@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-maroon: #4D0000;
+  --color-gold: #E5AF62;
+  --color-cream: #FFF9EE;
+}
+
+:root {
+  --primary: #000000;
+  --secondary: #4D0000;
+  --cream: #FFF9EE;
+  --white: #FFFFFF;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--primary);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Cover the screen, centered, pannable via --bg-pos-x
+   (a landscape image overflows horizontally on portrait screens). */
+.app-bg {
+  background-image: url('/bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: var(--bg-pos-x, 50%) center;
+  transition: background-position 0.7s ease;
+}
+
+/* On wider screens `cover` overflows vertically (a landscape image on a wide
+   viewport), leaving no horizontal room to pan. Zoom the width so there's
+   horizontal overflow for the --bg-pos-x slide to reveal. */
+@media (min-width: 1024px) {
+  .app-bg {
+    background-size: 110% auto;
+  }
+}
+
+/* Gentle hovering/float for the bees. */
+@keyframes bee-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-9px) rotate(3deg); }
+}
+
+.bee-float {
+  animation: bee-float 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Stationary bee that bounces in place. */
+@keyframes bee-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+
+.bee-bounce {
+  animation: bee-bounce 1.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bee-float,
+  .bee-bounce {
+    animation: none;
+  }
+}
