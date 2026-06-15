@@ -139,7 +139,7 @@ export default function VideoPlayer({
   };
 
   const btn =
-    "pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60";
+    "pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-[2px] transition hover:bg-black/60";
 
   return (
     <div
@@ -172,7 +172,7 @@ export default function VideoPlayer({
           type="button"
           onClick={replay}
           aria-label="Replay"
-          className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition hover:bg-black/70"
+          className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-[2px] transition hover:bg-black/70"
         >
           <ReplayIcon className="h-8 w-8" />
         </button>

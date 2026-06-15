@@ -7,50 +7,13 @@ import { useRouter } from "next/navigation";
 import StoryPopup from "./components/StoryPopup";
 import VideoPopup from "./components/VideoPopup";
 
-// Shared glassmorphism background (green tint + white sheen).
-const glassBg =
-  "linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)), linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1))";
-
-// Reusable arrow (points right by default; rotate via className for left/down).
-function Arrow({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden
-    >
-      <path d="M5 12h14" />
-      <path d="m12 5 7 7-7 7" />
-    </svg>
-  );
-}
-
-// Chevron (points right by default; rotate-180 for left).
-function Chevron({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.5}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden
-    >
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
-}
+// FlankButton notched-pill outline, authored in the 105×51 viewBox then scaled
+// to the button's real 140×65 px box (×4/3, ×65/51) so a CSS clip-path matches
+// the rendered SVG outline exactly. Using clip-path: path() (not an SVG
+// clipPath) avoids Safari ignoring transforms inside objectBoundingBox clips,
+// which let the blur bleed past the rounded corners.
+const FLANK_CLIP =
+  "path('M112 64.649C127.464 64.649 140 52.667 140 37.882C140 23.103 127.464 11.12 112 11.12H70.568L58.874 0.685C57.849 -0.229 56.259 -0.228 55.234 0.685L43.539 11.12H28C12.536 11.12 0 23.103 0 37.882C0 52.667 12.536 64.649 28 64.649H112Z')";
 
 // Glass pill that flanks the centre, with a bee badge on its top-left corner.
 function FlankButton({
@@ -97,34 +60,95 @@ function FlankButton({
     <div className={`absolute ${position}`}>
       {/* bee glass badge */}
       <span
-        className="absolute left-10 -top-14 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] "
-        style={{ background: glassBg }}
+        className="bee-float bg-glass absolute left-5 -top-14 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/30 shadow-lg backdrop-blur-[2px]"
+        style={{ animationDelay: isLeft ? "0s" : "0.7s" }}
       >
         <Image
           src={bee}
           alt="bee"
           width={80}
           height={80}
-          className="bee-float w-32 object-contain"
-          style={{ animationDelay: isLeft ? "0s" : "0.7s" }}
+          className="w-32 -scale-x-100 object-contain"
         />
       </span>
 
-      <button
-        type="button"
+      {/* Custom button shape with triangular notch + real frosted glass.
+          Clip the WRAPPER too: some browsers don't clip a child's
+          backdrop-filter by its own clip-path, so the blur leaks to the full
+          rectangle on the sides — an ancestor clip contains it to the shape. */}
+      <div
         onClick={handleActivate}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
-        className="flex  max-w-47.5 items-center gap-1 md:gap-2 rounded-full border border-white/30 px-3 py-1 text-left text-sm font-medium leading-tight text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] w-36 md:w-40"
-        style={{ background: glassBg }}
+        className="relative block h-16.25 w-35  shrink-0 cursor-pointer"
+        style={{ clipPath: FLANK_CLIP }}
       >
-        {isLeft && <Chevron className="shrink-0 rotate-180 text-lg" />}
-        <span
-          className={`font-semibold text-[10px] md:text-xs  w-full ${isLeft ? 'text-left' : 'text-right'}`}
-          dangerouslySetInnerHTML={{ __html: text }}
+        {/* Frosted-glass layer: actually blurs the page content behind the
+            button (backdrop-filter), clipped to the notched-pill shape. */}
+        <div
+          className="bg-glass absolute inset-0 backdrop-blur-[2px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]"
+          style={{ clipPath: FLANK_CLIP }}
         />
-        {!isLeft && <Chevron className="shrink-0 text-lg" />}
-      </button>
+
+        {/* Shape outline + content drawn on top of the glass. Clipped to the
+            SAME FLANK_CLIP so the centred stroke can't overhang the glass edge
+            (it becomes an inner border that lines up exactly with the fill). */}
+        <svg
+          className="absolute inset-0 block"
+          width="140"
+          height="65"
+          viewBox="0 0 105 51"
+          fill="none"
+          style={{ clipPath: FLANK_CLIP }}
+        >
+          {/* Glass edge highlight (strokeWidth 2 → ~1px after the outer half is
+              clipped away) */}
+          <path
+            d="M84 50.7253C95.598 50.7253 105 41.3233 105 29.7253C105 18.1273 95.598 8.72528 84 8.72528H52.9258L44.1553 0.537781C43.387 -0.179394 42.1942 -0.179146 41.4258 0.537781L32.6543 8.72528H21C9.40202 8.72528 0 18.1273 0 29.7253C0 41.3233 9.40202 50.7253 21 50.7253H84Z"
+            fill="none"
+            stroke="rgba(255, 255, 255, 0.3)"
+            strokeWidth="2"
+          />
+
+          {/* Icon and Text Container */}
+          <foreignObject x="0" y="10" width="105" height="39">
+            <div
+              className={`pointer-events-none flex h-full items-center gap-1 font-[Inter] text-[10px] font-medium leading-2.5 text-white ${
+                isLeft
+                  ? "flex-row justify-start pl-2 text-left"
+                  : "flex-row-reverse justify-end pr-2 text-right"
+              }`}
+            >
+              {/* Chevron Icon */}
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                className="shrink-0"
+              >
+                <polyline
+                  points="9 18 15 12 9 6"
+                  stroke="white"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{
+                    transform: isLeft ? "scaleX(-1)" : "none",
+                    transformOrigin: "center",
+                  }}
+                />
+              </svg>
+
+              {/* Text */}
+              <div
+                className="flex-1"
+                dangerouslySetInnerHTML={{ __html: text }}
+              />
+            </div>
+          </foreignObject>
+        </svg>
+      </div>
     </div>
   );
 }
@@ -160,7 +184,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative flex h-svh flex-col items-center overflow-hidden">
+    <div className="relative flex h-svh  flex-col px-10 md:px-0 items-center overflow-hidden">
       <Image
         src="/logo-1.png"
         alt="Logo"
@@ -172,31 +196,18 @@ export default function Home() {
         }`}
       />
 
-      <div
-        className="relative flex items-center justify-center"
-        style={{
-          width: 348,
-          height: 164,
-          opacity: 1,
-          borderRadius: "12.78px",
-          background:
-            "linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)), linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1))",
-        }}
-      >
-        {/* Glass arrow icon sitting on the top-center border */}
-        {/* <div
-          className="absolute left-1/2 top-0 z-10 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px]"
-          style={{ background: glassBg }}
-        >
-          <Arrow className="rotate-90" />
-        </div> */}
+     
+
+      <div className="bg-glass-tint relative flex h-40 w-full items-center justify-center rounded-[12.78px] backdrop-blur-[2px] md:w-80.5">
+       
+        
 
         <Image
           src="/mask.png"
           alt=""
-          width={111}
+          width={106}
           height={29}
-          className="absolute top-0 left-1/2 -translate-x-1/2 object-contain"
+          className="absolute top-0 left-1/2 h-10 w-auto -translate-x-1/2 object-contain"
         />
 
         <Image
@@ -205,7 +216,7 @@ export default function Home() {
           width={350}
           height={110}
           priority
-          className="object-contain"
+          className="object-contain w-56 md:w-96 "
         />
 
         <Image
@@ -213,58 +224,50 @@ export default function Home() {
           alt=""
           width={106}
           height={29}
-          className="absolute bottom-0 left-1/2 rotate-180 -translate-x-1/2 object-contain"
+          className="absolute bottom-0 left-1/2 h-10 w-auto rotate-180 -translate-x-1/2 object-contain"
         />
       </div>
 
       {/* Left button — upper-left, flanking the centre */}
       <FlankButton
         side="left"
-        bee="/bee2.png"
+        bee="/bee1.png"
         onClick={openStory}
         text="Meet our <br/> Women <br/> Harvesters"
-        position="top-[45%] md:top-[38%] left-[3px] md:left-1/2  translate-x-0 md:-translate-x-[290px]"
+        position="top-[42%] md:top-[35%] left-0 md:left-1/2 translate-x-0 md:-translate-x-[250px]"
       />
 
 
       {/* Right button — lower-right, flanking the centre */}
       <FlankButton
         side="right"
-        bee="/bee2.png"
+        bee="/bee1.png"
         onClick={openVideo}
         text="Know our <br/> sourcing story"
-        position="bottom-[26%] left-auto md:left-1/2 right-[3px] md:right-auto translate-x-0 md:translate-x-[90px]"
+        position="bottom-[29%] left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
       />
 
       {/* Decorative bee bouncing in place (top-right) */}
       <Image
-        src="/bee2.png"
+        src="/bee1.png"
         alt=""
         width={80}
         height={80}
-        className="bee-bounce pointer-events-none absolute top-36 right-72 z-20 w-18 select-none object-contain"
+        className="bee-bounce pointer-events-none absolute top-36 right-72 z-20 w-18 select-none object-contain hidden md:block"
       />
 
 
 
 
-      {/* Discover More */}
+      {/* Discover More — on mobile it sits in one CENTRED row with the fixed
+          chat button (10px gap). The pair is 240 + 10 + 56 = 306px, so centred
+          it spans 50% ± 153px: this (left) button's left edge = 50% − 153px and
+          the chat button's left edge = 50% + 97px (see ChatWidget).
+          On desktop it returns to the normal centred flow at the bottom. */}
       <button
         type="button"
         onClick={() => router.push("/discover")}
-        className="mt-auto mb-5 md:mb-8 flex items-center justify-center border border-white/30 text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] w-60 md:w-80"
-        style={{
-       
-          height: 48.513511657714844,
-          opacity: 1,
-          borderRadius: "31.62px",
-          gap: "10.54px",
-          paddingTop: "14.76px",
-          paddingRight: "21.08px",
-          paddingBottom: "14.76px",
-          paddingLeft: "21.08px",
-          background: glassBg,
-        }}
+        className="bg-glass fixed bottom-5 left-[calc(50%-153px)] mt-auto mb-5 flex h-[48.51px] w-60 items-center justify-center gap-[10.54px] rounded-[31.62px] border border-white/30 px-[21.08px] py-[14.76px] text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] md:static md:left-auto md:bottom-auto md:mb-8 md:w-80"
       >
         Discover More
       </button>

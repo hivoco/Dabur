@@ -27,7 +27,7 @@ export default function VideoPopup({
   return (
     <div
       onClick={handleClose}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xs transition-opacity duration-300 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-[2px] transition-opacity duration-300 ${
         show ? "opacity-100" : "opacity-0"
       }`}
     >

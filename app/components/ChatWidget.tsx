@@ -4,10 +4,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import ChatPanel from "./ChatPanel";
 
-// Shared glassmorphism background (green tint + white sheen).
-const glassBg =
-  "linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)), linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1))";
-
 const GREETING = "Hi, I’m your Chief Honey Officer (CHO)";
 const SECOND = "Ask the CHO";
 
@@ -57,17 +53,24 @@ export default function ChatWidget() {
   }, []);
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
+    <div
+      className={`fixed bottom-5 z-70 flex flex-col items-end gap-3 ${
+        open
+          ? "right-5"
+          : // Closed: on mobile sit in a centred row 10px right of the Discover
+            // button (its left edge = 50% + 97px; see page.tsx). Corner on desktop.
+            "left-[calc(50%+97px)] md:left-auto md:right-5"
+      }`}
+    >
       {open ? (
         <ChatPanel onClose={() => setOpen(false)} />
       ) : (
         <>
       {/* Glass card: slides in from the right, then swaps text with a typewriter effect */}
       <div
-        className={`md:flex hidden  items-center rounded-full border border-white/30 px-3 md:py-1 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition-[transform,opacity] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`bg-glass md:flex hidden  items-center rounded-full border border-white/30 px-3 md:py-1 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition-[transform,opacity] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
           shown ? "translate-x-0 opacity-100" : "translate-x-[120%] opacity-0"
         }`}
-        style={{ background: glassBg }}
       >
         {/* Bee collapses + fades when switching to the short text */}
         <div
@@ -84,7 +87,7 @@ export default function ChatWidget() {
           />
         </div>
 
-        <span className="max-w-50 text-xl md:text-sm font-semibold leading-tight text-white">
+        <span className="max-w-56 text-xl md:text-sm font-semibold leading-tight text-white">
           {text}
         </span>
       </div>
@@ -94,8 +97,7 @@ export default function ChatWidget() {
         type="button"
         aria-label="Open chat"
         onClick={() => setOpen(true)}
-        className="flex h-14 w-14 items-center justify-center rounded-full border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px]"
-        style={{ background: glassBg }}
+        className="bg-glass flex h-14 w-14 items-center justify-center rounded-full border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px]"
       >
         <Image
           src="/chat.png"

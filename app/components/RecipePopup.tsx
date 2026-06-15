@@ -53,15 +53,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className="flex flex-col"
-      style={{
-        gap: "8.86px",
-        borderLeft: "1.77px solid #4B5320",
-        borderRadius: "8.86px",
-        padding: "7.09px 8.86px 7.09px 17.72px",
-      }}
-    >
+    <div className="flex flex-col gap-[8.86px] rounded-[8.86px] border-l-[1.77px] border-[#4B5320] py-[7.09px] pr-[8.86px] pl-[17.72px]">
       <h3 className="text-[13px] font-bold tracking-[0.18em] text-[#3a2a12]">
         {label}
       </h3>
@@ -100,12 +92,11 @@ export default function RecipePopup({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative flex h-[90vh] w-full max-w-249 flex-col overflow-y-auto rounded-t-3xl p-5 transition-all duration-500 ease-out md:h-140 md:rounded-[24.89px] md:p-7 md:overflow-hidden ${
+        className={`bg-cream relative flex h-[90vh] w-full max-w-249 flex-col overflow-y-auto rounded-t-3xl p-5 shadow-[0px_5px_15px_rgba(0,0,0,0.50)] transition-all duration-500 ease-out md:h-140 md:rounded-[24.89px] md:p-7 md:overflow-hidden ${
           show
             ? "translate-y-0 opacity-100 md:scale-100"
             : "translate-y-full opacity-0 md:translate-y-0 md:scale-95"
         }`}
-        style={{ background: "#FFF9EE", boxShadow: "0px 5px 15px rgba(0,0,0,0.50)" }}
       >
         {/* Drag handle (mobile bottom-sheet) */}
         <div className="mx-auto mb-3 h-1.5 w-36 shrink-0 rounded-full bg-[#1D1D1D] md:hidden" />

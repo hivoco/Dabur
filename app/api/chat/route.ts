@@ -8,6 +8,18 @@ import { getVectorStore } from "@/app/lib/rag";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+// Allow the chat to be called from a different origin (e.g. local dev frontend
+// hitting the deployed backend). Tighten "*" to a specific origin if you prefer.
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export function OPTIONS() {
+  return new Response(null, { status: 204, headers: CORS });
+}
+
 const SYSTEM_PROMPT = `You are the "Chief Honey Officer" (CHO), a warm, helpful assistant for Dabur Litchi Honey.
 Answer the user's question using ONLY the context below, which is extracted from a Q&A document.
 If the answer is not in the context, politely say you don't have that information yet.
@@ -96,6 +108,7 @@ export async function POST(req: Request) {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Cache-Control": "no-cache, no-transform",
+        ...CORS,
       },
     });
   } catch (err) {

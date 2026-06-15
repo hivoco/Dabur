@@ -88,10 +88,10 @@ const RECIPES: Recipe[] = [
 
 // A few bees scattered around (gentle float via the .bee-float class).
 const BEES = [
-  { src: "/bee2.png", className: "left-[13%] top-[12%] w-8 md:w-12", delay: "0s" },
-  { src: "/bee2.png", className: "right-[18%] top-[16%] w-8 md:w-12", delay: "0.6s" },
+  { src: "/bee1.png", className: "left-[13%] top-[12%] w-8 md:w-12", delay: "0s" },
+  { src: "/bee1.png", className: "right-[18%] top-[16%] w-8 md:w-12", delay: "0.6s" },
   { src: "/bee1.png", className: "right-[7%] top-[44%] w-8 md:w-12", delay: "1.1s" },
-  { src: "/bee2.png", className: "left-[40%] bottom-[28%] w-7 md:w-10", delay: "1.6s" },
+  { src: "/bee1.png", className: "left-[40%] bottom-[28%] w-7 md:w-10", delay: "1.6s" },
 ];
 
 export default function Discover() {
@@ -105,14 +105,14 @@ export default function Discover() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden bg-black/5 backdrop-blur-xs">
+    <div className="fixed inset-0 z-0 overflow-hidden bg-black/35 backdrop-blur-[2px]">
       {/* Decorative leaf — top-left corner (flipped 180deg) */}
       <Image
         src="/leaf.png"
         alt=""
         width={123}
         height={158}
-        className={`pointer-events-none absolute -top-8.75 left-0 z-0 h-39.5 w-[122.98px] select-none object-cover transition-all duration-700 ease-out ${
+        className={`pointer-events-none absolute -top-8.75 left-0 z-0 h-39.5  select-none object-contain transition-all duration-700 ease-out ${
           mounted ? "translate-x-0 translate-y-0 opacity-100" : "-translate-x-full -translate-y-full opacity-0"
         }`}
       />
@@ -145,7 +145,7 @@ export default function Discover() {
       <Link
         href="/"
         aria-label="Back"
-        className="fixed left-5 top-5 z-30 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/25 text-white backdrop-blur-sm transition hover:bg-black/40"
+        className="fixed left-5 top-5 z-30 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/25 text-white backdrop-blur-[2px] transition hover:bg-black/40"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <polyline points="15 18 9 12 15 6" />
@@ -170,10 +170,7 @@ export default function Discover() {
       <div className="relative z-10 mx-auto max-w-7xl px-5 pb-6 pt-6 md:px-10">
         {/* What Makes It Truly Special */}
         <div className="mx-auto w-full md:w-fit">
-          <h2
-            className="mb-5 text-xl md:text-[28px] font-bold text-center md:text-left leading-none tracking-normal text-white"
-            style={{ fontFamily: "var(--font-inter)" }}
-          >
+          <h2 className="mb-5 text-xl md:text-[28px] font-bold text-center md:text-left leading-none tracking-normal text-white">
             What Makes It Truly Special
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none [&::-webkit-scrollbar]:hidden md:flex-wrap md:gap-6 md:overflow-visible md:pb-0">
@@ -193,10 +190,7 @@ export default function Discover() {
 
         {/* Elevate your recipes */}
         <div className="mx-auto mt-6 w-full md:w-fit">
-          <h2
-            className="mb-5 text-xl md:text-[28px] font-bold text-center md:text-left leading-[29.57px] tracking-normal text-white"
-            style={{ fontFamily: "var(--font-inter)" }}
-          >
+          <h2 className="mb-5 text-xl md:text-[28px] font-bold text-center md:text-left leading-[29.57px] tracking-normal text-white">
             Elevate your recipes with a drizzle of Litchi honey
           </h2>
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none [&::-webkit-scrollbar]:hidden md:flex-wrap md:gap-6 md:overflow-visible md:pb-0">

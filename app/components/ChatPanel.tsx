@@ -10,6 +10,10 @@ type Message = { role: "user" | "bot"; text: string };
 const STORAGE_KEY = "cho-chat-history";
 const MAX_HISTORY = 10; // keep the last 10 messages
 
+// Where the chat API lives. Empty = same origin (the deployed app itself).
+// Set NEXT_PUBLIC_API_BASE_URL to call a different backend (e.g. from local dev).
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
+
 const TOPICS = [
   "Tracebility",
   "Craftmanship",
@@ -87,7 +91,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
     setMessages((m) => [...m, { role: "user", text }, { role: "bot", text: "" }]);
     setStreaming(true);
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch(`${API_BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),

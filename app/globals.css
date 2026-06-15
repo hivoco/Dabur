@@ -13,6 +13,24 @@
   --white: #FFFFFF;
 }
 
+/* Glassmorphism backgrounds (green tint + white sheen), as reusable Tailwind
+   utilities so they can be applied with a class instead of an inline style.
+   bg-glass: plain; bg-glass-tint: +20% black; bg-glass-dark: +25% black. */
+@utility bg-glass {
+  background: linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
+}
+@utility bg-glass-tint {
+  background: linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
+}
+@utility bg-glass-dark {
+  background: linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -30,23 +48,23 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Cover the screen, centered, pannable via --bg-pos-x
-   (a landscape image overflows horizontally on portrait screens). */
+/* The landscape image is sized LARGER than the viewport so it always fully
+   covers AND has slack to move:
+     - horizontally via --bg-pos-x (the left/right pan)
+     - vertically  shifted 100px DOWN (see background-position below)
+   Height is the viewport + 250px, so there's always 250px of vertical overflow
+   (125px above/below centre) — enough to drop the image 100px without ever
+   exposing a blank top edge. Width follows (auto); a landscape image then
+   overflows sideways for the --bg-pos-x pan. */
 .app-bg {
-  background-image: url('/bg.png');
+  background-image: url('/bg.jpg');
   background-repeat: no-repeat;
-  background-size: cover;
-  background-position: var(--bg-pos-x, 50%) center;
+  background-size: auto calc(100% + 250px);
+  /* calc(50% + 100px): centred vertically, then nudged 100px DOWN.
+     Increase/decrease the 100px to taste (and bump the 250px above if you push
+     it past ~125px so the top stays covered). */
+  background-position: var(--bg-pos-x, 50%) calc(50% + 50px);
   transition: background-position 0.7s ease;
-}
-
-/* On wider screens `cover` overflows vertically (a landscape image on a wide
-   viewport), leaving no horizontal room to pan. Zoom the width so there's
-   horizontal overflow for the --bg-pos-x slide to reveal. */
-@media (min-width: 1024px) {
-  .app-bg {
-    background-size: 110% auto;
-  }
 }
 
 /* Gentle hovering/float for the bees. */
