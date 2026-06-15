@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@huggingface/transformers": "^4.2.0",
+    "@huggingface/transformers": "^3.8.1",
     "@langchain/community": "^1.1.29",
     "@langchain/core": "^1.1.48",
     "@langchain/groq": "^1.2.1",
