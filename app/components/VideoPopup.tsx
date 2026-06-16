@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useEscClose } from "../lib/useEscClose";
 import VideoPlayer from "./VideoPlayer";
 
 export default function VideoPopup({
@@ -23,6 +24,8 @@ export default function VideoPopup({
     setShow(false);
     onClose();
   };
+
+  useEscClose(handleClose);
 
   return (
     <div

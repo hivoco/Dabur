@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import VideoPlayer from "./VideoPlayer";
+import { useEscClose } from "../lib/useEscClose";
 
 // "Did You Know?" body — supports HTML markup (e.g. <br/>, <strong>) so it can
 // be made dynamic later. Keep this trusted (not user-supplied) input.
@@ -22,6 +23,8 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
     setShow(false);
     onClose();
   };
+
+  useEscClose(handleClose);
 
   return (
     <div
@@ -108,7 +111,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
 
           {/* Did You Know card */}
           <div className="w-full @2xl:w-[42%] md:-mt-28">
-            <div className="bg-glass-dark relative rounded-3xl border border-white/40 p-4 @2xl:p-5">
+            <div className="bg-glass-soft relative rounded-[28.718px] border border-white/40 p-4 @2xl:p-5">
               <Image src="/quate.png" alt="" width={19} height={19} className="absolute -top-2 left-4 w-3 object-contain @2xl:w-6" />
               <h3 className="text-[clamp(0.95rem,2.2svh,1.25rem)] font-semibold leading-none tracking-normal text-white @2xl:text-[23.93px]">
                 Did You Know?

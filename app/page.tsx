@@ -284,11 +284,11 @@ export default function Home() {
           (e.g. floating over an open popup). z-[60] sits above the popup (z-50);
           the Discover button hides while a popup is open. On desktop md:contents
           dissolves the row (Discover in flow, chat floats corner). */}
-      <div className="fixed inset-x-0 bottom-5 z-[60] flex items-center justify-center gap-2.5 md:contents">
+      <div className="fixed inset-x-0 bottom-5 z-[60] flex items-center justify-center gap-2.5 px-5 md:contents">
         <button
           type="button"
           onClick={() => router.push("/discover")}
-          className={`bg-glass flex h-[48.51px] w-60 items-center justify-center gap-[10.54px] rounded-[31.62px] border border-white/30 px-[21.08px] py-[14.76px] text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] md:mt-auto md:mb-8 md:w-80 ${
+          className={`bg-glass flex h-[48.51px] flex-1 items-center justify-center gap-[10.54px] rounded-[31.62px] border border-white/30 px-[21.08px] py-[14.76px] text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] md:mt-auto md:mb-8 md:w-80 md:flex-none ${
             popupOpen ? "invisible pointer-events-none" : ""
           }`}
         >

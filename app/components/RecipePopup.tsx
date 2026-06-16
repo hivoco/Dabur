@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
+import { useEscClose } from "../lib/useEscClose";
 
 export type Recipe = {
   src: string;
@@ -82,6 +83,8 @@ export default function RecipePopup({
     setShow(false);
     setTimeout(onClose, 500);
   };
+
+  useEscClose(handleClose);
 
   return createPortal(
     <div

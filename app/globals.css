@@ -31,6 +31,12 @@
     linear-gradient(0deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
     linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
 }
+@utility bg-glass-soft {
+  /* Design spec: white 10% over black 10% over a green 15% base. */
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%),
+    rgba(75, 83, 32, 0.15);
+}
 
 html {
   scroll-behavior: smooth;

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import BackgroundProvider from "./components/Background";
@@ -11,6 +11,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Dabur",
   description: "Dabur - Your website",
+};
+
+// Prevent zoom/scaling (pinch-zoom and input-focus auto-zoom on mobile).
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({

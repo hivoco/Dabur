@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import ChatPanel from "./ChatPanel";
+import { useEscClose } from "../lib/useEscClose";
 
 const GREETING = "Hi, I’m your Chief Honey Officer (CHO)";
 const SECOND = "Ask the CHO";
@@ -23,6 +24,10 @@ export default function ChatWidget({
   const [shown, setShown] = useState(false); // slide-in from the right
   const [text, setText] = useState(GREETING); // animated text
   const [showBee, setShowBee] = useState(true); // bee collapses on switch
+
+  useEscClose(() => {
+    if (open) setOpen(false);
+  });
 
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -115,7 +120,7 @@ export default function ChatWidget({
         type="button"
         aria-label="Open chat"
         onClick={() => setOpen(true)}
-        className="bg-glass flex h-14 w-14 items-center justify-center rounded-full border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px]"
+        className="bg-glass flex h-[48.51px] w-[48.51px] items-center justify-center rounded-full border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px]"
       >
         <Image
           src="/chat.png"
