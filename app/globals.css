@@ -107,9 +107,20 @@ html, body {
   50% { transform: translateY(-16px); }
 }
 
+@keyframes jivika-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
 .bee-bounce {
   animation: bee-bounce 1.4s ease-in-out infinite;
   will-change: transform;
+}
+
+.jivika-bounce {
+  animation: jivika-bounce 5s ease-in-out infinite;
+  will-change: transform;
+  
 }
 
 @media (prefers-reduced-motion: reduce) {

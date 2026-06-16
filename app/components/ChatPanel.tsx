@@ -143,7 +143,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
 
       {/* Topic chips — hidden once the conversation starts */}
       {messages.length === 0 && (
-      <div className="flex flex-wrap justify-center gap-2.5 px-4 pb-2 pt-1">
+      <div className="flex flex-wrap px-1 justify-center gap-2  pt-1">
         {TOPICS.map((t) => (
           <button
             key={t}

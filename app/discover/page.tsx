@@ -93,10 +93,10 @@ const CAROUSEL_RECIPES = [...RECIPES, ...RECIPES];
 
 // A few bees scattered around (gentle float via the .bee-float class).
 const BEES = [
-  { src: "/bee1.gif", className: "left-[13%] top-[12%] w-8 md:w-12", delay: "0s" },
-  { src: "/bee1.gif", className: "right-[18%] top-[16%] w-8 md:w-12", delay: "0.6s" },
-  { src: "/bee1.gif", className: "right-[7%] top-[44%] w-8 md:w-12", delay: "1.1s" },
-  { src: "/bee1.gif", className: "left-[40%] bottom-[28%] w-7 md:w-10", delay: "1.6s" },
+  { src: "/bee1.gif", className: "left-[13%] top-[12%] w-8 md:w-12", delay: "0s", flip: false },
+  { src: "/bee1.gif", className: "right-[18%] top-[16%] w-8 md:w-12", delay: "0.6s", flip: true },
+  { src: "/bee1.gif", className: "right-[7%] top-[44%] w-8 md:w-12", delay: "1.1s", flip: false },
+  { src: "/bee1.gif", className: "left-[40%] bottom-[28%] w-7 md:w-10", delay: "1.6s", flip: true },
 ];
 
 export default function Discover() {
@@ -120,11 +120,17 @@ export default function Discover() {
       if (pausedRef.current) return;
       // Auto-slide on desktop only; off on mobile.
       if (!window.matchMedia("(min-width: 768px)").matches) return;
-      const { scrollLeft, clientWidth, scrollWidth } = el;
-      if (scrollLeft + clientWidth >= scrollWidth - 8) {
+      // Advance ONE card at a time (leftmost slides out, a new one slides in);
+      // loop back to the start at the end.
+      const step =
+        el.children.length > 1
+          ? (el.children[1] as HTMLElement).offsetLeft -
+            (el.children[0] as HTMLElement).offsetLeft
+          : el.clientWidth;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
         el.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        el.scrollBy({ left: clientWidth, behavior: "smooth" });
+        el.scrollBy({ left: step, behavior: "smooth" });
       }
     }, 3000);
     return () => clearInterval(id);
@@ -167,17 +173,24 @@ export default function Discover() {
         }`}
       />
 
-      {/* Random bees */}
+      {/* Random bees — some flipped (-scale-x-100) on the WRAPPER so the flip
+          doesn't fight the bee-float transform that animates the image. */}
       {BEES.map((b, i) => (
-        <Image
+        <div
           key={i}
-          src={b.src}
-          alt=""
-          width={80}
-          height={80}
-          className={`bee-float pointer-events-none absolute z-0 select-none object-contain ${b.className}`}
-          style={{ animationDelay: b.delay }}
-        />
+          className={`pointer-events-none absolute z-0 select-none ${b.className} ${
+            b.flip ? "-scale-x-100" : ""
+          }`}
+        >
+          <Image
+            src={b.src}
+            alt=""
+            width={80}
+            height={80}
+            className="bee-float w-full object-contain"
+            style={{ animationDelay: b.delay }}
+          />
+        </div>
       ))}
 
       {/* Close (top-right) -> back to home */}
@@ -204,9 +217,9 @@ export default function Discover() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-6 pt-6 md:px-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-6 pt-6  md:px-10">
         {/* What Makes It Truly Special */}
-        <div className="mx-auto w-full md:w-full">
+        <div className="mx-auto w-full md:max-w-[910px]">
           <h2 className="mb-5 text-xl md:text-[28px] font-bold text-center md:text-left leading-none tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)]">
             What Makes It Truly Special
           </h2>
@@ -215,18 +228,18 @@ export default function Discover() {
               <div
                 key={src}
                 style={{ transitionDelay: `${i * 90}ms` }}
-                className={`recipe-card aspect-[482/586] relative overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out ${
+                className={`aspect-[482/586] w-40 shrink-0 md:w-52 relative overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out ${
                   mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                 }`}
               >
-                <Image src={src} alt="" fill sizes="(max-width: 768px) 200px, 240px" className="object-cover" />
+                <Image src={src} alt="" fill sizes="(max-width: 768px) 200px, 240px" className="object-contain" />
               </div>
             ))}
           </div>
         </div>
 
         {/* Elevate your recipes */}
-        <div className="mx-auto mt-6 w-full">
+        <div className="mx-auto mt-6 w-full md:max-w-[910px]">
           <h2 className="mb-5 text-xl md:text-[28px] font-bold text-center md:text-left leading-[29.57px] tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)]">
             Elevate your recipes with a drizzle of Litchi honey
           </h2>
@@ -250,7 +263,7 @@ export default function Discover() {
               key={i}
               onClick={() => setActive(r)}
               style={{ transitionDelay: `${(TOP_CARDS.length + i) * 90}ms` }}
-              className={`recipe-card relative h-50 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-60 ${
+              className={`w-40 shrink-0 md:w-52 relative h-50 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-60 ${
                 mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
               }`}
             >

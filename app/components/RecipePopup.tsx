@@ -101,22 +101,24 @@ export default function RecipePopup({
         {/* Drag handle (mobile bottom-sheet) */}
         <div className="mx-auto mb-3 h-1.5 w-36 shrink-0 rounded-full bg-[#1D1D1D] md:hidden" />
 
-        {/* Back */}
-        <button
-          type="button"
-          onClick={handleClose}
-          aria-label="Back"
-          className="absolute left-5 top-5 z-10 flex h-8 w-8 items-center justify-center text-[#3a2a12] transition hover:opacity-70"
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
-
-        {/* Title */}
-        <h2 className="text-center text-xl font-bold text-[#2e2212] md:text-2xl">
-          {recipe.title}
-        </h2>
+        {/* Header: back button on the same row as the centred title */}
+        <div className="flex items-center">
+          <button
+            type="button"
+            onClick={handleClose}
+            aria-label="Back"
+            className="flex h-8 w-8 shrink-0 items-center justify-center text-[#3a2a12] transition hover:opacity-70"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <h2 className="flex-1 text-center text-xl font-bold text-[#2e2212] md:text-2xl">
+            {recipe.title}
+          </h2>
+          {/* spacer to keep the title visually centred opposite the back button */}
+          <span className="h-8 w-8 shrink-0" aria-hidden />
+        </div>
 
         {/* Content */}
         <div className="mt-5 flex flex-col gap-5 md:min-h-0 md:flex-1 md:flex-row md:gap-7">
@@ -151,6 +153,16 @@ export default function RecipePopup({
                 ))}
               </div>
             </Section>
+
+            {/* Gradient divider between Ingredients and Method (mobile only) */}
+            <div
+              aria-hidden
+              className="mx-auto h-px w-full max-w-[320px] md:hidden"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(239, 231, 218, 0.5) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(239, 231, 218, 0.5) 100%)",
+              }}
+            />
 
             <Section label="METHOD">
               <div className="flex flex-col gap-2">

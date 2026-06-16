@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useBackground } from "./components/Background";
 import { useRouter } from "next/navigation";
@@ -69,7 +69,7 @@ function FlankButton({
           alt="bee"
           width={80}
           height={80}
-          className="w-32 -scale-x-100 object-contain"
+          className={`w-32 ${isLeft&& "-scale-x-100"} object-contain`}
         />
       </span>
 
@@ -161,6 +161,13 @@ export default function Home() {
   const [videoOpen, setVideoOpen] = useState(false);
   const popupOpen = storyOpen || videoOpen;
 
+  // Fade the page content in on mount (e.g. when navigating back from /discover).
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const r = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(r);
+  }, []);
+
   // Slide the background and open the popup at the same time.
   const openStory = () => {
     showLeft();
@@ -195,16 +202,16 @@ export default function Home() {
         width={120}
         height={109}
         priority
-        className={`relative z-60 mt-2 w-20 mb-2 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] ${
-          popupOpen ? "hidden md:block" : ""
-        }`}
+        className={`relative z-60 mt-2 w-20 mb-2 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] transition-opacity duration-500 ${
+          !mounted ? "opacity-0" : "opacity-100"
+        } ${popupOpen ? "hidden md:block" : ""}`}
       />
 
       {/* Foreground content — hidden while a popup is open so only the
           popup (over the sliding background image) is visible. */}
       <div
         className={`flex w-full flex-1 flex-col items-center transition-opacity duration-500 ${
-          popupOpen ? "pointer-events-none opacity-0" : "opacity-100"
+          !mounted || popupOpen ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       >
 

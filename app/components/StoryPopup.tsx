@@ -61,7 +61,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
           alt="JEEViKA"
           width={98}
           height={98}
-          className="absolute right-20 top-24 z-10 hidden h-[97.37px] w-[97.37px] rotate-[0.5deg] rounded-full object-contain @2xl:block"
+          className="absolute jivika-bounce  right-20 top-24 z-10 hidden h-[97.37px] w-[97.37px] rotate-[0.5deg] rounded-full object-contain @2xl:block"
         />
 
         {/* Brand logo — mobile, top centre */}
@@ -97,7 +97,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
                 alt="JEEViKA"
                 width={98}
                 height={98}
-                className="absolute -top-10 right-1 z-10 h-20 w-20 rounded-full object-contain @2xl:hidden"
+                className="absolute jivika-bounce -top-10 right-1 z-10 h-20 w-20 rounded-full object-contain @2xl:hidden"
               />
             </div>
             <p className="mt-2 text-center text-[clamp(0.78rem,1.9svh,1rem)] font-semibold text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] @2xl:mt-4 @2xl:text-lg">
