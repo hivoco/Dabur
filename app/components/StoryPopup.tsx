@@ -75,11 +75,11 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
 
         {/* Title */}
         <div className="flex shrink-0 flex-col items-center px-6 pt-1 @2xl:pt-6">
-          <Image src="/mask.png" alt="" width={130} height={22} className="h-auto w-20 object-contain @2xl:w-32" />
+          <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-20 object-contain @2xl:w-32" />
           <h2 className="text-center text-[clamp(1rem,2.6svh,1.4rem)] font-semibold text-white [text-shadow:0px_4px_4px_#000000] @2xl:text-[26px]">
             Behind Every Drop, A Story of Empowerment
           </h2>
-          <Image src="/mask.png" alt="" width={130} height={22} className="h-auto w-20 rotate-180 object-contain @2xl:w-32" />
+          <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-20 rotate-180 object-contain @2xl:w-32" />
         </div>
 
         {/* Main — stacked on mobile, two columns on desktop */}
