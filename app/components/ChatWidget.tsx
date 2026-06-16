@@ -11,7 +11,14 @@ const DELETE_MS = 35; // per-char delete speed
 const TYPE_MS = 55; // per-char type speed
 const SWITCH_PAUSE = 250; // gap between deleting and typing
 
-export default function ChatWidget() {
+// `triggerClassName` styles the closed button's container. Default = floating
+// bottom-right corner (used standalone, e.g. on /discover). The home page passes
+// a class that makes it an in-flow flex item so it can sit in a centred row.
+export default function ChatWidget({
+  triggerClassName,
+}: {
+  triggerClassName?: string;
+}) {
   const [open, setOpen] = useState(false); // chat panel open/closed
   const [shown, setShown] = useState(false); // slide-in from the right
   const [text, setText] = useState(GREETING); // animated text
@@ -53,14 +60,25 @@ export default function ChatWidget() {
   }, []);
 
   return (
-    <div
-      className={`fixed bottom-5 z-70 flex flex-col items-end gap-3 ${
+    <>
+      {/* Mobile: blur + dim the page behind the open chat panel. */}
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          aria-hidden
+          className="fixed inset-0 z-60 bg-black/30 backdrop-blur-sm md:hidden"
+        />
+      )}
+      <div
+      className={
         open
-          ? "right-5"
-          : // Closed: on mobile sit in a centred row 10px right of the Discover
-            // button (its left edge = 50% + 97px; see page.tsx). Corner on desktop.
-            "left-[calc(50%+97px)] md:left-auto md:right-5"
-      }`}
+          ? // Open: fixed overlay. On mobile the panel (w-92vw) is centred so
+            // both side margins are equal; on desktop it sits in the
+            // bottom-right corner (right-5).
+            "fixed bottom-5 left-1/2 -translate-x-1/2 z-70 flex flex-col items-end md:left-auto md:translate-x-0 md:right-5"
+          : (triggerClassName ??
+            "fixed bottom-5 right-5 z-70 flex flex-col items-end gap-3")
+      }
     >
       {open ? (
         <ChatPanel onClose={() => setOpen(false)} />
@@ -110,5 +128,6 @@ export default function ChatWidget() {
         </>
       )}
     </div>
+    </>
   );
 }

@@ -6,6 +6,7 @@ import { useBackground } from "./components/Background";
 import { useRouter } from "next/navigation";
 import StoryPopup from "./components/StoryPopup";
 import VideoPopup from "./components/VideoPopup";
+import ChatWidget from "./components/ChatWidget";
 
 // FlankButton notched-pill outline, authored in the 105×51 viewBox then scaled
 // to the button's real 140×65 px box (×4/3, ×65/51) so a CSS clip-path matches
@@ -60,7 +61,7 @@ function FlankButton({
     <div className={`absolute ${position}`}>
       {/* bee glass badge */}
       <span
-        className="bee-float bg-glass absolute left-5 -top-14 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/30 shadow-lg backdrop-blur-[2px]"
+        className="bee-float bg-glass absolute left-9 -top-12 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/30 shadow-lg backdrop-blur-[2px]"
         style={{ animationDelay: isLeft ? "0s" : "0.7s" }}
       >
         <Image
@@ -80,7 +81,7 @@ function FlankButton({
         onClick={handleActivate}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
-        className="relative block h-16.25 w-35  shrink-0 cursor-pointer"
+        className="relative block h-16.25 w-35 shrink-0 cursor-pointer origin-center scale-[0.9786] md:scale-100"
         style={{ clipPath: FLANK_CLIP }}
       >
         {/* Frosted-glass layer: actually blurs the page content behind the
@@ -113,7 +114,7 @@ function FlankButton({
           {/* Icon and Text Container */}
           <foreignObject x="0" y="10" width="105" height="39">
             <div
-              className={`pointer-events-none flex h-full items-center gap-1 font-[Inter] text-[10px] font-medium leading-2.5 text-white ${
+              className={`pointer-events-none flex h-full items-center gap-0.5 font-[Inter] text-[10px] font-medium leading-2.5 text-white md:gap-1 ${
                 isLeft
                   ? "flex-row justify-start pl-2 text-left"
                   : "flex-row-reverse justify-end pr-2 text-right"
@@ -158,6 +159,7 @@ export default function Home() {
   const router = useRouter();
   const [storyOpen, setStoryOpen] = useState(false);
   const [videoOpen, setVideoOpen] = useState(false);
+  const popupOpen = storyOpen || videoOpen;
 
   // Slide the background and open the popup at the same time.
   const openStory = () => {
@@ -185,29 +187,39 @@ export default function Home() {
 
   return (
     <div className="relative flex h-svh  flex-col px-10 md:px-0 items-center overflow-hidden">
+      {/* Brand logo — top centre of the PAGE. On desktop it stays visible
+          above an open popup; on mobile it hides (the popup shows its own). */}
       <Image
         src="/logo-1.png"
         alt="Logo"
         width={120}
         height={109}
         priority
-        className={`relative z-60 mt-2 w-20 md:w-24 mb-2 object-contain ${
-          storyOpen || videoOpen ? "hidden md:block" : ""
+        className={`relative z-60 mt-2 w-20 mb-2 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] ${
+          popupOpen ? "hidden md:block" : ""
         }`}
       />
 
+      {/* Foreground content — hidden while a popup is open so only the
+          popup (over the sliding background image) is visible. */}
+      <div
+        className={`flex w-full flex-1 flex-col items-center transition-opacity duration-500 ${
+          popupOpen ? "pointer-events-none opacity-0" : "opacity-100"
+        }`}
+      >
+
      
 
-      <div className="bg-glass-tint relative flex h-40 w-full items-center justify-center rounded-[12.78px] backdrop-blur-[2px] md:w-80.5">
+      <div className="bg-glass-tint relative flex h-32 md:h-40  w-64 items-center justify-center rounded-[12.78px] backdrop-blur-[2px] md:w-87">
        
         
 
         <Image
-          src="/mask.png"
+          src="/mask2.png"
           alt=""
           width={106}
           height={29}
-          className="absolute top-0 left-1/2 h-10 w-auto -translate-x-1/2 object-contain"
+          className="absolute top-1 left-1/2 w-24 md:w-28  -translate-x-1/2 object-contain"
         />
 
         <Image
@@ -220,18 +232,18 @@ export default function Home() {
         />
 
         <Image
-          src="/mask.png"
+          src="/mask2.png"
           alt=""
           width={106}
           height={29}
-          className="absolute bottom-0 left-1/2 h-10 w-auto rotate-180 -translate-x-1/2 object-contain"
+          className="absolute bottom-1 left-1/2 w-24 md:w-28   rotate-180 -translate-x-1/2 object-contain"
         />
       </div>
 
       {/* Left button — upper-left, flanking the centre */}
       <FlankButton
         side="left"
-        bee="/bee1.png"
+        bee="/bee1.gif"
         onClick={openStory}
         text="Meet our <br/> Women <br/> Harvesters"
         position="top-[42%] md:top-[35%] left-0 md:left-1/2 translate-x-0 md:-translate-x-[250px]"
@@ -241,36 +253,44 @@ export default function Home() {
       {/* Right button — lower-right, flanking the centre */}
       <FlankButton
         side="right"
-        bee="/bee1.png"
+        bee="/bee1.gif"
         onClick={openVideo}
         text="Know our <br/> sourcing story"
         position="bottom-[29%] left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
       />
 
       {/* Decorative bee bouncing in place (top-right) */}
-      <Image
-        src="/bee1.png"
+      {/* <Image
+        src="/bee1.gif"
         alt=""
         width={80}
         height={80}
         className="bee-bounce pointer-events-none absolute top-36 right-72 z-20 w-18 select-none object-contain hidden md:block"
-      />
+      /> */}
 
 
 
 
-      {/* Discover More — on mobile it sits in one CENTRED row with the fixed
-          chat button (10px gap). The pair is 240 + 10 + 56 = 306px, so centred
-          it spans 50% ± 153px: this (left) button's left edge = 50% − 153px and
-          the chat button's left edge = 50% + 97px (see ChatWidget).
-          On desktop it returns to the normal centred flow at the bottom. */}
-      <button
-        type="button"
-        onClick={() => router.push("/discover")}
-        className="bg-glass fixed bottom-5 left-[calc(50%-153px)] mt-auto mb-5 flex h-[48.51px] w-60 items-center justify-center gap-[10.54px] rounded-[31.62px] border border-white/30 px-[21.08px] py-[14.76px] text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] md:static md:left-auto md:bottom-auto md:mb-8 md:w-80"
-      >
-        Discover More
-      </button>
+      </div>
+
+      {/* Bottom action row — OUTSIDE the fading wrapper so the chat stays visible
+          (e.g. floating over an open popup). z-[60] sits above the popup (z-50);
+          the Discover button hides while a popup is open. On desktop md:contents
+          dissolves the row (Discover in flow, chat floats corner). */}
+      <div className="fixed inset-x-0 bottom-5 z-[60] flex items-center justify-center gap-2.5 md:contents">
+        <button
+          type="button"
+          onClick={() => router.push("/discover")}
+          className={`bg-glass flex h-[48.51px] w-60 items-center justify-center gap-[10.54px] rounded-[31.62px] border border-white/30 px-[21.08px] py-[14.76px] text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] md:mt-auto md:mb-8 md:w-80 ${
+            popupOpen ? "invisible pointer-events-none" : ""
+          }`}
+        >
+          Discover More
+        </button>
+
+        {/* Mobile: an in-flow flex item in the row. Desktop: floats corner. */}
+        <ChatWidget triggerClassName="flex flex-col items-end gap-3 md:fixed md:bottom-5 md:right-5 md:z-70" />
+      </div>
 
       {storyOpen && <StoryPopup onClose={closeStory} />}
       {videoOpen && <VideoPopup src="/brand-film.mp4" onClose={closeVideo} />}

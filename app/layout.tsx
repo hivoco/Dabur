@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import BackgroundProvider from "./components/Background";
-import ChatWidget from "./components/ChatWidget";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,7 +26,6 @@ export default function RootLayout({
     >
       <body className="min-h-svh ">
         <BackgroundProvider>{children}</BackgroundProvider>
-        <ChatWidget />
       </body>
     </html>
   );

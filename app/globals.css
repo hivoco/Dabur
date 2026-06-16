@@ -21,9 +21,10 @@
     linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
 }
 @utility bg-glass-tint {
-  background: linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
+  /* Exact design spec: white 10% over black 20% over a green 15% base. */
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%),
+    rgba(75, 83, 32, 0.15);
 }
 @utility bg-glass-dark {
   background: linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)),
@@ -65,6 +66,28 @@ html, body {
      it past ~125px so the top stays covered). */
   background-position: var(--bg-pos-x, 50%) calc(50% + 50px);
   transition: background-position 0.7s ease;
+}
+
+/* Mobile only: nudge the background 8px to the right (added on top of the
+   --bg-pos-x pan; the image overflows, so a larger X offset moves it right). */
+@media (max-width: 767px) {
+  .app-bg {
+    background-position-x: calc(var(--bg-pos-x, 50%) + 10px);
+  }
+}
+
+/* Recipe carousel cards: fixed 240px on mobile so the next card peeks at the
+   right edge; exactly 4 across on desktop (accounting for the gap-6 = 1.5rem
+   gaps). calc needs real CSS here — a Tailwind arbitrary value drops the
+   required spaces around the operators and becomes invalid. */
+.recipe-card {
+  flex-shrink: 0;
+  width: 15rem;
+}
+@media (min-width: 768px) {
+  .recipe-card {
+    width: calc((100% - 3 * 1.5rem) / 4);
+  }
 }
 
 /* Gentle hovering/float for the bees. */
