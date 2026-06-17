@@ -29,7 +29,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
   return (
     <div
       onClick={handleClose}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/5 p-0 backdrop-blur-[2px] transition-opacity duration-300 md:p-6 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/15 p-0 backdrop-blur-[4px] transition-opacity duration-300 md:p-6 ${
         show ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -110,7 +110,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
           </div>
 
           {/* Did You Know card */}
-          <div className="w-full @2xl:w-[42%] md:-mt-28">
+          <div className="w-full @2xl:w-[42%] md:-mt-28 ">
             <div className="bg-glass-soft relative rounded-[28.718px] border border-white/40 p-4 @2xl:p-5">
               <Image src="/quate.png" alt="" width={19} height={19} className="absolute -top-2 left-4 w-3 object-contain @2xl:w-6" />
               <h3 className="text-[clamp(0.95rem,2.2svh,1.25rem)] font-semibold leading-none tracking-normal text-white @2xl:text-[23.93px]">
@@ -132,7 +132,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
           alt=""
           width={300}
           height={300}
-          className="pointer-events-none mt-1 min-h-0 w-full flex-1 select-none object-contain object-bottom @2xl:absolute @2xl:bottom-0 @2xl:right-0 @2xl:mt-0 @2xl:h-auto @2xl:w-56 @2xl:flex-none"
+          className="pointer-events-none min-h-0 w-full  flex-1 select-none object-contain object-bottom-right @2xl:absolute @2xl:bottom-0 @2xl:right-0 @2xl:mt-0 @2xl:h-auto @2xl:w-56 @2xl:flex-none @2xl:object-bottom"
         />
       </div>
     </div>

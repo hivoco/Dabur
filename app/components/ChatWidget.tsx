@@ -17,8 +17,10 @@ const SWITCH_PAUSE = 250; // gap between deleting and typing
 // a class that makes it an in-flow flex item so it can sit in a centred row.
 export default function ChatWidget({
   triggerClassName,
+  desktopBackdrop = false,
 }: {
   triggerClassName?: string;
+  desktopBackdrop?: boolean;
 }) {
   const [open, setOpen] = useState(false); // chat panel open/closed
   const [shown, setShown] = useState(false); // slide-in from the right
@@ -71,7 +73,19 @@ export default function ChatWidget({
         <div
           onClick={() => setOpen(false)}
           aria-hidden
-          className="fixed inset-0 z-60 bg-black/30 backdrop-blur-sm md:hidden"
+          className={`fixed inset-0 z-60 bg-black/60 backdrop-blur-xl ${
+            desktopBackdrop ? "" : "md:hidden"
+          }`}
+        />
+      )}
+      {/* Brand logo shown above the backdrop while the chat is open (mobile). */}
+      {open && (
+        <Image
+          src="/logo-1.png"
+          alt="Logo"
+          width={120}
+          height={109}
+          className="pointer-events-none fixed left-1/2 top-4 z-[65] w-20 -translate-x-1/2 select-none object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:hidden"
         />
       )}
       <div

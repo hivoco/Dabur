@@ -150,7 +150,8 @@ export default function Discover() {
   };
 
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden bg-black/35 backdrop-blur-[5px]">
+    <>
+    <div className="fixed inset-0 z-0 overflow-hidden  bg-black/35 backdrop-blur-[5px]">
       {/* Decorative leaf — top-left corner (flipped 180deg) */}
       <Image
         src="/leaf.png"
@@ -168,7 +169,7 @@ export default function Discover() {
         alt=""
         width={84}
         height={86}
-        className={`pointer-events-none absolute right-0 top-25 md:top-[170.74px] z-0 h-14 w-14 md:h-21.5 md:w-[83.5px] select-none object-cover transition-all duration-700 ease-out ${
+        className={`pointer-events-none absolute right-0 top-25 md:top-[170.74px] z-0 hidden h-14 w-14 select-none md:block md:h-21.5 md:w-[83.5px] object-cover transition-all duration-700 ease-out ${
           mounted ? "translate-x-0 translate-y-0 opacity-100" : "translate-x-full -translate-y-full opacity-0"
         }`}
       />
@@ -304,9 +305,12 @@ export default function Discover() {
       </div>
 
       {active && <RecipePopup recipe={active} onClose={() => setActive(null)} />}
-
-      {/* Floating chat (fixed bottom-right corner) */}
-      <ChatWidget />
     </div>
+
+      {/* Rendered OUTSIDE the blurred root so the chat's own backdrop-blur can
+          actually blur the discover page behind it. Hidden while a recipe popup
+          is open so the floating chat icon doesn't sit on top of it. */}
+      {!active && <ChatWidget />}
+    </>
   );
 }

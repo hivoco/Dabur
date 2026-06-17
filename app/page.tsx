@@ -226,7 +226,7 @@ export default function Home() {
           alt=""
           width={106}
           height={29}
-          className="absolute top-1 left-1/2 w-24 md:w-28  -translate-x-1/2 object-contain"
+          className="absolute top-1 left-1/2 w-20 md:w-28  -translate-x-1/2 object-contain"
         />
 
         <Image
@@ -243,7 +243,7 @@ export default function Home() {
           alt=""
           width={106}
           height={29}
-          className="absolute bottom-1 left-1/2 w-24 md:w-28   rotate-180 -translate-x-1/2 object-contain"
+          className="absolute bottom-1 left-1/2 w-20 md:w-28   rotate-180 -translate-x-1/2 object-contain"
         />
       </div>
 
@@ -266,14 +266,31 @@ export default function Home() {
         position="bottom-[29%] left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
       />
 
-      {/* Decorative bee bouncing in place (top-right) */}
-      {/* <Image
-        src="/bee1.gif"
-        alt=""
-        width={80}
-        height={80}
-        className="bee-bounce pointer-events-none absolute top-36 right-72 z-20 w-18 select-none object-contain hidden md:block"
-      /> */}
+      {/* Decorative bees — top / right, smaller and flipped. The flip
+          (-scale-x-100) lives on the WRAPPER so it doesn't fight the bee-float
+          transform that animates the image. */}
+      {/* <div className="pointer-events-none absolute top-[12%] right-[14%] z-20 w-5 -scale-x-100 select-none md:w-12">
+        <Image
+          src="/bee1.gif"
+          alt=""
+          width={20}
+          height={20}
+          unoptimized
+          className="bee-float w-full object-contain"
+          style={{ animationDelay: "0.3s" }}
+        />
+      </div>
+      <div className="pointer-events-none absolute top-[34%] right-[6%] z-20 w-7  select-none md:w-10">
+        <Image
+          src="/bee1.gif"
+          alt=""
+          width={20}
+          height={20}
+          unoptimized
+          className="bee-float w-full object-contain"
+          style={{ animationDelay: "1.2s" }}
+        />
+      </div> */}
 
 
 
