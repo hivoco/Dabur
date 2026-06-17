@@ -93,8 +93,8 @@ const CAROUSEL_RECIPES = [...RECIPES, ...RECIPES];
 
 // A few bees scattered around (gentle float via the .bee-float class).
 const BEES = [
-  { src: "/bee1.gif", className: "left-[13%] top-[12%] w-8 md:w-12", delay: "0s", flip: false },
-  { src: "/bee1.gif", className: "right-[18%] top-[16%] w-8 md:w-12", delay: "0.6s", flip: true },
+  { src: "/bee1.gif", className: "left-[5%] top-[12%] w-8 md:w-12", delay: "0s", flip: false },
+  { src: "/bee1.gif", className: "right-[10%] top-[8%] w-8 md:w-12", delay: "0.6s", flip: true },
   { src: "/bee1.gif", className: "right-[7%] top-[44%] w-8 md:w-12", delay: "1.1s", flip: false },
   { src: "/bee1.gif", className: "left-[40%] bottom-[28%] w-7 md:w-10", delay: "1.6s", flip: true },
 ];
@@ -224,12 +224,12 @@ export default function Discover() {
           <h2 className="mb-5 text-xl md:text-[28px] font-bold text-center md:text-left leading-none tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)]">
             What Makes It Truly Special
           </h2>
-          <div className="-mr-5 flex gap-4 overflow-x-auto pb-2 scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:flex-wrap md:gap-6 md:overflow-visible md:pb-0">
+          <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:flex-wrap md:gap-6 md:overflow-visible md:pb-0">
             {TOP_CARDS.map((src, i) => (
               <div
                 key={src}
                 style={{ transitionDelay: `${i * 90}ms` }}
-                className={`aspect-[482/586] w-40 shrink-0 md:w-52 relative overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out ${
+                className={`aspect-[482/586] w-[56vw] shrink-0 md:w-52 relative snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out ${
                   mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                 }`}
               >
@@ -264,7 +264,7 @@ export default function Discover() {
               key={i}
               onClick={() => setActive(r)}
               style={{ transitionDelay: `${(TOP_CARDS.length + i) * 90}ms` }}
-              className={`w-40 shrink-0 md:w-52 relative h-50 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-60 ${
+              className={`w-[70vw] shrink-0 md:w-52 relative h-50 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-60 ${
                 mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
               }`}
             >
