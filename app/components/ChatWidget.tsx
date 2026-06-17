@@ -78,29 +78,32 @@ export default function ChatWidget({
           }`}
         />
       )}
-      {/* Brand logo shown above the backdrop while the chat is open (mobile). */}
-      {open && (
-        <Image
-          src="/logo-1.png"
-          alt="Logo"
-          width={120}
-          height={109}
-          className="pointer-events-none fixed left-1/2 top-4 z-[65] w-20 -translate-x-1/2 select-none object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:hidden"
-        />
-      )}
       <div
       className={
         open
-          ? // Open: fixed overlay. On mobile the panel (w-92vw) is centred so
-            // both side margins are equal; on desktop it sits in the
-            // bottom-right corner (right-5).
-            "fixed bottom-5 left-1/2 -translate-x-1/2 z-70 flex flex-col items-end md:left-auto md:translate-x-0 md:right-5"
+          ? // Open: full-height column on mobile so the logo takes its own space
+            // at the top and the panel fills the remaining height below it. The
+            // wrapper is pointer-events-none so taps on the empty area fall
+            // through to the backdrop (which closes the chat). On desktop it
+            // collapses to the bottom-right corner.
+            "pointer-events-none fixed inset-0 z-70 flex flex-col items-center gap-2 px-4 pt-4 pb-5 md:inset-auto md:bottom-5 md:right-5 md:items-end md:gap-0 md:p-0"
           : (triggerClassName ??
             "fixed bottom-5 right-5 z-70 flex flex-col items-end gap-3")
       }
     >
       {open ? (
-        <ChatPanel onClose={() => setOpen(false)} />
+        <>
+          {/* Brand logo — mobile: takes its own space at the top so the panel
+              fills the remaining height below it. Hidden on desktop. */}
+          <Image
+            src="/logo-1.png"
+            alt="Logo"
+            width={120}
+            height={109}
+            className="pointer-events-none w-20 shrink-0 select-none object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:hidden"
+          />
+          <ChatPanel onClose={() => setOpen(false)} />
+        </>
       ) : (
         <>
       {/* Glass card: slides in from the right, then swaps text with a typewriter effect */}
