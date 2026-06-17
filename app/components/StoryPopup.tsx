@@ -132,7 +132,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
           alt=""
           width={300}
           height={300}
-          className="pointer-events-none min-h-0 w-full  flex-1 select-none object-contain object-bottom-right @2xl:absolute @2xl:bottom-0 @2xl:right-0 @2xl:mt-0 @2xl:h-auto @2xl:w-56 @2xl:flex-none @2xl:object-bottom"
+          className="pointer-events-none relative z-20 -mt-5.75 min-h-0 w-full  flex-1 select-none object-contain object-bottom-right @2xl:absolute @2xl:bottom-0 @2xl:right-0 @2xl:mt-0 @2xl:h-auto @2xl:w-56 @2xl:flex-none @2xl:object-bottom"
         />
       </div>
     </div>
