@@ -5,11 +5,13 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import { useEscClose } from "../lib/useEscClose";
 
+export type Ingredient = { name: string; icon: string };
+
 export type Recipe = {
   src: string;
   title: string;
   why: string;
-  ingredients: string[];
+  ingredients: Ingredient[];
   method: string[];
 };
 
@@ -17,15 +19,6 @@ function StarIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="#E5AF62" aria-hidden>
       <path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.4l1.1-6.5L2.6 9.3l6.5-.9L12 2.5z" />
-    </svg>
-  );
-}
-
-// Generic placeholder icon for ingredients (swap with real per-ingredient icons).
-function IngredientIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M12 3c3.5 3.8 5.5 6.8 5.5 9.5a5.5 5.5 0 1 1-11 0C6.5 9.8 8.5 6.8 12 3Z" />
     </svg>
   );
 }
@@ -145,12 +138,18 @@ export default function RecipePopup({
             <Section label="INGREDIENTS">
               <div className="grid grid-cols-4 gap-x-2 gap-y-4">
                 {recipe.ingredients.map((ing) => (
-                  <div key={ing} className="flex flex-col items-center gap-1.5 text-center">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-full border border-[#4B5320] bg-[#4B532026]/30 text-black">
-                      <IngredientIcon />
+                  <div key={ing.name} className="flex flex-col items-center gap-1.5 text-center">
+                    <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-[#4B5320] bg-[#4B532026]/30">
+                      <Image
+                        src={ing.icon}
+                        alt={ing.name}
+                        width={48}
+                        height={48}
+                        className="h-full w-full object-contain p-1.5"
+                      />
                     </span>
                     <span className="text-[10px] font-medium leading-tight text-[#3a2a12]">
-                      {ing}
+                      {ing.name}
                     </span>
                   </div>
                 ))}

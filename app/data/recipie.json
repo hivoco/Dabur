@@ -1,0 +1,148 @@
+[
+  {
+    "card": "card1",
+    "title": "Litchi Honey Citrus Sparkler",
+    "ingredients": [
+      { "name": "Litchi Honey", "icon": "/discover/icons/card1/1.png" },
+      { "name": "Lime Juice", "icon": "/discover/icons/card1/2.png" },
+      { "name": "Orange Juice", "icon": "/discover/icons/card1/3.png" },
+      { "name": "Sparkling Water", "icon": "/discover/icons/card1/4.png" },
+      { "name": "Mint", "icon": "/discover/icons/card1/5.png" },
+      { "name": "Grapefruit slice", "icon": "/discover/icons/card1/6.png" }
+    ],
+    "method": [
+      "Stir honey with lime juice till it dissolves.",
+      "Add orange juice and ice.",
+      "Top with sparkling water.",
+      "Garnish with mint and grapefruit."
+    ],
+    "whyItWorks": "Bright citrus enhances the honey's delicate floral-litchi notes while keeping the drink light, crisp, and refreshing."
+  },
+  {
+    "card": "card2",
+    "title": "Litchi Honey Tropical Salad",
+    "ingredients": [
+      { "name": "Litchi Honey", "icon": "/discover/icons/card2/1.png" },
+      { "name": "Mango", "icon": "/discover/icons/card2/2.png" },
+      { "name": "Cucumber", "icon": "/discover/icons/card2/3.png" },
+      { "name": "Avocado", "icon": "/discover/icons/card2/4.png" },
+      { "name": "Rocket Leaves", "icon": "/discover/icons/card2/5.png" },
+      { "name": "Olive Juice", "icon": "/discover/icons/card2/6.png" },
+      { "name": "Lime Juice", "icon": "/discover/icons/card2/7.png" }
+    ],
+    "method": [
+      "Stir honey with lime juice till it dissolves.",
+      "Add orange juice and ice.",
+      "Top with sparkling water.",
+      "Garnish with mint and grapefruit."
+    ],
+    "whyItWorks": "Litchi honey adds delicate sweetness that enhances tropical fruits without overpowering their fresh, vibrant flavours."
+  },
+  {
+    "card": "card3",
+    "title": "Litchi Honey Yogurt Bowl",
+    "ingredients": [
+      { "name": "Litchi Honey", "icon": "/discover/icons/card3/1.png" },
+      { "name": "Thick Yogurt", "icon": "/discover/icons/card3/2.png" },
+      { "name": "Berries", "icon": "/discover/icons/card3/3.png" },
+      { "name": "Chia Seeds", "icon": "/discover/icons/card3/4.png" },
+      { "name": "Toasted Almonds", "icon": "/discover/icons/card3/5.png" }
+    ],
+    "method": [
+      "Spoon yogurt into a bowl.",
+      "Top with berries, almonds, and chia seeds.",
+      "Finish with a generous drizzle of litchi honey.",
+      "Serve immediately."
+    ],
+    "whyItWorks": "The floral honey complements creamy yogurt beautifully, adding light sweetness while keeping the bowl wholesome and refreshing."
+  },
+  {
+    "card": "card4",
+    "title": "Coconut Lime Cooler",
+    "ingredients": [
+      { "name": "Litchi Honey", "icon": "/discover/icons/card4/1.png" },
+      { "name": "Lime Juice", "icon": "/discover/icons/card4/2.png" },
+      { "name": "Crushed Ice", "icon": "/discover/icons/card4/3.png" },
+      { "name": "Coconut water", "icon": "/discover/icons/card4/4.png" }
+    ],
+    "method": [
+      "Shake coconut water, lime juice, and litchi honey together.",
+      "Pour over crushed ice.",
+      "Stir gently.",
+      "Serve chilled."
+    ],
+    "whyItWorks": "The tropical freshness of coconut and lime pairs naturally with the subtle floral notes of litchi honey."
+  },
+  {
+    "card": "card5",
+    "title": "Litchi Honey Malai Toast",
+    "ingredients": [
+      { "name": "Litchi Honey", "icon": "/discover/icons/card5/1.png" },
+      { "name": "Bread", "icon": "/discover/icons/card5/2.png" },
+      { "name": "Fruits", "icon": "/discover/icons/card5/3.png" },
+      { "name": "Fresh Milk Malai", "icon": "/discover/icons/card5/4.png" }
+    ],
+    "method": [
+      "Toast the bread in a frypan.",
+      "Spread chilled Malai over warm toast.",
+      "Top with fruits of your choice.",
+      "Drizzle generously with litchi honey."
+    ],
+    "whyItWorks": "The creamy malai and fresh fruits pair beautifully with the subtle floral sweetness of the honey."
+  },
+  {
+    "card": "card6",
+    "title": "Litchi Honey Glazed Roasted Carrots",
+    "ingredients": [
+      { "name": "Litchi Honey", "icon": "/discover/icons/card6/1.png" },
+      { "name": "Carrot Strips", "icon": "/discover/icons/card6/2.png" },
+      { "name": "Olive Oil", "icon": "/discover/icons/card6/3.png" },
+      { "name": "Salt", "icon": "/discover/icons/card6/4.png" },
+      { "name": "Thyme", "icon": "/discover/icons/card6/5.png" }
+    ],
+    "method": [
+      "Roast carrot strips with olive oil and salt until tender.",
+      "Arrange on a serving plate.",
+      "Finish with thyme.",
+      "Drizzle warm litchi honey before serving."
+    ],
+    "whyItWorks": "The honey lightly caramelises the carrots while its floral notes keep the dish refined and fresh."
+  },
+  {
+    "card": "card7",
+    "title": "Litchi Honey Overnight Oats",
+    "ingredients": [
+      { "name": "Litchi Honey", "icon": "/discover/icons/card7/1.png" },
+      { "name": "Oats", "icon": "/discover/icons/card7/2.png" },
+      { "name": "Milk", "icon": "/discover/icons/card7/3.png" },
+      { "name": "Chia Seeds", "icon": "/discover/icons/card7/4.png" },
+      { "name": "Banana", "icon": "/discover/icons/card7/5.png" },
+      { "name": "Nuts", "icon": "/discover/icons/card7/6.png" }
+    ],
+    "method": [
+      "Combine oats, chia seeds, milk, and litchi honey.",
+      "Refrigerate overnight.",
+      "Top with sliced bananas and nuts.",
+      "Serve chilled."
+    ],
+    "whyItWorks": "Litchi honey adds natural sweetness and subtle fruity floral notes to this creamy, nourishing breakfast."
+  },
+  {
+    "card": "card8",
+    "title": "Litchi Honey Shrikhand",
+    "ingredients": [
+      { "name": "Litchi Honey", "icon": "/discover/icons/card8/1.png" },
+      { "name": "Hung Curd", "icon": "/discover/icons/card8/2.png" },
+      { "name": "Cardamom", "icon": "/discover/icons/card8/3.png" },
+      { "name": "Saffron", "icon": "/discover/icons/card8/4.png" },
+      { "name": "Pistachios", "icon": "/discover/icons/card8/5.png" }
+    ],
+    "method": [
+      "Whisk hung curd with cardamom, saffron, and litchi honey until smooth.",
+      "Chill well.",
+      "Garnish with pistachios.",
+      "Serve cold."
+    ],
+    "whyItWorks": "Litchi honey gives shrikhand a lighter sweetness and delicate floral aroma that feels elegant and refreshing."
+  }
+]

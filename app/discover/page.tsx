@@ -5,91 +5,20 @@ import Image from "next/image";
 import Link from "next/link";
 import RecipePopup, { type Recipe } from "../components/RecipePopup";
 import ChatWidget from "../components/ChatWidget";
+import recipeData from "../data/recipie.json";
 
 const TOP_CARDS = [1, 2, 3, 4].map((n) => `/discover/${n}.png`);
 
-const RECIPES: Recipe[] = [
-  {
-    src: "/discover/b1.png",
-    title: "Litchi Honey Citrus Sparkler",
-    why: "Bright citrus enhances the honey's delicate floral-litchi notes while keeping the drink light, crisp, and refreshing.",
-    ingredients: [
-      "Litchi Honey",
-      "Lime Juice",
-      "Orange Juice",
-      "Sparkling Water",
-      "Mint",
-      "Grapefruit slice",
-    ],
-    method: [
-      "Stir honey with lime juice till it dissolves.",
-      "Add orange juice and ice.",
-      "Top with sparkling water.",
-      "Garnish with mint and grapefruit.",
-    ],
-  },
-  {
-    src: "/discover/b2.png",
-    title: "Litchi Honey Tropical Salad",
-    why: "Litchi honey balances the tangy tropical fruit with a smooth floral sweetness.",
-    ingredients: [
-      "Litchi Honey",
-      "Mango",
-      "Pineapple",
-      "Cucumber",
-      "Mixed Greens",
-      "Lime",
-    ],
-    method: [
-      "Whisk honey with lime juice for the dressing.",
-      "Chop mango, pineapple and cucumber.",
-      "Toss with mixed greens.",
-      "Drizzle the dressing and serve.",
-    ],
-  },
-  {
-    src: "/discover/b3.png",
-    title: "Litchi Honey Overnight Oats",
-    why: "Slow-soaked oats let the litchi honey infuse every spoonful with gentle sweetness.",
-    ingredients: [
-      "Litchi Honey",
-      "Rolled Oats",
-      "Milk",
-      "Chia Seeds",
-      "Banana",
-      "Berries",
-    ],
-    method: [
-      "Mix oats, milk and chia seeds.",
-      "Stir in litchi honey.",
-      "Refrigerate overnight.",
-      "Top with banana and berries.",
-    ],
-  },
-  {
-    src: "/discover/b4.png",
-    title: "Litchi Honey Malai Toast",
-    why: "Creamy malai and litchi honey create a rich, indulgent toast with floral depth.",
-    ingredients: [
-      "Litchi Honey",
-      "Bread",
-      "Malai",
-      "Pistachios",
-      "Saffron",
-      "Rose petals",
-    ],
-    method: [
-      "Toast the bread till golden.",
-      "Spread a layer of malai.",
-      "Drizzle litchi honey generously.",
-      "Garnish with pistachios and saffron.",
-    ],
-  },
-];
-
-// 8 cards for the carousel: the 4 recipes repeated, so desktop shows 4 and
-// auto-slides to the next 4. Swap in 8 distinct recipes when available.
-const CAROUSEL_RECIPES = [...RECIPES, ...RECIPES];
+// Recipes are data-driven from app/data/recipie.json. The Nth entry (card1..8)
+// maps to its hero image at /discover/bottom-card/bN.png; every ingredient
+// carries its own icon path, all rendered dynamically in the RecipePopup.
+const RECIPES: Recipe[] = recipeData.map((r, i) => ({
+  src: `/discover/bottom-card/b${i + 1}.png`,
+  title: r.title,
+  why: r.whyItWorks,
+  ingredients: r.ingredients,
+  method: r.method,
+}));
 
 // A few bees scattered around (gentle float via the .bee-float class).
 const BEES = [
@@ -203,105 +132,109 @@ export default function Discover() {
         <Image src="/cross.svg" alt="" width={21} height={21} unoptimized className="h-full w-full object-contain" />
       </Link>
 
-      {/* Scrollable content layer — decorations above stay fixed */}
-      <div className="absolute inset-0 z-10 overflow-hidden [@media(max-width:767px)_and_(max-height:680px)]:overflow-y-auto">
-      {/* Logo */}
-      <div className="flex justify-center pt-6">
-        <Image
-          src="/logo-1.png"
-          alt="Logo"
-          width={120}
-          height={109}
-          priority 
-          className="w-20 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]"
-        />
-      </div>
+      {/* Content layer — a flex column that fills the viewport so everything
+          fits inside 100svh on ANY screen. The logo sits at the top; the two
+          sections are centred in the remaining height. Sizes, gaps and paddings
+          all scale with svh, so nothing overflows or has to scroll on short
+          screens, and the spacing stays even on tall ones. */}
+      <div className="absolute inset-0 z-10 flex flex-col overflow-hidden">
+        {/* Logo */}
+        <div className="flex shrink-0 justify-center pt-[clamp(0.5rem,2.5svh,1.5rem)] pb-[clamp(0.25rem,1svh,0.75rem)]">
+          <Image
+            src="/logo-1.png"
+            alt="Logo"
+            width={120}
+            height={109}
+            priority
+            className="w-[clamp(56px,9svh,80px)] object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]"
+          />
+        </div>
 
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl px-5 pb-6 pt-6  md:px-10">
-        {/* What Makes It Truly Special */}
-        <div className="mx-auto w-full md:max-w-[910px]">
-          <h2 className="mb-5 text-xl md:text-[28px] font-bold text-center md:text-left leading-none tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)]">
-            What Makes It Truly Special
-          </h2>
-          <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:flex-wrap md:gap-6 md:overflow-visible md:pb-0">
-            {TOP_CARDS.map((src, i) => (
+        {/* Sections — centred in the leftover height with a scaling gap. */}
+        <div className="flex min-h-0 flex-1 flex-col justify-center gap-[clamp(1rem,4svh,2.25rem)] px-5 pb-[clamp(0.75rem,2svh,1.5rem)] md:px-10">
+          {/* What Makes It Truly Special */}
+          <div className="mx-auto w-full md:max-w-[910px]">
+            <h2 className="mb-[clamp(0.5rem,1.8svh,1.25rem)] text-center text-xl font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[28px]">
+              What Makes It Truly Special
+            </h2>
+            <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:flex-wrap md:gap-6 md:overflow-visible md:pb-0">
+              {TOP_CARDS.map((src, i) => (
+                <div
+                  key={src}
+                  style={{ transitionDelay: `${i * 90}ms` }}
+                  className={`relative aspect-[482/586] h-[clamp(160px,30svh,253px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out md:h-auto md:w-52 ${
+                    mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                  }`}
+                >
+                  <Image src={src} alt="" fill sizes="(max-width: 768px) 200px, 240px" className="object-contain" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Elevate your recipes */}
+          <div className="mx-auto w-full md:max-w-[910px]">
+            <h2 className="mb-[clamp(0.5rem,1.8svh,1.25rem)] text-center text-xl font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[28px]">
+              Elevate your recipes with a drizzle of Litchi honey
+            </h2>
+            {/* Carousel: auto-advances + manual scroll + prev/next arrows.
+                Desktop shows 4 cards; mobile is full-bleed on the right (-mr-5)
+                so the next card peeks at the screen edge. */}
+            <div className="relative">
               <div
-                key={src}
-                style={{ transitionDelay: `${i * 90}ms` }}
-                className={`aspect-[482/586] w-[56vw] shrink-0 md:w-52 relative snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out ${
-                  mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                }`}
+                ref={carouselRef}
+                onMouseEnter={() => {
+                  pausedRef.current = true;
+                }}
+                onMouseLeave={() => {
+                  pausedRef.current = false;
+                }}
+                className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth  scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:gap-6 md:pb-0 pb-10"
               >
-                <Image src={src} alt="" fill sizes="(max-width: 768px) 200px, 240px" className="object-contain" />
+                {RECIPES.map((r, i) => (
+                  <button
+                    type="button"
+                    key={i}
+                    onClick={() => setActive(r)}
+                    style={{ transitionDelay: `${(TOP_CARDS.length + i) * 90}ms` }}
+                    className={`relative h-[clamp(145px,26svh,240px)] w-[70vw] shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-60 md:w-52 ${
+                      mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                    }`}
+                  >
+                    <Image src={r.src} alt={r.title} fill sizes="(max-width: 768px) 240px, 300px" className="object-cover" />
+                    <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/30 to-transparent p-3">
+                      <p className="text-sm font-semibold leading-tight text-white">
+                        {r.title}
+                      </p>
+                    </div>
+                  </button>
+                ))}
               </div>
-            ))}
+
+              {/* Prev / next arrows, vertically centred over the cards. */}
+              <button
+                type="button"
+                aria-label="Previous"
+                onClick={() => scrollByCard(-1)}
+                className="absolute left-1 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-[2px] transition hover:bg-black/50 md:flex"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                aria-label="Next"
+                onClick={() => scrollByCard(1)}
+                className="absolute right-1 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-[2px] transition hover:bg-black/50 md:flex"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Elevate your recipes */}
-        <div className="mx-auto mt-6 w-full md:max-w-[910px]">
-          <h2 className="mb-5 text-xl md:text-[28px] font-bold text-center md:text-left leading-[29.57px] tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)]">
-            Elevate your recipes with a drizzle of Litchi honey
-          </h2>
-          {/* Carousel: auto-advances + manual scroll + prev/next arrows.
-              Desktop shows exactly 4 (.recipe-card); mobile is full-bleed on the
-              right (-mr-5) so the next card peeks at the screen edge. */}
-          <div className="relative">
-          <div
-            ref={carouselRef}
-            onMouseEnter={() => {
-              pausedRef.current = true;
-            }}
-            onMouseLeave={() => {
-              pausedRef.current = false;
-            }}
-            className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:gap-6 md:pb-0"
-          >
-            {CAROUSEL_RECIPES.map((r, i) => (
-            <button
-              type="button"
-              key={i}
-              onClick={() => setActive(r)}
-              style={{ transitionDelay: `${(TOP_CARDS.length + i) * 90}ms` }}
-              className={`w-[70vw] shrink-0 md:w-52 relative h-50 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-60 ${
-                mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-              }`}
-            >
-              <Image src={r.src} alt={r.title} fill sizes="(max-width: 768px) 240px, 300px" className="object-cover" />
-              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/30 to-transparent p-3">
-                <p className="text-sm font-semibold leading-tight text-white">
-                  {r.title}
-                </p>
-              </div>
-            </button>
-          ))}
-          </div>
-
-          {/* Prev / next arrows, vertically centred over the cards. */}
-          <button
-            type="button"
-            aria-label="Previous"
-            onClick={() => scrollByCard(-1)}
-            className="absolute left-1 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 md:flex items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-[2px] transition hover:bg-black/50"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            aria-label="Next"
-            onClick={() => scrollByCard(1)}
-            className="absolute right-1 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 md:flex items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-[2px] transition hover:bg-black/50"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
-          </div>
-        </div>
-      </div>
       </div>
 
       {active && <RecipePopup recipe={active} onClose={() => setActive(null)} />}

@@ -4,14 +4,18 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import VideoPlayer from "./VideoPlayer";
 import { useEscClose } from "../lib/useEscClose";
-
-// "Did You Know?" body — supports HTML markup (e.g. <br/>, <strong>) so it can
-// be made dynamic later. Keep this trusted (not user-supplied) input.
-const DID_YOU_KNOW_HTML =
-  "Every spoon of litchi honey holds the work of bees visiting millions of flowers over incredible distances equal to three times around the Earth.";
+import womenData from "../data/women.json";
 
 export default function StoryPopup({ onClose }: { onClose: () => void }) {
   const [show, setShow] = useState(false);
+
+  // Pick ONE of the women stories at random each time the popup opens, so a
+  // returning visitor may see a different video / message / image. Chosen in a
+  // lazy initialiser — the popup only ever mounts on a user click (client-side),
+  // so Math.random() here can't cause an SSR hydration mismatch.
+  const [story] = useState(
+    () => womenData[Math.floor(Math.random() * womenData.length)]
+  );
 
   useEffect(() => {
     const r = requestAnimationFrame(() => setShow(true));
@@ -29,7 +33,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
   return (
     <div
       onClick={handleClose}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/15 p-0 backdrop-blur-[4px] transition-opacity duration-300 md:p-6 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/15 p-0 backdrop-blur-[4px] transition-opacity duration-300 md:items-center md:px-6 md:pb-6 md:pt-26 ${
         show ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -44,7 +48,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
       */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`bg-glass-dark @container relative flex h-svh w-full flex-col overflow-hidden border-white/40 shadow-[0_8px_60px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-all duration-500 ease-out md:h-[90vh] md:max-h-155 md:max-w-290 md:rounded-[28px] md:border ${
+        className={`bg-glass-dark @container relative flex h-svh w-full flex-col overflow-hidden border-white/40 shadow-[0_8px_60px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-all duration-500 ease-out md:h-[calc(100svh-128px)] md:max-h-155 md:max-w-290 md:rounded-[28px] md:border ${
           show ? "translate-x-0 opacity-100" : "-translate-x-32 opacity-0"
         }`}
       >
@@ -80,7 +84,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
         <div className="flex shrink-0 flex-col items-center px-6 pt-1 @2xl:pt-6">
           <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-20 object-contain @2xl:w-32" />
           <h2 className="text-center text-[clamp(1rem,2.6svh,1.4rem)] font-semibold text-white [text-shadow:0px_4px_4px_#000000] @2xl:text-[26px]">
-            Behind Every Drop, A Story of Empowerment
+            {story.title}
           </h2>
           <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-20 rotate-180 object-contain @2xl:w-32" />
         </div>
@@ -91,7 +95,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
           <div className="flex w-full flex-col items-center @2xl:w-[58%]">
             <div className="relative w-full">
               <VideoPlayer
-                src="/woman2.mp4"
+                src={story.video}
                 className="h-[26svh] w-full overflow-hidden rounded-[17.39px] border border-white shadow-lg @2xl:aspect-video @2xl:h-auto"
               />
               {/* JEEViKA badge — mobile, bottom-right corner of the video */}
@@ -104,8 +108,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
               />
             </div>
             <p className="mt-2 text-center text-[clamp(0.78rem,1.9svh,1rem)] font-semibold text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] @2xl:mt-4 @2xl:text-lg">
-              Crafted in partnership with JEEViKA, a Bihar Government initiative
-              supporting rural women livelihoods.
+              {story.caption}
             </p>
           </div>
 
@@ -116,10 +119,9 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
               <h3 className="text-[clamp(0.95rem,2.2svh,1.25rem)] font-semibold leading-none tracking-normal text-white @2xl:text-[23.93px]">
                 Did You Know?
               </h3>
-              <p
-                className="mt-2 text-[clamp(0.72rem,1.65svh,0.95rem)] font-semibold leading-snug tracking-normal text-white @2xl:text-[15px]"
-                dangerouslySetInnerHTML={{ __html: DID_YOU_KNOW_HTML }}
-              />
+              <p className="mt-2 text-[clamp(0.72rem,1.65svh,0.95rem)] font-semibold leading-snug tracking-normal text-white @2xl:text-[15px]">
+                {story.didYouKnow}
+              </p>
               <Image src="/quate.png" alt="" width={19} height={19} className="absolute -bottom-2 right-4 w-3 rotate-180 object-contain @2xl:w-6" />
             </div>
           </div>
@@ -128,7 +130,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
         {/* Woman — mobile: flexes to fill the leftover space and touches the
             bottom; desktop: cutout pinned to the bottom-right corner. */}
         <Image
-          src="/woman.png"
+          src={story.image}
           alt=""
           width={300}
           height={300}
