@@ -46,7 +46,7 @@ function SeekIcon({ dir }: { dir: "back" | "forward" }) {
           </>
         )}
       </svg>
-      <span className="absolute text-[6px] font-bold leading-none">20</span>
+      <span className="absolute text-[6px] font-bold leading-none">10</span>
     </span>
   );
 }
