@@ -2,7 +2,7 @@ import { ChatGroq } from "@langchain/groq";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { RunnableSequence } from "@langchain/core/runnables";
-import { AIMessage, HumanMessage, type BaseMessage } from "@langchain/core/messages";
+import { AIMessage, HumanMessage, SystemMessage, type BaseMessage } from "@langchain/core/messages";
 import type { Document } from "@langchain/core/documents";
 import { getVectorStore } from "@/app/lib/rag";
 
@@ -25,17 +25,52 @@ export function OPTIONS() {
 // wording and contact details live in a single place.
 const OUT_OF_SCOPE_MESSAGE = `I'm sorry, but I'm unable to provide the information you're looking for at the moment.
 
-For detailed assistance regarding your query, please contact our **Customer Care team** at **[1800 103 1644](tel:18001031644)** or email us at **[daburcares@dabur.com](mailto:daburcares@dabur.com)**.
+For detailed assistance regarding your query, please contact our **Customer Care Team** at **[1800 103 1644](tel:18001031644)** or email us at **[daburcares@dabur.com](mailto:daburcares@dabur.com)**.
 
 You can also visit **[www.daburhoney.com](https://www.daburhoney.com)** for more information about Dabur Honey products and services.`;
 
-const LEGAL_DISCLAIMER = `*data shown as per public domain.*
+const LEGAL_DISCLAIMER = `**Disclaimer:**
 
-For detailed assistance regarding your query, please contact our **Customer Care team** at **[1800 103 1644](tel:18001031644)** or email us at **[daburcares@dabur.com](mailto:daburcares@dabur.com)**.
+The above information is based on publicly available data and is provided for general awareness. For any specific product-related queries or further assistance, please contact **Dabur Consumer Care** at **[1800 103 1644](tel:18001031644)** or write to **[daburcares@dabur.com](mailto:daburcares@dabur.com)**.
 
-You can also visit **[www.daburhoney.com](https://www.daburhoney.com)** for more information about Dabur Honey products and services.
+For more information about Dabur Honey products, please visit **[www.daburhoney.com](https://www.daburhoney.com)**.
 
-Our team will be happy to assist you.`;
+We will be happy to assist you.`;
+
+// Shown when the user's message is flagged as profane/abusive (see isAbusive).
+const PROFANITY_MESSAGE =
+  "I may have missed your question. Could you tell me what you'd like help with?";
+
+// LLM-based profanity/abuse detector. A fixed word list can't catch slang,
+// deliberate misspellings, or Hindi/Hinglish (Hindi written in English), so we
+// ask the model for a YES/NO judgement instead. Fails OPEN (returns false) on
+// any error, so a transient classifier failure never blocks a real question.
+async function isAbusive(message: string): Promise<boolean> {
+  try {
+    const classifier = new ChatGroq({
+      apiKey: process.env.GROQ_API_KEY,
+      model: "llama-3.1-8b-instant",
+      temperature: 0,
+      maxTokens: 3,
+    });
+    const res = await classifier.invoke([
+      new SystemMessage(
+        "You are a strict content-safety classifier. Decide whether the user's message contains profanity, sexual content, slurs, hate speech, personal insults, or abusive/offensive slang in ANY language — including Hindi or Hinglish (Hindi written with English letters) and deliberately misspelled or obfuscated words. Reply with ONLY one word: YES if it does, otherwise NO."
+      ),
+      new HumanMessage(message),
+    ]);
+    const text =
+      typeof res.content === "string"
+        ? res.content
+        : Array.isArray(res.content)
+          ? res.content.map((c) => (typeof c === "string" ? c : "")).join("")
+          : "";
+    return text.trim().toUpperCase().startsWith("Y");
+  } catch (err) {
+    console.error("profanity check error", err);
+    return false; // fail open — don't block real questions on a classifier error
+  }
+}
 
 const SYSTEM_PROMPT = `You are the "Chief Honey Officer" (CHO), a warm, helpful assistant for Dabur Litchi Honey.
 Answer the user's question using ONLY the context below, which is extracted from a Q&A document.
@@ -60,6 +95,20 @@ export async function POST(req: Request) {
       return new Response("Missing 'message'", { status: 400 });
     }
 
+    if (!process.env.GROQ_API_KEY) {
+      return new Response("GROQ_API_KEY is not set", { status: 500 });
+    }
+
+    // Profanity / abuse guard — classified by the LLM so it catches slang,
+    // obfuscation and Hindi/Hinglish that a fixed word list cannot. Deflect
+    // politely and skip the normal answer when flagged.
+    if (await isAbusive(message)) {
+      return new Response(PROFANITY_MESSAGE, {
+        status: 200,
+        headers: { "Content-Type": "text/plain; charset=utf-8", ...CORS },
+      });
+    }
+
     // Short-term memory: the last few turns the client kept in its tab session,
     // converted to LangChain messages so the model has conversational context.
     const historyMsgs: BaseMessage[] = (Array.isArray(history) ? history : [])
@@ -70,10 +119,6 @@ export async function POST(req: Request) {
           ? new AIMessage(h.content as string)
           : new HumanMessage(h.content as string)
       );
-
-    if (!process.env.GROQ_API_KEY) {
-      return new Response("GROQ_API_KEY is not set", { status: 500 });
-    }
 
     // Retrieve the most relevant chunks from the FAISS index.
     let store;

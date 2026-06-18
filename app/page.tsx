@@ -252,8 +252,8 @@ export default function Home() {
         side="left"
         bee="/bee1.gif"
         onClick={openStory}
-        text="Meet our <br/> Women <br/> Harvesters"
-        position="top-[42%] md:top-[35%] left-0 md:left-1/2 translate-x-0 md:-translate-x-[250px]"
+        text="Meet Our <br/> Women <br/> Harvesters"
+        position="top-[42%] md:top-[39%] left-0 md:left-1/2 translate-x-0 md:-translate-x-[250px]"
       />
 
 

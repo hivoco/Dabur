@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type Message = { role: "user" | "bot"; text: string };
 
@@ -229,6 +230,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
               ) : m.text ? (
                 <div className="space-y-1.5 break-words [&_a]:underline [&_h1]:text-sm [&_h1]:font-bold [&_h2]:font-bold [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:list-decimal [&_ol]:pl-4 [&_p]:leading-snug [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-4">
                   <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
                     urlTransform={(url) =>
                       url.startsWith("tel:") ? url : defaultUrlTransform(url)
                     }

@@ -22,7 +22,7 @@ const RECIPES: Recipe[] = recipeData.map((r, i) => ({
 
 // A few bees scattered around (gentle float via the .bee-float class).
 const BEES = [
-  { src: "/bee1.gif", className: "left-[5%] top-[12%] w-8 md:w-12", delay: "0s", flip: false },
+  { src: "/bee1.gif", className: "left-[12%] md:left-[5%] top-[7%] w-8 md:w-12", delay: "0s", flip: true },
   { src: "/bee1.gif", className: "right-[10%] top-[8%] w-8 md:w-12", delay: "0.6s", flip: true },
   { src: "/bee1.gif", className: "right-[7%] top-[44%] w-8 md:w-12", delay: "1.1s", flip: false },
   { src: "/bee1.gif", className: "left-[40%] bottom-[28%] w-7 md:w-10", delay: "1.6s", flip: true },
@@ -175,7 +175,7 @@ export default function Discover() {
           {/* Elevate your recipes */}
           <div className="mx-auto w-full md:max-w-[910px]">
             <h2 className="mb-[clamp(0.5rem,1.8svh,1.25rem)] text-center text-xl font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[28px]">
-              Elevate your recipes with a drizzle of Litchi Honey
+              Elevate your Recipes with a Drizzle of Litchi Honey
             </h2>
             {/* Carousel: auto-advances + manual scroll + prev/next arrows.
                 Desktop shows 4 cards; mobile is full-bleed on the right (-mr-5)

@@ -187,10 +187,10 @@ export default function VideoPlayer({
         <button type="button" onClick={togglePlay} aria-label={playing ? "Pause" : "Play"} className={btn}>
           {playing ? <PauseIcon /> : <PlayIcon />}
         </button>
-        <button type="button" onClick={() => seek(-20)} aria-label="Back 20 seconds" className={btn}>
+        <button type="button" onClick={() => seek(-10)} aria-label="Back 10 seconds" className={btn}>
           <SeekIcon dir="back" />
         </button>
-        <button type="button" onClick={() => seek(20)} aria-label="Forward 20 seconds" className={btn}>
+        <button type="button" onClick={() => seek(10)} aria-label="Forward 10 seconds" className={btn}>
           <SeekIcon dir="forward" />
         </button>
 
