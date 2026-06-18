@@ -27,14 +27,14 @@
       { "name": "Cucumber", "icon": "/discover/icons/card2/3.png" },
       { "name": "Avocado", "icon": "/discover/icons/card2/4.png" },
       { "name": "Rocket Leaves", "icon": "/discover/icons/card2/5.png" },
-      { "name": "Olive Juice", "icon": "/discover/icons/card2/6.png" },
+      { "name": "Olive oil", "icon": "/discover/icons/card2/6.png" },
       { "name": "Lime Juice", "icon": "/discover/icons/card2/7.png" }
     ],
     "method": [
-      "Stir honey with lime juice till it dissolves.",
-      "Add orange juice and ice.",
-      "Top with sparkling water.",
-      "Garnish with mint and grapefruit."
+      "Toss chopped fruits and greens together.",
+      "Whisk olive oil, lime juice, and litchi honey into a dressing.",
+      "Drizzle over the salad.",
+      "Serve fresh."
     ],
     "whyItWorks": "Litchi honey adds delicate sweetness that enhances tropical fruits without overpowering their fresh, vibrant flavours."
   },
