@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import ChatPanel from "./ChatPanel";
+import ChatPanel, { STORAGE_KEY } from "./ChatPanel";
 import { useEscClose } from "../lib/useEscClose";
 
 const GREETING = "Hi, I’m your Chief Honey Officer (CHO)";
@@ -27,8 +27,18 @@ export default function ChatWidget({
   const [text, setText] = useState(GREETING); // animated text
   const [showBee, setShowBee] = useState(true); // bee collapses on switch
 
+  // Close the chat AND wipe the saved history so reopening starts fresh.
+  const closeChat = () => {
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // ignore storage errors (e.g. private mode)
+    }
+    setOpen(false);
+  };
+
   useEscClose(() => {
-    if (open) setOpen(false);
+    if (open) closeChat();
   });
 
   useEffect(() => {
@@ -71,7 +81,7 @@ export default function ChatWidget({
       {/* Mobile: blur + dim the page behind the open chat panel. */}
       {open && (
         <div
-          onClick={() => setOpen(false)}
+          onClick={closeChat}
           aria-hidden
           className={`fixed inset-0 z-60 bg-black/60 backdrop-blur-xl ${
             desktopBackdrop ? "" : "md:hidden"
@@ -102,7 +112,7 @@ export default function ChatWidget({
             height={109}
             className="pointer-events-none w-20 shrink-0 select-none object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:hidden"
           />
-          <ChatPanel onClose={() => setOpen(false)} />
+          <ChatPanel onClose={closeChat} />
         </>
       ) : (
         <>

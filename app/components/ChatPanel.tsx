@@ -6,9 +6,15 @@ import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 
 type Message = { role: "user" | "bot"; text: string };
 
-// Persist the conversation in the browser tab (cleared when the tab closes).
-const STORAGE_KEY = "cho-chat-history";
+// Persist the conversation in the browser tab (cleared when the tab closes, and
+// also when the chat popup is closed — see ChatWidget). Exported so the widget
+// can wipe it on close.
+export const STORAGE_KEY = "cho-chat-history";
 const MAX_HISTORY = 10; // keep the last 10 messages
+
+// Typewriter pacing for the bot reply so it reads as a natural, typed-out
+// message instead of appearing all at once. Tune TYPE_TICK_MS to taste.
+const TYPE_TICK_MS = 30; // ms between reveal frames
 
 // Where the chat API lives. Empty = same origin (the deployed app itself).
 // Set NEXT_PUBLIC_API_BASE_URL to call a different backend (e.g. from local dev).
@@ -106,24 +112,55 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
     setInput("");
     setMessages((m) => [...m, { role: "user", text }, { role: "bot", text: "" }]);
     setStreaming(true);
-    try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, history }),
+
+    let buffer = ""; // full text received from the server so far
+    let shown = 0; // characters revealed to the user so far
+    let finished = false; // server stream has ended
+
+    // Typewriter: reveal the buffered text a little at a time so the reply reads
+    // as if it's being typed instead of appearing instantly. It catches up
+    // faster when a lot is buffered, so it never lags far behind the stream.
+    const reveal = () =>
+      new Promise<void>((resolve) => {
+        const tick = () => {
+          if (shown < buffer.length) {
+            const step = Math.min(
+              8,
+              Math.max(2, Math.ceil((buffer.length - shown) / 40))
+            );
+            shown = Math.min(buffer.length, shown + step);
+            updateLastBot(buffer.slice(0, shown));
+          }
+          if (finished && shown >= buffer.length) return resolve();
+          setTimeout(tick, TYPE_TICK_MS);
+        };
+        tick();
       });
-      if (!res.ok || !res.body) throw new Error("request failed");
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let acc = "";
-      for (;;) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        acc += decoder.decode(value, { stream: true });
-        updateLastBot(acc);
+
+    const pump = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text, history }),
+        });
+        if (!res.ok || !res.body) throw new Error("request failed");
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        for (;;) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+        }
+      } catch {
+        if (!buffer) buffer = "Sorry, something went wrong. Please try again.";
+      } finally {
+        finished = true;
       }
-    } catch {
-      updateLastBot("Sorry, something went wrong. Please try again.");
+    };
+
+    try {
+      await Promise.all([pump(), reveal()]);
     } finally {
       setStreaming(false);
     }
