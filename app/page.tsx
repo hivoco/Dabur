@@ -262,7 +262,7 @@ export default function Home() {
         side="right"
         bee="/bee1.gif"
         onClick={openVideo}
-        text="Know our <br/> sourcing story"
+        text="Know Our <br/> Sourcing Story"
         position="bottom-[29%] left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
       />
 
