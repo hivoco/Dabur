@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
     "@huggingface/transformers",
     "pdf-parse",
   ],
+
+  // Allow local images to carry a query string (e.g. /discover/1.png?v=2). We
+  // use ?v= to cache-bust images that keep the same filename; Next 16 blocks
+  // query strings on local images unless a localPattern permits them. Omitting
+  // `search` here allows any query string on any local path.
+  images: {
+    localPatterns: [{ pathname: "/**" }],
+  },
 };
 
 export default nextConfig;

@@ -7,13 +7,20 @@ import RecipePopup, { type Recipe } from "../components/RecipePopup";
 import ChatWidget from "../components/ChatWidget";
 import recipeData from "../data/recipie.json";
 
-const TOP_CARDS = [1, 22, 33, 4].map((n) => `/discover/${n}.png`);
+// Bump this whenever you REPLACE an image but keep its filename. A same-named
+// file has the same URL, so browsers, any CDN, and Next's image optimizer keep
+// serving the cached copy; changing ?v= makes the URL new so they fetch fresh.
+const ASSET_VERSION = "2";
+
+const TOP_CARDS = [1, 22, 33, 4].map(
+  (n) => `/discover/${n}.png?v=${ASSET_VERSION}`
+);
 
 // Recipes are data-driven from app/data/recipie.json. The Nth entry (card1..8)
 // maps to its hero image at /discover/bottom-card/bN.png; every ingredient
 // carries its own icon path, all rendered dynamically in the RecipePopup.
 const RECIPES: Recipe[] = recipeData.map((r, i) => ({
-  src: `/discover/bottom-card/b${i + 1}.png`,
+  src: `/discover/bottom-card/b${i + 1}.png?v=${ASSET_VERSION}`,
   title: r.title,
   why: r.whyItWorks,
   ingredients: r.ingredients,
