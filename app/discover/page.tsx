@@ -7,7 +7,7 @@ import RecipePopup, { type Recipe } from "../components/RecipePopup";
 import ChatWidget from "../components/ChatWidget";
 import recipeData from "../data/recipie.json";
 
-const TOP_CARDS = [1, 2, 3, 4].map((n) => `/discover/${n}.png`);
+const TOP_CARDS = [1, 22, 33, 4].map((n) => `/discover/${n}.png`);
 
 // Recipes are data-driven from app/data/recipie.json. The Nth entry (card1..8)
 // maps to its hero image at /discover/bottom-card/bN.png; every ingredient
