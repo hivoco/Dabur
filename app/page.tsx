@@ -69,7 +69,7 @@ function FlankButton({
           alt="bee"
           width={80}
           height={80}
-          className={`w-32 ${isLeft&& "-scale-x-100"} object-contain`}
+          className={`w-7 ${isLeft&& "-scale-x-100"} object-contain`}
         />
       </span>
 
@@ -269,28 +269,50 @@ export default function Home() {
       {/* Decorative bees — top / right, smaller and flipped. The flip
           (-scale-x-100) lives on the WRAPPER so it doesn't fight the bee-float
           transform that animates the image. */}
-      {/* <div className="pointer-events-none absolute top-[12%] right-[14%] z-20 w-5 -scale-x-100 select-none md:w-12">
+      <div className="pointer-events-none absolute top-[10%] right-[14%] hidden md:block z-20 w-5 -scale-x-100 select-none md:w-12">
         <Image
           src="/bee1.gif"
           alt=""
-          width={20}
-          height={20}
+          width={10}
+          height={10}
           unoptimized
-          className="bee-float w-full object-contain"
+          className="bee-float w-7 object-contain"
           style={{ animationDelay: "0.3s" }}
         />
       </div>
-      <div className="pointer-events-none absolute top-[34%] right-[6%] z-20 w-7  select-none md:w-10">
+      <div className="pointer-events-none absolute top-[12%] left-[13%] z-20 w-5  select-none md:w-12">
+        <Image
+          src="/bee1.gif"
+          alt=""
+          width={10}
+          height={10}
+          unoptimized
+          className="bee-float w-7 object-contain"
+          style={{ animationDelay: "0.3s" }}
+        />
+      </div>
+      <div className="pointer-events-none absolute bottom-[22%] left-[13%] z-20 w-5 -scale-x-100 select-none md:w-12">
+        <Image
+          src="/bee1.gif"
+          alt=""
+          width={10}
+          height={10}
+          unoptimized
+          className="bee-float w-7 object-contain"
+          style={{ animationDelay: "0.3s" }}
+        />
+      </div>
+      <div className="pointer-events-none absolute top-[30%] md:top-[45%] right-[4%] z-20 w-5 -scale-x-100 md:scale-x-100  select-none md:w-10">
         <Image
           src="/bee1.gif"
           alt=""
           width={20}
           height={20}
           unoptimized
-          className="bee-float w-full object-contain"
+          className="bee-float  w-7 object-contain"
           style={{ animationDelay: "1.2s" }}
         />
-      </div> */}
+      </div>
 
 
 

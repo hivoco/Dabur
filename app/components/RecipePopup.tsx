@@ -88,7 +88,7 @@ export default function RecipePopup({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`bg-cream relative flex h-[90vh] w-full max-w-249 flex-col overflow-y-auto rounded-t-3xl p-5 shadow-[0px_5px_15px_rgba(0,0,0,0.50)] transition-all duration-500 ease-out md:h-140 md:rounded-[24.89px] md:p-7 md:overflow-hidden ${
+        className={`bg-cream relative flex h-[90vh] w-full max-w-249 flex-col overflow-y-scroll rounded-t-3xl p-5 shadow-[0px_5px_15px_rgba(0,0,0,0.50)] transition-all duration-500 ease-out md:h-140 md:rounded-[24.89px] md:p-7 md:overflow-hidden ${
           show
             ? "translate-y-0 opacity-100 md:scale-100"
             : "translate-y-full opacity-0 md:translate-y-0 md:scale-95"

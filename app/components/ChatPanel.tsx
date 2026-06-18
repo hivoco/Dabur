@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 
 type Message = { role: "user" | "bot"; text: string };
 
@@ -14,13 +14,21 @@ const MAX_HISTORY = 10; // keep the last 10 messages
 // Set NEXT_PUBLIC_API_BASE_URL to call a different backend (e.g. from local dev).
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
 
+// Each topic chip drops its mapped question into the chat input (same as the
+// suggested questions below).
 const TOPICS = [
-  "Tracebility",
-  "Craftmanship",
-  "Authenticity",
-  "Naturally Sourced",
-  "Monofloral",
-  "Purity",
+  { label: "Traceability", question: "How can I check honey purity?" },
+  {
+    label: "JEEViKA",
+    question: "Who are the JEEViKA Didis mentioned with Dabur Litchi Honey?",
+  },
+  { label: "Authenticity", question: "Is Dabur Honey a pure honey?" },
+  {
+    label: "Naturally Sourced",
+    question: "Where is Dabur Litchi Honey naturally sourced from?",
+  },
+  { label: "Monofloral", question: "What is monofloral honey?" },
+  { label: "Purity", question: "How is honey tested for purity?" },
 ];
 
 const QUESTIONS = [
@@ -84,9 +92,17 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
       return copy;
     });
 
-  const send = async () => {
-    const text = input.trim();
+  const send = async (textArg?: string) => {
+    // textArg lets a topic/question chip send directly; otherwise use the input.
+    const text = (textArg ?? input).trim();
     if (!text || streaming) return;
+    // Short-term memory: send the last 5 messages from THIS tab's session so the
+    // bot knows what was just discussed. sessionStorage is cleared when the tab
+    // closes, so a fresh visit starts with no history (nothing persisted long-term).
+    const history = messages
+      .filter((m) => m.text.trim())
+      .slice(-5)
+      .map((m) => ({ role: m.role, content: m.text }));
     setInput("");
     setMessages((m) => [...m, { role: "user", text }, { role: "bot", text: "" }]);
     setStreaming(true);
@@ -94,7 +110,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, history }),
       });
       if (!res.ok || !res.body) throw new Error("request failed");
       const reader = res.body.getReader();
@@ -146,11 +162,12 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
       <div className="flex flex-wrap px-1 justify-center gap-2  pt-1">
         {TOPICS.map((t) => (
           <button
-            key={t}
+            key={t.label}
             type="button"
+            onClick={() => send(t.question)}
             className="rounded-full bg-[#FFF9EE] px-3 py-1.5 text-xs font-medium text-black shadow-md transition hover:bg-[#FFF9EE]/90 md:px-4 md:py-2 md:text-sm"
           >
-            {t}
+            {t.label}
           </button>
         ))}
       </div>
@@ -174,7 +191,18 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
                 m.text
               ) : m.text ? (
                 <div className="space-y-1.5 break-words [&_a]:underline [&_h1]:text-sm [&_h1]:font-bold [&_h2]:font-bold [&_h3]:font-semibold [&_li]:my-0.5 [&_ol]:list-decimal [&_ol]:pl-4 [&_p]:leading-snug [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-4">
-                  <ReactMarkdown>{m.text}</ReactMarkdown>
+                  <ReactMarkdown
+                    urlTransform={(url) =>
+                      url.startsWith("tel:") ? url : defaultUrlTransform(url)
+                    }
+                    components={{
+                      a: (props) => (
+                        <a {...props} target="_blank" rel="noopener noreferrer" />
+                      ),
+                    }}
+                  >
+                    {m.text}
+                  </ReactMarkdown>
                 </div>
               ) : (
                 <span className="inline-flex gap-1 py-1">
@@ -195,7 +223,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
           <button
             key={q}
             type="button"
-            onClick={() => setInput(q)}
+            onClick={() => send(q)}
             className="flex items-center gap-2 rounded-full border border-white/25 bg-[#FFF9EE] px-3 py-2.5 text-left text-xs font-medium text-black shadow-md transition hover:bg-[#FFF9EE]/20 md:px-4 md:py-3 md:text-sm"
           >
             <span className="shrink-0 text-black/80">
@@ -226,7 +254,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
           />
           <button
             type="button"
-            onClick={send}
+            onClick={() => send()}
             aria-label="Send message"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#4D0000] transition hover:opacity-90 md:h-11 md:w-11"
           >

@@ -117,7 +117,7 @@ export default function Discover() {
             alt=""
             width={80}
             height={80}
-            className="bee-float w-full object-contain"
+            className="bee-float w-7 object-contain"
             style={{ animationDelay: b.delay }}
           />
         </div>
