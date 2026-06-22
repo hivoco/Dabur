@@ -88,6 +88,11 @@ export default function Discover() {
   return (
     <>
     <div className="fixed inset-0 z-0 overflow-hidden  bg-black/35 backdrop-blur-[5px]">
+      {/* SEO heading — visually hidden but present for crawlers/screen readers. */}
+      <h1 className="sr-only">
+        Dabur Litchi Honey — Recipes &amp; What Makes It Special
+      </h1>
+
       {/* Decorative leaf — top-left corner (flipped 180deg) */}
       <Image
         src="/leaf.png"
@@ -182,7 +187,7 @@ export default function Discover() {
           {/* Elevate your recipes */}
           <div className="mx-auto w-full md:max-w-[910px]">
             <h2 className="mb-[clamp(0.5rem,1.8svh,1.25rem)] text-center text-xl font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[28px]">
-              Elevate your Recipes with a Drizzle of Litchi Honey
+              Elevate Your Recipes With A Drizzle Of Litchi Honey
             </h2>
             {/* Carousel: auto-advances + manual scroll + prev/next arrows.
                 Desktop shows 4 cards; mobile is full-bleed on the right (-mr-5)

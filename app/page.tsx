@@ -194,11 +194,14 @@ export default function Home() {
 
   return (
     <div className="relative flex h-svh  flex-col px-10 md:px-0 items-center overflow-hidden">
+      {/* SEO heading — visually hidden but present for crawlers/screen readers. */}
+      <h1 className="sr-only">Monofloral Litchi Honey</h1>
+
       {/* Brand logo — top centre of the PAGE. On desktop it stays visible
           above an open popup; on mobile it hides (the popup shows its own). */}
       <Image
         src="/logo-1.png"
-        alt="Logo"
+        alt="Dabur Litchi Honey logo"
         width={120}
         height={109}
         priority
@@ -231,7 +234,7 @@ export default function Home() {
 
         <Image
           src="/mono1.png"
-          alt=""
+          alt="Dabur Litchi Honey jar — monofloral litchi honey"
           width={350}
           height={110}
           priority
@@ -253,7 +256,7 @@ export default function Home() {
         bee="/bee1.gif"
         onClick={openStory}
         text="Meet Our <br/> Women <br/> Harvesters"
-        position="top-[42%] md:top-[39%] left-0 md:left-1/2 translate-x-0 md:-translate-x-[250px]"
+        position="top-[42%] md:top-[42%] left-0 md:left-1/2 translate-x-0 md:-translate-x-[250px]"
       />
 
 
