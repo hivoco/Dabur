@@ -6,7 +6,7 @@ import ChatPanel, { STORAGE_KEY } from "./ChatPanel";
 import { useEscClose } from "../lib/useEscClose";
 
 const GREETING = "Hi, I’m your Chief Honey Officer (CHO)";
-const SECOND = "Ask our CHO";
+const SECOND = "Ask Our CHO";
 
 const DELETE_MS = 35; // per-char delete speed
 const TYPE_MS = 55; // per-char type speed

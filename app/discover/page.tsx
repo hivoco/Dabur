@@ -167,7 +167,7 @@ export default function Discover() {
           {/* What Makes It Truly Special */}
           <div className="mx-auto w-full md:max-w-[910px]">
             <h2 className="mb-[clamp(0.5rem,1.8svh,1.25rem)] text-center text-xl font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[28px]">
-              What Makes It Truly Special
+              What Makes it Truly Special
             </h2>
             <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:flex-wrap md:gap-6 md:overflow-visible md:pb-0">
               {TOP_CARDS.map((src, i) => (
@@ -187,7 +187,7 @@ export default function Discover() {
           {/* Elevate your recipes */}
           <div className="mx-auto w-full md:max-w-[910px]">
             <h2 className="mb-[clamp(0.5rem,1.8svh,1.25rem)] text-center text-xl font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[28px]">
-              Elevate Your Recipes With A Drizzle Of Litchi Honey
+              Elevate Your Recipes with a Drizzle of Litchi Honey
             </h2>
             {/* Carousel: auto-advances + manual scroll + prev/next arrows.
                 Desktop shows 4 cards; mobile is full-bleed on the right (-mr-5)
