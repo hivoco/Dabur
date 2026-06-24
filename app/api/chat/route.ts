@@ -41,9 +41,9 @@ We will be happy to assist you.`;
 const PROFANITY_MESSAGE =
   "I may have missed your question. Could you tell me what you'd like help with?";
 
-// Appended below answers that ask about honey benefits.
+// Appended (in italics) below answers that ask about honey benefits.
 const BENEFITS_NOTE =
-  "Honey has several health benefits (as per scientific study in the public domain)";
+  "*Disclaimer: Individual results may vary. Not a substitute for medical treatment, if any. Don’t exceed the recommended dosage.*";
 
 // Normalise common misspellings of "honey" (hanny, hunny, hany, honny, honney…)
 // to "honey" so retrieval and the model still understand the question.
