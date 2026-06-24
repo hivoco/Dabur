@@ -185,12 +185,12 @@ export default function Discover() {
             <h2 className="mb-[clamp(0.5rem,1.8svh,1.25rem)] text-center text-[clamp(1.05rem,3svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[28px] md:[@media(max-height:699px)]:text-[clamp(16px,3.6svh,28px)]">
               What Makes it Truly Special
             </h2>
-            <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:flex-wrap md:gap-6 md:overflow-visible md:pb-0">
+            <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden lg:mr-0 lg:flex-wrap lg:gap-6 lg:overflow-visible lg:pb-0">
               {TOP_CARDS.map((src, i) => (
                 <div
                   key={src}
                   style={{ transitionDelay: `${i * 90}ms` }}
-                  className={`relative aspect-482/586 h-[clamp(110px,30svh,253px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out md:h-auto md:w-52 md:[@media(max-height:699px)]:h-[clamp(130px,32svh,253px)] md:[@media(max-height:699px)]:w-auto ${
+                  className={`relative aspect-482/586 h-[clamp(110px,30svh,253px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out lg:h-auto lg:w-52 lg:[@media(max-height:699px)]:h-[clamp(130px,32svh,253px)] lg:[@media(max-height:699px)]:w-auto ${
                     mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                   }`}
                 >
