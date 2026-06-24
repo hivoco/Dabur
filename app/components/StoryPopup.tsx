@@ -113,7 +113,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
                 alt="JEEViKA"
                 width={98}
                 height={98}
-                className="absolute jivika-bounce -top-[clamp(1.25rem,5.5svh,2.5rem)] right-1 z-10 h-[clamp(40px,9svh,64px)] w-[clamp(40px,9svh,64px)] rounded-full object-contain @2xl:hidden"
+                className="absolute jivika-bounce -top-[clamp(1.25rem,5.5svh,2.5rem)] right-1 z-10 h-[clamp(44px,11svh,80px)] w-[clamp(44px,11svh,80px)] rounded-full object-contain @2xl:hidden"
               />
             </div>
             <p className="mt-2 text-center text-[clamp(0.78rem,1.9svh,1rem)] font-semibold text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] @2xl:mt-4 @2xl:text-lg">
@@ -130,13 +130,13 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
                 alt="JEEViKA"
                 width={98}
                 height={98}
-                className="jivika-bounce absolute -top-[clamp(3.5rem,14.5svh,6.5rem)] right-2 z-10 hidden h-[clamp(56px,13svh,97px)] w-[clamp(56px,13svh,97px)] rotate-[0.5deg] rounded-full object-contain @2xl:block"
+                className="jivika-bounce absolute -top-[clamp(3rem,13svh,5.5rem)] right-2 z-10 hidden h-[clamp(56px,13svh,97px)] w-[clamp(56px,13svh,97px)] rotate-[0.5deg] rounded-full object-contain @2xl:block"
               />
               <Image src="/quate.png" alt="" width={19} height={19} className="absolute -top-2 left-4 w-3 object-contain @2xl:w-6" />
               <h3 className="text-[clamp(0.9rem,2.2svh,1.25rem)] font-semibold leading-none tracking-normal text-white @2xl:text-[clamp(15px,3svh,23.93px)]">
                 Did You Know?
               </h3>
-              <p className="mt-2 text-[clamp(0.72rem,1.65svh,0.95rem)] font-semibold leading-snug tracking-normal text-white @2xl:text-[clamp(11px,1.9svh,15px)]">
+              <p className="mt-2 max-w-5/6 text-[clamp(0.72rem,1.65svh,0.95rem)] font-semibold leading-snug tracking-normal text-white @2xl:text-[clamp(11px,1.9svh,15px)]">
                 {story.didYouKnow}
               </p>
               <Image src="/quate.png" alt="" width={19} height={19} className="absolute -bottom-2 right-4 w-3 rotate-180 object-contain @2xl:w-6" />
