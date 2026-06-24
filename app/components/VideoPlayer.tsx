@@ -153,7 +153,7 @@ export default function VideoPlayer({
   return (
     <div
       ref={containerRef}
-      className={`relative ${className}`}
+      className={`relative bg-black ${className}`}
       onMouseMove={poke}
       onMouseLeave={() => setVisible(false)}
       onTouchStart={poke}
@@ -175,7 +175,7 @@ export default function VideoPlayer({
         onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
         onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
-        className="h-full w-full object-cover"
+        className="h-full w-full object-contain"
       />
 
       {/* Replay — only when the video has finished */}
