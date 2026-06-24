@@ -60,25 +60,29 @@ export default function Discover() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  // Auto-advance one card every 3s on desktop, looping infinitely; pauses on
-  // hover. Manual scroll/drag still works (native overflow-x).
+  // Auto-advance one card every 3s on desktop, looping infinitely; pauses only
+  // while actually hovering. We read the live :hover state each tick instead of
+  // a flag toggled by mouseenter/leave — those events can be missed (e.g. when a
+  // recipe popup opens over the carousel), leaving it stuck/stopped forever.
   const carouselRef = useRef<HTMLDivElement>(null);
-  const pausedRef = useRef(false);
   useEffect(() => {
     const el = carouselRef.current;
     if (!el) return;
     const id = setInterval(() => {
-      if (pausedRef.current) return;
       if (!window.matchMedia("(min-width: 768px)").matches) return;
-      const half = el.scrollWidth / 2; // width of one copy of the recipes
-      const step =
-        el.children.length > 1
-          ? (el.children[1] as HTMLElement).offsetLeft -
-            (el.children[0] as HTMLElement).offsetLeft
-          : el.clientWidth;
-      // Once we've scrolled a whole copy, jump back by one copy instantly
+      if (el.matches(":hover")) return;
+      const items = el.children;
+      if (items.length < 2) return;
+      const x0 = (items[0] as HTMLElement).offsetLeft;
+      const step = (items[1] as HTMLElement).offsetLeft - x0;
+      // Exact width of one copy = where the 2nd copy (card RECIPES.length) starts.
+      // Using the card grid (not scrollWidth/2) keeps the reset aligned to a snap
+      // point, so it can never drift and snap-stick.
+      const second = items[RECIPES.length] as HTMLElement | undefined;
+      const copyWidth = second ? second.offsetLeft - x0 : el.scrollWidth / 2;
+      // Once we've scrolled a whole copy, jump back exactly one copy instantly
       // (seamless — the copies are identical), then advance one more card.
-      if (el.scrollLeft >= half) el.scrollLeft -= half;
+      if (el.scrollLeft >= copyWidth - 1) el.scrollLeft -= copyWidth;
       el.scrollBy({ left: step, behavior: "smooth" });
     }, 3000);
     return () => clearInterval(id);
@@ -89,15 +93,16 @@ export default function Discover() {
   const scrollByCard = (dir: 1 | -1) => {
     const el = carouselRef.current;
     if (!el) return;
-    const kids = el.children;
-    const step =
-      kids.length > 1
-        ? (kids[1] as HTMLElement).offsetLeft - (kids[0] as HTMLElement).offsetLeft
-        : el.clientWidth;
-    // Wrap seamlessly so the arrows loop infinitely too (desktop only).
-    const half = el.scrollWidth / 2;
-    if (dir === 1 && el.scrollLeft >= half) el.scrollLeft -= half;
-    if (dir === -1 && el.scrollLeft <= 0) el.scrollLeft += half;
+    const items = el.children;
+    if (items.length < 2) return;
+    const x0 = (items[0] as HTMLElement).offsetLeft;
+    const step = (items[1] as HTMLElement).offsetLeft - x0;
+    // Wrap seamlessly so the arrows loop infinitely too (desktop only). Use the
+    // exact copy width (card grid) so the reset stays aligned to a snap point.
+    const second = items[RECIPES.length] as HTMLElement | undefined;
+    const copyWidth = second ? second.offsetLeft - x0 : el.scrollWidth / 2;
+    if (dir === 1 && el.scrollLeft >= copyWidth - 1) el.scrollLeft -= copyWidth;
+    if (dir === -1 && el.scrollLeft <= 0) el.scrollLeft += copyWidth;
     el.scrollBy({ left: dir * step, behavior: "smooth" });
   };
 
@@ -211,13 +216,7 @@ export default function Discover() {
             <div className="relative">
               <div
                 ref={carouselRef}
-                onMouseEnter={() => {
-                  pausedRef.current = true;
-                }}
-                onMouseLeave={() => {
-                  pausedRef.current = false;
-                }}
-                className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth  scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:gap-6 md:pb-0 pb-2"
+                className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto  scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:gap-6 md:pb-0 pb-2"
               >
                 {carouselItems.map((r, i) => (
                   <button
