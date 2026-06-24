@@ -169,7 +169,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className={`pointer-events-auto flex min-h-0 w-[92vw] max-w-[380px] flex-1 origin-bottom-right flex-col overflow-hidden rounded-[28px] border border-white/40 bg-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.25)] backdrop-blur-md transition-all duration-300 ease-out md:h-[80vh] md:max-h-160 md:flex-none ${
+      className={`pointer-events-auto flex min-h-0 w-[92vw] max-w-[380px] flex-1 origin-bottom-right flex-col overflow-hidden rounded-[28px] border border-white/40 bg-white/10 shadow-[0_8px_40px_rgba(0,0,0,0.25)] backdrop-blur-md transition-all duration-300 ease-out md:h-[90vh] md:max-h-160 md:flex-none ${
         show ? "translate-y-0 scale-100 opacity-100" : "translate-y-4 scale-90 opacity-0"
       }`}
     >

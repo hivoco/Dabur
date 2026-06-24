@@ -66,7 +66,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
       */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`bg-glass-dark @container relative flex h-svh w-full flex-col overflow-hidden border-white/40 shadow-[0_8px_60px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-all duration-500 ease-out md:h-[calc(100svh-128px)] md:max-h-155 md:max-w-290 md:rounded-[28px] md:border ${
+        className={`bg-glass-dark @container relative flex h-svh w-full flex-col overflow-hidden border-white/40 shadow-[0_8px_60px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-all duration-500 ease-out md:h-[calc(100svh-128px)] md:max-h-155 md:max-w-5xl [@media(max-height:700px)]:md:max-w-200 md:rounded-[28px] md:border ${
           show ? "translate-x-0 opacity-100" : "-translate-x-32 opacity-0"
         }`}
       >
@@ -90,7 +90,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
         />
 
         {/* Title */}
-        <div className="flex shrink-0 flex-col items-center px-6 pt-1 @2xl:pt-6">
+        <div className="flex shrink-0 flex-col  items-center px-6 pt-1 @2xl:pt-6">
           <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-[clamp(48px,11svh,80px)] object-contain @2xl:w-32" />
           <h2 className="text-center text-[clamp(0.9rem,2.6svh,1.4rem)] font-semibold text-white [text-shadow:0px_4px_4px_#000000] @2xl:text-[clamp(15px,3.4svh,26px)]">
             {story.title}
@@ -101,11 +101,11 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
         {/* Main — stacked on mobile, two columns on desktop */}
         <div className="flex w-full shrink-0 flex-col items-center gap-[clamp(0.4rem,1.4svh,0.75rem)] px-6 pt-[clamp(0.4rem,1.4svh,0.75rem)] @2xl:min-h-0 @2xl:flex-1 @2xl:flex-row @2xl:items-center @2xl:justify-evenly @2xl:gap-8 @2xl:px-10">
           {/* Video + caption */}
-          <div className="flex w-full flex-col items-center @2xl:w-[58%]">
+          <div className="flex w-full flex-col  items-center @2xl:w-[58%]">
             <div className="relative w-full">
               <VideoPlayer
                 src={story.video}
-                className="h-[clamp(90px,24svh,230px)] w-full overflow-hidden rounded-[17.39px] border border-white shadow-lg @2xl:aspect-video [@media(min-height:701px)]:@2xl:h-auto [@media(max-height:700px)]:@2xl:h-[clamp(150px,40svh,330px)] [@media(max-height:700px)]:@2xl:w-auto"
+                className="h-[clamp(90px,24svh,230px)] w-full overflow-hidden rounded-[17.39px] border border-white shadow-lg @2xl:aspect-auto [@media(min-height:701px)]:@2xl:h-auto [@media(max-height:700px)]:@2xl:h-[clamp(150px,40svh,330px)] [@media(max-height:700px)]:@2xl:w-auto"
               />
               {/* JEEViKA badge — mobile, bottom-right corner of the video */}
               <Image
@@ -116,13 +116,13 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
                 className="absolute jivika-bounce -top-[clamp(1.25rem,5.5svh,2.5rem)] right-1 z-10 h-[clamp(44px,11svh,80px)] w-[clamp(44px,11svh,80px)] rounded-full object-contain @2xl:hidden"
               />
             </div>
-            <p className="mt-2 text-center text-[clamp(0.78rem,1.9svh,1rem)] font-semibold text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] @2xl:mt-4 @2xl:text-lg">
+            <p className="mt-2 text-center text-[clamp(0.78rem,1.9svh,1rem)] font-semibold text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] @2xl:mt-4 @2xl:text-lg [@media(max-height:700px)]:@2xl:text-sm">
               {story.caption}
             </p>
           </div>
 
           {/* Did You Know card */}
-          <div className="w-full @2xl:w-[42%] md:-mt-28 ">
+          <div className="w-full  @2xl:w-[42%] md:-mt-28 ">
             <div className="bg-glass-soft relative rounded-[28.718px] border border-white/40 p-[clamp(0.6rem,2svh,1rem)] @2xl:p-5">
               {/* JEEViKA logo — desktop, perched just above the card's top-right corner */}
               <Image

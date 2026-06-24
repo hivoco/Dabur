@@ -39,51 +39,35 @@ export default function Discover() {
   const [active, setActive] = useState<Recipe | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  // On desktop the recipe carousel loops infinitely: render the recipes TWICE
-  // and seamlessly jump back by one copy once we scroll past it (invisible,
-  // since the copies are identical). Mobile keeps the single set.
-  const [desktop, setDesktop] = useState(false);
-  const carouselItems = desktop ? [...RECIPES, ...RECIPES] : RECIPES;
-
   // Trigger the staggered card reveal once the page mounts.
   useEffect(() => {
     const r = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(r);
   }, []);
 
-  // Track desktop (>=768px) so we only duplicate / auto-advance there.
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const update = () => setDesktop(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  // Auto-advance one card every 3s on desktop, looping infinitely; pauses only
-  // while actually hovering. We read the live :hover state each tick instead of
-  // a flag toggled by mouseenter/leave — those events can be missed (e.g. when a
-  // recipe popup opens over the carousel), leaving it stuck/stopped forever.
+  // Auto-advance the recipe carousel one view at a time (loops back at the end);
+  // pauses on hover. Manual scroll/drag still works (native overflow-x).
   const carouselRef = useRef<HTMLDivElement>(null);
+  const pausedRef = useRef(false);
   useEffect(() => {
     const el = carouselRef.current;
     if (!el) return;
     const id = setInterval(() => {
+      if (pausedRef.current) return;
+      // Auto-slide on desktop only; off on mobile.
       if (!window.matchMedia("(min-width: 768px)").matches) return;
-      if (el.matches(":hover")) return;
-      const items = el.children;
-      if (items.length < 2) return;
-      const x0 = (items[0] as HTMLElement).offsetLeft;
-      const step = (items[1] as HTMLElement).offsetLeft - x0;
-      // Exact width of one copy = where the 2nd copy (card RECIPES.length) starts.
-      // Using the card grid (not scrollWidth/2) keeps the reset aligned to a snap
-      // point, so it can never drift and snap-stick.
-      const second = items[RECIPES.length] as HTMLElement | undefined;
-      const copyWidth = second ? second.offsetLeft - x0 : el.scrollWidth / 2;
-      // Once we've scrolled a whole copy, jump back exactly one copy instantly
-      // (seamless — the copies are identical), then advance one more card.
-      if (el.scrollLeft >= copyWidth - 1) el.scrollLeft -= copyWidth;
-      el.scrollBy({ left: step, behavior: "smooth" });
+      // Advance ONE card at a time (leftmost slides out, a new one slides in);
+      // loop back to the start at the end.
+      const step =
+        el.children.length > 1
+          ? (el.children[1] as HTMLElement).offsetLeft -
+            (el.children[0] as HTMLElement).offsetLeft
+          : el.clientWidth;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: step, behavior: "smooth" });
+      }
     }, 3000);
     return () => clearInterval(id);
   }, []);
@@ -93,16 +77,11 @@ export default function Discover() {
   const scrollByCard = (dir: 1 | -1) => {
     const el = carouselRef.current;
     if (!el) return;
-    const items = el.children;
-    if (items.length < 2) return;
-    const x0 = (items[0] as HTMLElement).offsetLeft;
-    const step = (items[1] as HTMLElement).offsetLeft - x0;
-    // Wrap seamlessly so the arrows loop infinitely too (desktop only). Use the
-    // exact copy width (card grid) so the reset stays aligned to a snap point.
-    const second = items[RECIPES.length] as HTMLElement | undefined;
-    const copyWidth = second ? second.offsetLeft - x0 : el.scrollWidth / 2;
-    if (dir === 1 && el.scrollLeft >= copyWidth - 1) el.scrollLeft -= copyWidth;
-    if (dir === -1 && el.scrollLeft <= 0) el.scrollLeft += copyWidth;
+    const kids = el.children;
+    const step =
+      kids.length > 1
+        ? (kids[1] as HTMLElement).offsetLeft - (kids[0] as HTMLElement).offsetLeft
+        : el.clientWidth;
     el.scrollBy({ left: dir * step, behavior: "smooth" });
   };
 
@@ -186,16 +165,16 @@ export default function Discover() {
         {/* Sections — centred in the leftover height with a scaling gap. */}
         <div className="flex min-h-0 flex-1 flex-col justify-center gap-[clamp(1rem,4svh,2.25rem)] px-5 pb-[clamp(0.75rem,2svh,1.5rem)] md:px-10">
           {/* What Makes It Truly Special */}
-          <div className="mx-auto w-full md:max-w-[910px]">
-            <h2 className="mb-[clamp(0.5rem,1.8svh,1.25rem)] text-center text-[clamp(1.05rem,3svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[28px] md:[@media(max-height:699px)]:text-[clamp(16px,3.6svh,28px)]">
+          <div className="mx-auto w-full md:max-w-[min(910px,128svh)]">
+            <h2 className="mb-[clamp(0.4rem,1.6svh,1.25rem)] text-center text-[clamp(1rem,2.4svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[clamp(1.25rem,3.4svh,28px)]">
               What Makes it Truly Special
             </h2>
-            <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden lg:mr-0 lg:flex-wrap lg:gap-6 lg:overflow-visible lg:pb-0">
+            <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:grid md:grid-cols-4 md:gap-6 md:overflow-visible md:pb-0">
               {TOP_CARDS.map((src, i) => (
                 <div
                   key={src}
                   style={{ transitionDelay: `${i * 90}ms` }}
-                  className={`relative aspect-482/586 h-[clamp(110px,30svh,253px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out lg:h-auto lg:w-52 lg:[@media(max-height:699px)]:h-[clamp(130px,32svh,253px)] lg:[@media(max-height:699px)]:w-auto ${
+                  className={`relative aspect-482/586 h-[clamp(130px,30svh,253px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out md:h-auto md:w-full ${
                     mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                   }`}
                 >
@@ -206,8 +185,8 @@ export default function Discover() {
           </div>
 
           {/* Elevate your recipes */}
-          <div className="mx-auto w-full md:max-w-[910px]">
-            <h2 className="mb-[clamp(0.5rem,1.8svh,1.25rem)] text-center text-[clamp(1.05rem,3svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[28px] md:[@media(max-height:699px)]:text-[clamp(16px,3.6svh,28px)]">
+          <div className="mx-auto w-full md:max-w-[min(910px,128svh)]">
+            <h2 className="mb-[clamp(0.4rem,1.6svh,1.25rem)] text-center text-[clamp(1rem,2.4svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[clamp(1.25rem,3.4svh,28px)]">
               Elevate Your Recipes with a Drizzle of Litchi Honey
             </h2>
             {/* Carousel: auto-advances + manual scroll + prev/next arrows.
@@ -216,15 +195,21 @@ export default function Discover() {
             <div className="relative">
               <div
                 ref={carouselRef}
-                className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto  scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:gap-6 md:pb-0 pb-2"
+                onMouseEnter={() => {
+                  pausedRef.current = true;
+                }}
+                onMouseLeave={() => {
+                  pausedRef.current = false;
+                }}
+                className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth  scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:gap-6 md:pb-0 pb-[clamp(0.25rem,1.5svh,2.5rem)]"
               >
-                {carouselItems.map((r, i) => (
+                {RECIPES.map((r, i) => (
                   <button
                     type="button"
                     key={i}
                     onClick={() => setActive(r)}
                     style={{ transitionDelay: `${(TOP_CARDS.length + i) * 90}ms` }}
-                    className={`relative h-[clamp(110px,26svh,240px)] w-[70vw] shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-60 md:w-52 md:[@media(max-height:699px)]:h-[clamp(120px,30svh,240px)] ${
+                    className={`relative h-[clamp(130px,26svh,240px)] w-[70vw] shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-[clamp(140px,30svh,240px)] md:w-52 ${
                       mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                     }`}
                   >
