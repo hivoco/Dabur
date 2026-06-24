@@ -6,16 +6,34 @@ import VideoPlayer from "./VideoPlayer";
 import { useEscClose } from "../lib/useEscClose";
 import womenData from "../data/women.json";
 
+// One women story is chosen at random per browser TAB and reused for every
+// StoryPopup open in that tab (persisted in sessionStorage, cleared when the tab
+// closes). A fresh tab/visit gets a new random story.
+const STORY_KEY = "women-story-index";
+
 export default function StoryPopup({ onClose }: { onClose: () => void }) {
   const [show, setShow] = useState(false);
 
-  // Pick ONE of the women stories at random each time the popup opens, so a
-  // returning visitor may see a different video / message / image. Chosen in a
-  // lazy initialiser — the popup only ever mounts on a user click (client-side),
-  // so Math.random() here can't cause an SSR hydration mismatch.
-  const [story] = useState(
-    () => womenData[Math.floor(Math.random() * womenData.length)]
-  );
+  // Deterministic default for SSR / first paint (avoids a hydration mismatch);
+  // the per-tab story is resolved on the client in the effect below.
+  const [story, setStory] = useState(womenData[0]);
+
+  // Resolve the per-tab story once on the client.
+  useEffect(() => {
+    let idx: number;
+    try {
+      const saved = sessionStorage.getItem(STORY_KEY);
+      if (saved !== null && womenData[Number(saved)]) {
+        idx = Number(saved);
+      } else {
+        idx = Math.floor(Math.random() * womenData.length);
+        sessionStorage.setItem(STORY_KEY, String(idx));
+      }
+    } catch {
+      idx = Math.floor(Math.random() * womenData.length);
+    }
+    setStory(womenData[idx]);
+  }, []);
 
   useEffect(() => {
     const r = requestAnimationFrame(() => setShow(true));
@@ -62,41 +80,32 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
           <Image src="/cross.svg" alt="" width={21} height={21} unoptimized className="h-full w-full object-contain" />
         </button>
 
-        {/* JEEViKA logo — desktop, top-right */}
-        <Image
-          src="/jivika.png"
-          alt="JEEViKA"
-          width={98}
-          height={98}
-          className="absolute jivika-bounce  right-20 top-24 z-10 hidden h-[97.37px] w-[97.37px] rotate-[0.5deg] rounded-full object-contain @2xl:block"
-        />
-
         {/* Brand logo — mobile, top centre */}
         <Image
           src="/logo-1.png"
           alt="Logo"
           width={120}
           height={109}
-          className="mt-2 mb-3 w-20 shrink-0 self-center object-contain @2xl:hidden"
+          className="mt-[clamp(0.25rem,0.8svh,0.5rem)] mb-[clamp(0.4rem,1.4svh,0.75rem)] w-[clamp(48px,11svh,80px)] shrink-0 self-center object-contain @2xl:hidden"
         />
 
         {/* Title */}
         <div className="flex shrink-0 flex-col items-center px-6 pt-1 @2xl:pt-6">
-          <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-20 object-contain @2xl:w-32" />
-          <h2 className="text-center text-[clamp(1rem,2.6svh,1.4rem)] font-semibold text-white [text-shadow:0px_4px_4px_#000000] @2xl:text-[26px]">
+          <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-[clamp(48px,11svh,80px)] object-contain @2xl:w-32" />
+          <h2 className="text-center text-[clamp(0.9rem,2.6svh,1.4rem)] font-semibold text-white [text-shadow:0px_4px_4px_#000000] @2xl:text-[clamp(15px,3.4svh,26px)]">
             {story.title}
           </h2>
-          <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-20 rotate-180 object-contain @2xl:w-32" />
+          <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-[clamp(48px,11svh,80px)] rotate-180 object-contain @2xl:w-32" />
         </div>
 
         {/* Main — stacked on mobile, two columns on desktop */}
-        <div className="flex w-full shrink-0 flex-col items-center gap-3 px-6 pt-3 @2xl:min-h-0 @2xl:flex-1 @2xl:flex-row @2xl:items-center @2xl:justify-evenly @2xl:gap-8 @2xl:px-10">
+        <div className="flex w-full shrink-0 flex-col items-center gap-[clamp(0.4rem,1.4svh,0.75rem)] px-6 pt-[clamp(0.4rem,1.4svh,0.75rem)] @2xl:min-h-0 @2xl:flex-1 @2xl:flex-row @2xl:items-center @2xl:justify-evenly @2xl:gap-8 @2xl:px-10">
           {/* Video + caption */}
           <div className="flex w-full flex-col items-center @2xl:w-[58%]">
             <div className="relative w-full">
               <VideoPlayer
                 src={story.video}
-                className="h-[26svh] w-full overflow-hidden rounded-[17.39px] border border-white shadow-lg @2xl:aspect-video @2xl:h-auto"
+                className="h-[clamp(90px,24svh,230px)] w-full overflow-hidden rounded-[17.39px] border border-white shadow-lg @2xl:aspect-video [@media(min-height:701px)]:@2xl:h-auto [@media(max-height:700px)]:@2xl:h-[clamp(150px,40svh,330px)] [@media(max-height:700px)]:@2xl:w-auto"
               />
               {/* JEEViKA badge — mobile, bottom-right corner of the video */}
               <Image
@@ -104,7 +113,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
                 alt="JEEViKA"
                 width={98}
                 height={98}
-                className="absolute jivika-bounce -top-10 right-1 z-10 h-20 w-20 rounded-full object-contain @2xl:hidden"
+                className="absolute jivika-bounce -top-[clamp(1.25rem,5.5svh,2.5rem)] right-1 z-10 h-[clamp(40px,9svh,64px)] w-[clamp(40px,9svh,64px)] rounded-full object-contain @2xl:hidden"
               />
             </div>
             <p className="mt-2 text-center text-[clamp(0.78rem,1.9svh,1rem)] font-semibold text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] @2xl:mt-4 @2xl:text-lg">
@@ -114,12 +123,20 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
 
           {/* Did You Know card */}
           <div className="w-full @2xl:w-[42%] md:-mt-28 ">
-            <div className="bg-glass-soft relative rounded-[28.718px] border border-white/40 p-4 @2xl:p-5">
+            <div className="bg-glass-soft relative rounded-[28.718px] border border-white/40 p-[clamp(0.6rem,2svh,1rem)] @2xl:p-5">
+              {/* JEEViKA logo — desktop, perched just above the card's top-right corner */}
+              <Image
+                src="/jivika.png"
+                alt="JEEViKA"
+                width={98}
+                height={98}
+                className="jivika-bounce absolute -top-[clamp(3.5rem,14.5svh,6.5rem)] right-2 z-10 hidden h-[clamp(56px,13svh,97px)] w-[clamp(56px,13svh,97px)] rotate-[0.5deg] rounded-full object-contain @2xl:block"
+              />
               <Image src="/quate.png" alt="" width={19} height={19} className="absolute -top-2 left-4 w-3 object-contain @2xl:w-6" />
-              <h3 className="text-[clamp(0.95rem,2.2svh,1.25rem)] font-semibold leading-none tracking-normal text-white @2xl:text-[23.93px]">
+              <h3 className="text-[clamp(0.9rem,2.2svh,1.25rem)] font-semibold leading-none tracking-normal text-white @2xl:text-[clamp(15px,3svh,23.93px)]">
                 Did You Know?
               </h3>
-              <p className="mt-2 text-[clamp(0.72rem,1.65svh,0.95rem)] font-semibold leading-snug tracking-normal text-white @2xl:text-[15px]">
+              <p className="mt-2 text-[clamp(0.72rem,1.65svh,0.95rem)] font-semibold leading-snug tracking-normal text-white @2xl:text-[clamp(11px,1.9svh,15px)]">
                 {story.didYouKnow}
               </p>
               <Image src="/quate.png" alt="" width={19} height={19} className="absolute -bottom-2 right-4 w-3 rotate-180 object-contain @2xl:w-6" />
@@ -134,7 +151,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
           alt=""
           width={300}
           height={300}
-          className="pointer-events-none relative z-20 -mt-5.75 min-h-0 w-full  flex-1 select-none object-contain object-bottom-right @2xl:absolute @2xl:bottom-0 @2xl:right-0 @2xl:mt-0 @2xl:h-auto @2xl:w-53.75 @2xl:flex-none @2xl:object-bottom"
+          className="pointer-events-none relative z-20 -mt-5.75 min-h-0 w-full  flex-1 select-none object-contain object-bottom-right @2xl:absolute @2xl:bottom-0 @2xl:right-0 @2xl:mt-0 @2xl:h-auto @2xl:w-[clamp(110px,30svh,215px)] @2xl:flex-none @2xl:object-bottom"
         />
       </div>
     </div>

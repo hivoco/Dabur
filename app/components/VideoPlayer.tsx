@@ -19,6 +19,26 @@ function PauseIcon() {
   );
 }
 
+function VolumeOnIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+    </svg>
+  );
+}
+
+function VolumeOffIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+      <line x1="23" y1="9" x2="17" y2="15" />
+      <line x1="17" y1="9" x2="23" y2="15" />
+    </svg>
+  );
+}
+
 function FullscreenIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -27,27 +47,6 @@ function FullscreenIcon() {
       <path d="M3 16v3a2 2 0 0 0 2 2h3" />
       <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
     </svg>
-  );
-}
-
-function SeekIcon({ dir }: { dir: "back" | "forward" }) {
-  return (
-    <span className="relative flex h-5 w-5 items-center justify-center">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5" aria-hidden>
-        {dir === "back" ? (
-          <>
-            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-            <path d="M3 3v5h5" />
-          </>
-        ) : (
-          <>
-            <path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-            <path d="M21 3v5h-5" />
-          </>
-        )}
-      </svg>
-      <span className="absolute text-[6px] font-bold leading-none">10</span>
-    </span>
   );
 }
 
@@ -73,6 +72,9 @@ export default function VideoPlayer({
   const [visible, setVisible] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [ended, setEnded] = useState(false);
+  const [muted, setMuted] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   // Reveal the controls, then auto-hide after a short delay (works for hover & tap).
   const poke = () => {
@@ -99,15 +101,6 @@ export default function VideoPlayer({
     });
   }, []);
 
-  const seek = (delta: number) => {
-    const v = videoRef.current;
-    if (!v) return;
-    const dur = Number.isFinite(v.duration) ? v.duration : Infinity;
-    v.currentTime = Math.min(dur, Math.max(0, v.currentTime + delta));
-    if (ended) setEnded(false);
-    poke();
-  };
-
   const replay = () => {
     const v = videoRef.current;
     if (!v) return;
@@ -126,6 +119,22 @@ export default function VideoPlayer({
     }
     if (v.paused) void v.play();
     else v.pause();
+    poke();
+  };
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+    poke();
+  };
+
+  const onSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = Number(e.target.value);
+    if (ended) setEnded(false);
     poke();
   };
 
@@ -163,6 +172,9 @@ export default function VideoPlayer({
           setPlaying(false);
         }}
         onClick={togglePlay}
+        onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+        onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
         className="h-full w-full object-cover"
       />
 
@@ -187,14 +199,22 @@ export default function VideoPlayer({
         <button type="button" onClick={togglePlay} aria-label={playing ? "Pause" : "Play"} className={btn}>
           {playing ? <PauseIcon /> : <PlayIcon />}
         </button>
-        <button type="button" onClick={() => seek(-10)} aria-label="Back 10 seconds" className={btn}>
-          <SeekIcon dir="back" />
-        </button>
-        <button type="button" onClick={() => seek(10)} aria-label="Forward 10 seconds" className={btn}>
-          <SeekIcon dir="forward" />
+        <button type="button" onClick={toggleMute} aria-label={muted ? "Unmute" : "Mute"} className={btn}>
+          {muted ? <VolumeOffIcon /> : <VolumeOnIcon />}
         </button>
 
-        <div className="flex-1" />
+        {/* Progress / seek bar */}
+        <input
+          type="range"
+          min={0}
+          max={duration || 0}
+          step="any"
+          value={currentTime}
+          onChange={onSeek}
+          onPointerDown={poke}
+          aria-label="Seek"
+          className="pointer-events-auto h-1 flex-1 cursor-pointer accent-white"
+        />
 
         <button type="button" onClick={toggleFullscreen} aria-label="Fullscreen" className={btn}>
           <FullscreenIcon />

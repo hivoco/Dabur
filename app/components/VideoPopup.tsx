@@ -54,7 +54,7 @@ export default function VideoPopup({
       */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative aspect-video w-[92vw] max-w-[1000px] overflow-hidden rounded-2xl border border-white shadow-[0_8px_60px_rgba(0,0,0,0.5)] transition-all duration-500 ease-out max-md:absolute max-md:left-1/2 max-md:top-1/2 max-md:aspect-auto max-md:h-[100vw] max-md:w-[100svh] max-md:max-w-none max-md:-translate-x-1/2 max-md:-translate-y-1/2 max-md:rotate-90 max-md:rounded-none max-md:border-0 ${
+        className={`relative aspect-video w-[min(92vw,calc((100svh-8rem)*16/9))] max-w-[1000px] overflow-hidden rounded-2xl border border-white shadow-[0_8px_60px_rgba(0,0,0,0.5)] transition-all duration-500 ease-out max-md:absolute max-md:left-1/2 max-md:top-1/2 max-md:aspect-auto max-md:h-[100vw] max-md:w-[100svh] max-md:max-w-none max-md:-translate-x-1/2 max-md:-translate-y-1/2 max-md:rotate-90 max-md:rounded-none max-md:border-0 ${
           show ? "opacity-100 md:translate-x-0" : "opacity-0 md:translate-x-40"
         }`}
       >

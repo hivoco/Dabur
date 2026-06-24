@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useBackground } from "./components/Background";
 import { useRouter } from "next/navigation";
-import StoryPopup from "./components/StoryPopup";
-import VideoPopup from "./components/VideoPopup";
 import ChatWidget from "./components/ChatWidget";
 
 // FlankButton notched-pill outline, authored in the 105×51 viewBox then scaled
@@ -155,42 +153,19 @@ function FlankButton({
 }
 
 export default function Home() {
-  const { showLeft, showRight, center } = useBackground();
+  const { center } = useBackground();
   const router = useRouter();
-  const [storyOpen, setStoryOpen] = useState(false);
-  const [videoOpen, setVideoOpen] = useState(false);
-  const popupOpen = storyOpen || videoOpen;
 
-  // Fade the page content in on mount (e.g. when navigating back from /discover).
+  // Fade the page content in on mount, and re-center the background. The
+  // Story/Video pages slide it, so returning here (including via the browser
+  // back button) should reset it to centre.
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
+    center();
     const r = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(r);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Slide the background and open the popup at the same time.
-  const openStory = () => {
-    showLeft();
-    setStoryOpen(true);
-  };
-
-  // Recenter the background now (slides back with the popup's exit), then
-  // unmount the popup after its slide-out-left animation finishes.
-  const closeStory = () => {
-    center();
-    setTimeout(() => setStoryOpen(false), 500);
-  };
-
-  // Right button: slide the background left and open the video popup together.
-  const openVideo = () => {
-    showRight();
-    setVideoOpen(true);
-  };
-
-  const closeVideo = () => {
-    center();
-    setTimeout(() => setVideoOpen(false), 500);
-  };
 
   return (
     <div className="relative flex h-svh  flex-col px-10 md:px-0 items-center overflow-hidden">
@@ -207,20 +182,20 @@ export default function Home() {
         priority
         className={`relative z-60 mt-2 w-20 mb-2 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] transition-opacity duration-500 ${
           !mounted ? "opacity-0" : "opacity-100"
-        } ${popupOpen ? "hidden md:block" : ""}`}
+        }`}
       />
 
       {/* Foreground content — hidden while a popup is open so only the
           popup (over the sliding background image) is visible. */}
       <div
         className={`flex w-full flex-1 flex-col items-center transition-opacity duration-500 ${
-          !mounted || popupOpen ? "pointer-events-none opacity-0" : "opacity-100"
+          !mounted ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       >
 
      
 
-      <div className="bg-glass-tint relative flex h-32 md:h-40  w-64 items-center justify-center rounded-[12.78px] backdrop-blur-[2px] md:w-87">
+      <div className="bg-glass-tint relative flex items-center justify-center rounded-[12.78px] backdrop-blur-[2px] h-32 md:h-40 w-64 md:w-87 [@media(max-height:699px)]:h-[clamp(64px,15svh,105px)] md:[@media(max-height:699px)]:h-[clamp(64px,15svh,105px)] [@media(max-height:699px)]:w-[clamp(140px,29svh,203px)] md:[@media(max-height:699px)]:w-[clamp(140px,29svh,203px)]">
        
         
 
@@ -229,7 +204,7 @@ export default function Home() {
           alt=""
           width={106}
           height={29}
-          className="absolute top-1 left-1/2 w-20 md:w-28  -translate-x-1/2 object-contain"
+          className="absolute top-1 left-1/2 w-20 md:w-28 [@media(max-height:699px)]:w-[clamp(44px,9.4svh,66px)] md:[@media(max-height:699px)]:w-[clamp(44px,9.4svh,66px)]  -translate-x-1/2 object-contain"
         />
 
         <Image
@@ -238,7 +213,7 @@ export default function Home() {
           width={350}
           height={110}
           priority
-          className="object-contain w-56 md:w-96 "
+          className="object-contain w-56 md:w-96 [@media(max-height:699px)]:w-[clamp(120px,27svh,189px)] md:[@media(max-height:699px)]:w-[clamp(120px,27svh,189px)] "
         />
 
         <Image
@@ -246,7 +221,7 @@ export default function Home() {
           alt=""
           width={106}
           height={29}
-          className="absolute bottom-1 left-1/2 w-20 md:w-28   rotate-180 -translate-x-1/2 object-contain"
+          className="absolute bottom-1 left-1/2 w-20 md:w-28 [@media(max-height:699px)]:w-[clamp(44px,9.4svh,66px)] md:[@media(max-height:699px)]:w-[clamp(44px,9.4svh,66px)]   rotate-180 -translate-x-1/2 object-contain"
         />
       </div>
 
@@ -254,7 +229,7 @@ export default function Home() {
       <FlankButton
         side="left"
         bee="/bee1.gif"
-        onClick={openStory}
+        onClick={() => router.push("/women-harvesters")}
         text="Meet Our <br/> Women <br/> Harvesters"
         position="top-[42%] md:top-[42%] left-0 md:left-1/2 translate-x-0 md:-translate-x-[250px]"
       />
@@ -264,7 +239,7 @@ export default function Home() {
       <FlankButton
         side="right"
         bee="/bee1.gif"
-        onClick={openVideo}
+        onClick={() => router.push("/source-story")}
         text="Know Our <br/> Sourcing Story"
         position="bottom-[29%] left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
       />
@@ -330,9 +305,7 @@ export default function Home() {
         <button
           type="button"
           onClick={() => router.push("/discover")}
-          className={`bg-glass flex h-[48.51px] flex-1 items-center justify-center gap-[10.54px] rounded-[31.62px] border border-white/30 px-[21.08px] py-[14.76px] text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] md:mt-auto md:mb-8 md:w-80 md:flex-none ${
-            popupOpen ? "invisible pointer-events-none" : ""
-          }`}
+          className="bg-glass flex h-[48.51px] flex-1 items-center justify-center gap-[10.54px] rounded-[31.62px] border border-white/30 px-[21.08px] py-[14.76px] text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] md:mt-auto md:mb-8 md:w-80 md:flex-none"
         >
           Discover More
         </button>
@@ -341,8 +314,6 @@ export default function Home() {
         <ChatWidget triggerClassName="flex flex-col items-end gap-3 md:fixed md:bottom-5 md:right-5 md:z-70" />
       </div>
 
-      {storyOpen && <StoryPopup onClose={closeStory} />}
-      {videoOpen && <VideoPopup src="/brand-film.mp4" onClose={closeVideo} />}
     </div>
   );
 }

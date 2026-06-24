@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 
 // 50% = centered. Lower reveals the LEFT of the image (image slides right);
@@ -32,18 +32,17 @@ export default function BackgroundProvider({
   children: ReactNode;
 }) {
   const [posX, setPosX] = useState(50);
-  const [step, setStep] = useState(MOBILE_STEP);
 
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const update = () => setStep(mq.matches ? DESKTOP_STEP : MOBILE_STEP);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
+  // Read the step at call time (not from state) so it's correct even on a direct
+  // page visit, before any resize listener could run.
+  const step = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(min-width: 1024px)").matches
+      ? DESKTOP_STEP
+      : MOBILE_STEP;
 
-  const showLeft = () => setPosX((p) => Math.max(0, p - step));
-  const showRight = () => setPosX((p) => Math.min(100, p + step));
+  const showLeft = () => setPosX((p) => Math.max(0, p - step()));
+  const showRight = () => setPosX((p) => Math.min(100, p + step()));
   const center = () => setPosX(50);
 
   return (
