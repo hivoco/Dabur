@@ -113,7 +113,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
                 alt="JEEViKA"
                 width={98}
                 height={98}
-                className="absolute jivika-bounce -top-[clamp(1.25rem,5.5svh,2.5rem)] right-1 z-10 h-[clamp(44px,11svh,80px)] w-[clamp(44px,11svh,80px)] rounded-full object-contain @2xl:hidden"
+                className="absolute jivika-bounce  -top-12 md:-top-[clamp(1.25rem,5.5svh,2.5rem)] right-1 z-10 h-[clamp(44px,11svh,80px)] w-[clamp(44px,11svh,80px)] rounded-full object-contain @2xl:hidden"
               />
             </div>
             <p className="mt-2 text-center text-[clamp(0.78rem,1.9svh,1rem)] font-semibold text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] @2xl:mt-4 @2xl:text-lg [@media(max-height:700px)]:@2xl:text-sm">

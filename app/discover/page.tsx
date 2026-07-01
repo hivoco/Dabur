@@ -12,8 +12,8 @@ import recipeData from "../data/recipie.json";
 // serving the cached copy; changing ?v= makes the URL new so they fetch fresh.
 const ASSET_VERSION = "2";
 
-const TOP_CARDS = [1, 22, 33, 4].map(
-  (n) => `/discover/${n}.png?v=${ASSET_VERSION}`
+const TOP_CARDS = [1, 2, 3, 4].map(
+  (n) => `/discover/upper-card/${n}.png?v=${ASSET_VERSION}`
 );
 
 // Recipes are data-driven from app/data/recipie.json. The Nth entry (card1..8)
@@ -165,7 +165,7 @@ export default function Discover() {
         {/* Sections — centred in the leftover height with a scaling gap. */}
         <div className="flex min-h-0 flex-1 flex-col justify-center gap-[clamp(1rem,4svh,2.25rem)] px-5 pb-[clamp(0.75rem,2svh,1.5rem)] md:px-10">
           {/* What Makes It Truly Special */}
-          <div className="mx-auto w-full md:max-w-[min(910px,128svh)]">
+          <div className="mx-auto w-full md:max-w-[min(830px,116svh)]">
             <h2 className="mb-[clamp(0.4rem,1.6svh,1.25rem)] text-center text-[clamp(1rem,2.4svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[clamp(1.25rem,3.4svh,28px)]">
               What Makes it Truly Special
             </h2>
@@ -174,7 +174,7 @@ export default function Discover() {
                 <div
                   key={src}
                   style={{ transitionDelay: `${i * 90}ms` }}
-                  className={`relative aspect-482/586 h-[clamp(130px,30svh,253px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out md:h-auto md:w-full ${
+                  className={`relative aspect-482/586 h-[clamp(120px,27svh,225px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out md:h-auto md:w-full ${
                     mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                   }`}
                 >

@@ -118,7 +118,7 @@ export default function ChatWidget({
         <>
       {/* Glass card: slides in from the right, then swaps text with a typewriter effect */}
       <div
-        className={`bg-glass md:flex hidden  items-center rounded-full border border-white/30 px-3 md:py-1 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition-[transform,opacity] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`bg-glass md:flex hidden  items-center rounded-full border border-white/30 px-3  shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition-[transform,opacity] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
           shown ? "translate-x-0 opacity-100" : "translate-x-[120%] opacity-0"
         }`}
       >
@@ -147,14 +147,14 @@ export default function ChatWidget({
         type="button"
         aria-label="Open chat"
         onClick={() => setOpen(true)}
-        className="bg-glass flex h-[48.51px] w-[48.51px] items-center justify-center rounded-full border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px]"
+        className="bg-glass flex h-12 w-12 items-center justify-center rounded-full border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px]"
       >
         <Image
-          src="/chat.png"
+          src="/chat-bee.png"
           alt="Chat"
           width={104}
           height={104}
-          className="h-7 w-7 object-contain"
+          className="h-10 w-10 object-contain"
         />
       </button>
         </>
