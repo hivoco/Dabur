@@ -79,7 +79,7 @@ function FlankButton({
         onClick={handleActivate}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
-        className="relative block h-16.25  w-35 shrink-0 cursor-pointer origin-center scale-[0.9786] md:scale-100"
+        className="relative block h-16.25  w-35 shrink-0 cursor-pointer origin-center scale-80 md:scale-100"
         style={{ clipPath: FLANK_CLIP }}
       >
         {/* Frosted-glass layer: actually blurs the page content behind the
