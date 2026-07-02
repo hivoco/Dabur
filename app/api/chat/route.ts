@@ -193,7 +193,7 @@ export async function POST(req: Request) {
     // (not via the prompt) so it is added reliably and ONLY for those topics —
     // the small model tends to over- or under-apply such a conditional rule.
     const needsDisclaimer =
-      /\b(legal|complian\w*|certif\w*|tests?|tested|testing|labs?|laborator\w*|fssai|nmr|accredit\w*|regulat\w*|licen[sc]e\w*|standards?)\b/i.test(
+      /\b(legal|complian\w*|certif\w*|tests?|tested|testing|labs?|laborator\w*|fssai|nmr|accredit\w*|regulat\w*|licen[sc]e\w*|standards?|heal\w*|immun\w*|digest\w*|nutri\w*|medic\w*|therapeutic\w*|cures?|remed\w*|treatments?|diseases?|illness\w*|ailments?|wellness|diabet\w*|cholesterol|antioxidant\w*|allerg\w*)\b/i.test(
         message
       );
 
