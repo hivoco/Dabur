@@ -113,9 +113,12 @@ html, body {
   50% { transform: translateY(-16px); }
 }
 
+/* Bounce via margin-top (a non-composited property) rather than transform, so
+   the logo never gets promoted to its own GPU layer — that promotion let Safari
+   paint the bouncing logo behind the "Did You Know" card despite its z-index. */
 @keyframes jivika-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -10px; }
 }
 
 .bee-bounce {
@@ -125,8 +128,6 @@ html, body {
 
 .jivika-bounce {
   animation: jivika-bounce 5s ease-in-out infinite;
-  will-change: transform;
-  
 }
 
 @media (prefers-reduced-motion: reduce) {

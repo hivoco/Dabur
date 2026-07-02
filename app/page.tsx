@@ -79,7 +79,7 @@ function FlankButton({
         onClick={handleActivate}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
-        className="relative block h-16.25 w-35 shrink-0 cursor-pointer origin-center scale-[0.9786] md:scale-100"
+        className="relative block h-16.25  w-35 shrink-0 cursor-pointer origin-center scale-[0.9786] md:scale-100"
         style={{ clipPath: FLANK_CLIP }}
       >
         {/* Frosted-glass layer: actually blurs the page content behind the
@@ -240,8 +240,16 @@ export default function Home() {
         side="right"
         bee="/new-bee-2.gif"
         onClick={() => router.push("/source-story")}
+        text="Know Our  Sourcing <br/> Story"
+        position="bottom-[29%] md:hidden left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
+      />
+
+       <FlankButton
+        side="right"
+        bee="/new-bee-2.gif"
+        onClick={() => router.push("/source-story")}
         text="Know Our <br/> Sourcing Story"
-        position="bottom-[29%] left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
+        position="bottom-[29%] hidden md:flex left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
       />
 
       {/* Decorative bees — top / right, smaller and flipped. The flip

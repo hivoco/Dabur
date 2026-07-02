@@ -122,16 +122,8 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
           </div>
 
           {/* Did You Know card */}
-          <div className="w-full  @2xl:w-[42%] md:-mt-28 ">
-            <div className="bg-glass-soft relative rounded-[28.718px] border border-white/40 p-[clamp(0.6rem,2svh,1rem)] @2xl:p-5">
-              {/* JEEViKA logo — desktop, perched just above the card's top-right corner */}
-              <Image
-                src="/jivika.png"
-                alt="JEEViKA"
-                width={98}
-                height={98}
-                className="jivika-bounce absolute -top-[clamp(3rem,13svh,5.5rem)] right-2 z-10 hidden h-[clamp(56px,13svh,97px)] w-[clamp(56px,13svh,97px)] rotate-[0.5deg] rounded-full object-contain @2xl:block"
-              />
+          <div className="relative isolate w-full @2xl:w-[42%] md:-mt-28">
+            <div className="bg-glass-soft relative z-0 rounded-[28.718px] border border-white/40 p-[clamp(0.6rem,2svh,1rem)] @2xl:p-5">
               <Image src="/quate.png" alt="" width={19} height={19} className="absolute -top-2 left-4 w-3 object-contain @2xl:w-6" />
               <h3 className="text-[clamp(0.9rem,2.2svh,1.25rem)] font-semibold leading-none tracking-normal text-white @2xl:text-[clamp(15px,3svh,23.93px)]">
                 Did You Know?
@@ -141,6 +133,15 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
               </p>
               <Image src="/quate.png" alt="" width={19} height={19} className="absolute -bottom-2 right-4 w-3 rotate-180 object-contain @2xl:w-6" />
             </div>
+            {/* JEEViKA logo — desktop. A SIBLING of the card (not a child) so it
+                always paints after/above the box and can never slip behind it. */}
+            <Image
+              src="/jivika.png"
+              alt="JEEViKA"
+              width={98}
+              height={98}
+              className="jivika-bounce pointer-events-none absolute -top-[clamp(4.25rem,16svh,6.75rem)] right-2 z-50 hidden h-[clamp(56px,13svh,97px)] w-[clamp(56px,13svh,97px)] rounded-full object-contain @2xl:block"
+            />
           </div>
         </div>
 
