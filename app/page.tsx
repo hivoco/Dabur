@@ -241,7 +241,7 @@ export default function Home() {
         bee="/new-bee-2.gif"
         onClick={() => router.push("/source-story")}
         text="Know Our  Sourcing <br/> Story"
-        position="bottom-[29%] md:hidden left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
+        position="bottom-[29%] md:hidden left-auto md:left-1/2 -right-3 md:right-auto translate-x-0 md:translate-x-[120px]"
       />
 
        <FlankButton
