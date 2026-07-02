@@ -209,15 +209,25 @@ export async function POST(req: Request) {
             acc += token;
             controller.enqueue(encoder.encode(token));
           }
-          // Never append the disclaimer to the out-of-knowledge fallback reply.
-          const isFallback = acc.includes(
+          // Never append a disclaimer to the out-of-knowledge fallback reply.
+          const accLower = acc.toLowerCase();
+          const isFallback = accLower.includes(
             "unable to provide the information you're looking for"
           );
-          if (needsBenefits && !isFallback) {
-            controller.enqueue(encoder.encode(`\n\n${BENEFITS_NOTE}`));
-          }
-          if (needsDisclaimer && !isFallback) {
-            controller.enqueue(encoder.encode(`\n\n${LEGAL_DISCLAIMER}`));
+          // The model sometimes writes a disclaimer itself (the exact wording
+          // lives in the RAG context), which is why it was showing twice. Only
+          // append ours when the answer doesn't already contain one, and never
+          // stack two — the benefits note takes priority for health claims, the
+          // legal/compliance note covers everything else.
+          const hasDisclaimer =
+            accLower.includes("individual results may vary") ||
+            accLower.includes("based on publicly available data");
+          if (!isFallback && !hasDisclaimer) {
+            if (needsBenefits) {
+              controller.enqueue(encoder.encode(`\n\n${BENEFITS_NOTE}`));
+            } else if (needsDisclaimer) {
+              controller.enqueue(encoder.encode(`\n\n${LEGAL_DISCLAIMER}`));
+            }
           }
         } catch (err) {
           console.error("chat stream error", err);
