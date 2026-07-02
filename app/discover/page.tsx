@@ -182,7 +182,7 @@ export default function Discover() {
         {/* Sections — centred in the leftover height with a scaling gap. */}
         <div className="flex min-h-0 flex-1 flex-col justify-center gap-[clamp(1rem,4svh,2.25rem)] px-5 pb-[clamp(0.75rem,2svh,1.5rem)] md:px-10">
           {/* What Makes It Truly Special */}
-          <div className="mx-auto w-full md:max-w-[min(830px,116svh)]">
+          <div className="mx-auto w-full md:max-w-[min(910px,128svh)]">
             <h2 className="mb-[clamp(0.4rem,1.6svh,1.25rem)] text-center text-[clamp(1rem,2.4svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[clamp(1.25rem,3.4svh,28px)]">
               What Makes it Truly Special
             </h2>

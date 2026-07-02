@@ -88,7 +88,7 @@ export default function RecipePopup({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`bg-cream relative flex h-[90vh] w-full max-w-249 flex-col overflow-y-scroll rounded-t-3xl p-5 shadow-[0px_5px_15px_rgba(0,0,0,0.50)] transition-all duration-500 ease-out md:h-140 md:rounded-[24.89px] md:p-7 md:overflow-hidden ${
+        className={`bg-cream relative flex h-[90vh] w-full max-w-249 flex-col overflow-y-scroll rounded-t-3xl p-5 shadow-[0px_5px_15px_rgba(0,0,0,0.50)] transition-all duration-500 ease-out md:h-[min(560px,80svh)] md:max-w-[min(996px,142svh)] md:rounded-[24.89px] md:p-[clamp(1rem,4svh,1.75rem)] md:overflow-hidden ${
           show
             ? "translate-y-0 opacity-100 md:scale-100"
             : "translate-y-full opacity-0 md:translate-y-0 md:scale-95"
@@ -117,10 +117,10 @@ export default function RecipePopup({
         </div>
 
         {/* Content */}
-        <div className="mt-5 flex flex-col gap-5 md:min-h-0 md:flex-1 md:flex-row md:gap-7">
+        <div className="mt-[clamp(0.6rem,2.85svh,1.25rem)] flex flex-col gap-[clamp(0.6rem,2.85svh,1.25rem)] md:min-h-0 md:flex-1 md:flex-row md:gap-[clamp(1rem,4svh,1.75rem)]">
           {/* Left: image + why it works */}
-          <div className="flex flex-col gap-4 md:min-h-0 md:w-[52%]">
-            <div className="relative h-56 w-full shrink-0 overflow-hidden rounded-2xl md:h-auto md:flex-1">
+          <div className="flex flex-col gap-[clamp(0.4rem,2.3svh,1rem)] md:min-h-0 md:w-[52%]">
+            <div className="relative h-[clamp(140px,30svh,208px)] w-full shrink-0 overflow-hidden rounded-2xl md:h-auto md:flex-1">
               <Image
                 src={recipe.src}
                 alt={recipe.title}
@@ -134,7 +134,7 @@ export default function RecipePopup({
           </div>
 
           {/* Right: ingredients + method */}
-          <div className="flex flex-col gap-6 md:min-h-0 md:w-[48%] md:overflow-y-auto md:pr-1">
+          <div className="flex flex-col gap-[clamp(0.6rem,3.4svh,1.5rem)] md:min-h-0 md:w-[48%] md:overflow-y-auto md:pr-1">
             <Section label="INGREDIENTS">
               <div className="grid grid-cols-4 gap-x-2 gap-y-4">
                 {recipe.ingredients.map((ing) => (
