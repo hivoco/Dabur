@@ -27,9 +27,10 @@ export const metadata: Metadata = {
 };
 
 // Structured data for this page: breadcrumb + one Recipe per recipe card.
-const JSON_LD = [
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
   {
-    "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
@@ -42,7 +43,6 @@ const JSON_LD = [
     ],
   },
   ...recipeData.map((r, i) => ({
-    "@context": "https://schema.org",
     "@type": "Recipe",
     name: r.title,
     author: { "@type": "Organization", name: "Dabur" },
@@ -56,7 +56,8 @@ const JSON_LD = [
       text: step,
     })),
   })),
-];
+  ],
+};
 
 export default function DiscoverLayout({
   children,

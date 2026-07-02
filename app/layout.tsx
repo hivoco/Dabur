@@ -86,22 +86,21 @@ export const viewport: Viewport = {
 // Structured data (JSON-LD), rendered server-side so crawlers see it in the
 // initial HTML. Product/FAQ describe the single product this whole site is
 // about, so they live site-wide.
-const JSON_LD = [
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
   {
-    "@context": "https://schema.org",
     "@type": "Organization",
     name: "Dabur India Ltd.",
     url: SITE_URL,
     logo: `${SITE_URL}/logo-1.png`,
   },
   {
-    "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Dabur Litchi Honey",
     url: SITE_URL,
   },
   {
-    "@context": "https://schema.org",
     "@type": "Product",
     name: "Dabur Litchi Honey",
     brand: { "@type": "Brand", name: "Dabur" },
@@ -118,7 +117,6 @@ const JSON_LD = [
     ],
   },
   {
-    "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: [
       {
@@ -155,7 +153,8 @@ const JSON_LD = [
       },
     ],
   },
-];
+  ],
+};
 
 export default function RootLayout({
   children,

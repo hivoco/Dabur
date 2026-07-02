@@ -67,7 +67,7 @@ function FlankButton({
           alt="bee"
           width={80}
           height={80}
-          className={`w-7 ${isLeft&& "-scale-x-100"} object-contain`}
+          className={`w-7 ${!isLeft&& "-scale-x-100"} object-contain`}
         />
       </span>
 
@@ -228,7 +228,7 @@ export default function Home() {
       {/* Left button — upper-left, flanking the centre */}
       <FlankButton
         side="left"
-        bee="/bee1.gif"
+        bee="/new-bee-2.gif"
         onClick={() => router.push("/women-harvesters")}
         text="Meet Our <br/> Women <br/> Harvesters"
         position="top-[42%] md:top-[42%] left-0 md:left-1/2 translate-x-0 md:-translate-x-[250px]"
@@ -238,7 +238,7 @@ export default function Home() {
       {/* Right button — lower-right, flanking the centre */}
       <FlankButton
         side="right"
-        bee="/bee1.gif"
+        bee="/new-bee-2.gif"
         onClick={() => router.push("/source-story")}
         text="Know Our <br/> Sourcing Story"
         position="bottom-[29%] left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
@@ -247,9 +247,9 @@ export default function Home() {
       {/* Decorative bees — top / right, smaller and flipped. The flip
           (-scale-x-100) lives on the WRAPPER so it doesn't fight the bee-float
           transform that animates the image. */}
-      <div className="pointer-events-none absolute top-[10%] right-[14%] hidden md:block z-20 w-5 -scale-x-100 select-none md:w-12">
+      <div className="pointer-events-none absolute top-[10%] right-[14%] hidden md:block z-20 w-5  select-none md:w-12">
         <Image
-          src="/bee1.gif"
+          src="/new-bee-2.gif"
           alt=""
           width={10}
           height={10}
@@ -258,9 +258,9 @@ export default function Home() {
           style={{ animationDelay: "0.3s" }}
         />
       </div>
-      <div className="pointer-events-none absolute top-[12%] left-[13%] z-20 w-5  select-none md:w-12">
+      <div className="pointer-events-none absolute top-[12%] left-[13%] z-20 w-5  select-none -scale-x-100 md:w-12">
         <Image
-          src="/bee1.gif"
+          src="/new-bee-2.gif"
           alt=""
           width={10}
           height={10}
@@ -269,9 +269,9 @@ export default function Home() {
           style={{ animationDelay: "0.3s" }}
         />
       </div>
-      <div className="pointer-events-none absolute bottom-[22%] left-[13%] z-20 w-5 -scale-x-100 select-none md:w-12">
+      <div className="pointer-events-none absolute bottom-[22%] left-[13%] z-20 w-5  select-none md:w-12">
         <Image
-          src="/bee1.gif"
+          src="/new-bee-2.gif"
           alt=""
           width={10}
           height={10}
@@ -280,9 +280,9 @@ export default function Home() {
           style={{ animationDelay: "0.3s" }}
         />
       </div>
-      <div className="pointer-events-none absolute top-[30%] md:top-[45%] right-[4%] z-20 w-5 -scale-x-100 md:scale-x-100  select-none md:w-10">
+      <div className="pointer-events-none absolute top-[30%] md:top-[45%] right-[4%] z-20 w-5  md:scale-x-100  select-none md:w-10">
         <Image
-          src="/bee1.gif"
+          src="/new-bee-2.gif"
           alt=""
           width={20}
           height={20}
