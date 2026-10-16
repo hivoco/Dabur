@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { useEscClose } from "../lib/useEscClose";
 import VideoPlayer from "./VideoPlayer";
@@ -23,7 +23,8 @@ export default function VideoPopup({
   mobileSrc?: string;
   onClose: () => void;
 }) {
-  const [show, setShow] = useState(false);
+  // Visible from the first render; entrance is CSS-only (`starting:`).
+  const [show, setShow] = useState(true);
 
   // null during SSR / first paint, so neither file starts downloading until
   // we know which one this screen needs.
@@ -34,10 +35,6 @@ export default function VideoPopup({
   );
   const videoSrc = isMobile === null ? null : isMobile && mobileSrc ? mobileSrc : src;
 
-  useEffect(() => {
-    const r = requestAnimationFrame(() => setShow(true));
-    return () => cancelAnimationFrame(r);
-  }, []);
 
   // Fade out, then let the parent recenter the bg + unmount.
   const handleClose = () => {
@@ -51,7 +48,7 @@ export default function VideoPopup({
     <div
       onClick={handleClose}
       className={`full-bleed fixed inset-y-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-[2px] transition-opacity duration-300 md:px-6 md:pb-6 md:pt-26  ${
-        show ? "opacity-100" : "opacity-0"
+        show ? "opacity-100 starting:opacity-0" : "opacity-0"
       }`}
     >
       {/* Close */}
@@ -75,7 +72,7 @@ export default function VideoPopup({
       <div
         onClick={(e) => e.stopPropagation()}
         className={`relative aspect-video w-[min(92vw,calc((100svh-8rem)*16/9))] max-w-[1000px] overflow-hidden rounded-2xl border border-white shadow-[0_8px_60px_rgba(0,0,0,0.5)] transition-all duration-500 ease-out max-md:absolute max-md:left-1/2 max-md:top-1/2 max-md:aspect-auto max-md:h-[calc(100vw-2rem)] max-md:w-[calc(100svh-2rem)] max-md:max-w-none max-md:-translate-x-1/2 max-md:-translate-y-1/2 max-md:rotate-90   ${
-          show ? "opacity-100 md:translate-x-0" : "opacity-0 md:translate-x-40"
+          show ? "opacity-100 md:translate-x-0 starting:opacity-0 md:starting:translate-x-40" : "opacity-0 md:translate-x-40"
         }`}
       >
         {videoSrc ? (

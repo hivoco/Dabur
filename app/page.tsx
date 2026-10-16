@@ -168,7 +168,7 @@ export default function Home() {
       <h1 className="sr-only">Monofloral Litchi Honey</h1>
 
       <Image
-        src="/logo-1.png"
+        src="/logo-1.webp"
         alt="Dabur Litchi Honey logo"
         width={120}
         height={109}
@@ -195,7 +195,7 @@ export default function Home() {
           bottom-right. */}
       <FlankButton
         side="left"
-        bee="/new-bee-2.gif"
+        bee="/new-bee-2.webp"
         onClick={() => router.push("/women-harvesters")}
         text="Meet Our <br/> Women <br/> Harvesters"
         // 42% down on phones, 36% on sm+, sliding further down as the screen
@@ -206,14 +206,14 @@ export default function Home() {
       {/* Phone and tablet/desktop (sm: ≥640px) variants of the right button (different line breaks). */}
       <FlankButton
         side="right"
-        bee="/new-bee-2.gif"
+        bee="/new-bee-2.webp"
         onClick={() => router.push("/source-story")}
         text="Know Our  Sourcing <br/> Story"
         position="bottom-[29%] sm:hidden left-auto sm:left-1/2 -right-3 sm:right-auto translate-x-0 sm:translate-x-[120px]"
       />
       <FlankButton
         side="right"
-        bee="/new-bee-2.gif"
+        bee="/new-bee-2.webp"
         onClick={() => router.push("/source-story")}
         text="Know Our <br/> Sourcing Story"
         position="bottom-[29%] hidden sm:flex left-auto sm:left-1/2 right-0 sm:right-auto translate-x-0 sm:translate-x-[120px]"

@@ -3,12 +3,12 @@
     "card": "card1",
     "title": "Litchi Honey Citrus Sparkler",
     "ingredients": [
-      { "name": "Litchi Honey", "icon": "/discover/icons/card1/1.png" },
-      { "name": "Lime Juice", "icon": "/discover/icons/card1/2.png" },
-      { "name": "Orange Juice", "icon": "/discover/icons/card1/3.png" },
-      { "name": "Sparkling Water", "icon": "/discover/icons/card1/4.png" },
-      { "name": "Mint", "icon": "/discover/icons/card1/5.png" },
-      { "name": "Grapefruit slice", "icon": "/discover/icons/card1/6.png" }
+      { "name": "Litchi Honey", "icon": "/discover/icons/card1/1.webp" },
+      { "name": "Lime Juice", "icon": "/discover/icons/card1/2.webp" },
+      { "name": "Orange Juice", "icon": "/discover/icons/card1/3.webp" },
+      { "name": "Sparkling Water", "icon": "/discover/icons/card1/4.webp" },
+      { "name": "Mint", "icon": "/discover/icons/card1/5.webp" },
+      { "name": "Grapefruit slice", "icon": "/discover/icons/card1/6.webp" }
     ],
     "method": [
       "Stir honey with lime juice till it dissolves.",
@@ -22,13 +22,13 @@
     "card": "card2",
     "title": "Litchi Honey Tropical Salad",
     "ingredients": [
-      { "name": "Litchi Honey", "icon": "/discover/icons/card2/1.png" },
-      { "name": "Mango", "icon": "/discover/icons/card2/2.png" },
-      { "name": "Cucumber", "icon": "/discover/icons/card2/3.png" },
-      { "name": "Avocado", "icon": "/discover/icons/card2/4.png" },
-      { "name": "Rocket Leaves", "icon": "/discover/icons/card2/5.png" },
-      { "name": "Olive oil", "icon": "/discover/icons/card2/6.png" },
-      { "name": "Lime Juice", "icon": "/discover/icons/card2/7.png" }
+      { "name": "Litchi Honey", "icon": "/discover/icons/card2/1.webp" },
+      { "name": "Mango", "icon": "/discover/icons/card2/2.webp" },
+      { "name": "Cucumber", "icon": "/discover/icons/card2/3.webp" },
+      { "name": "Avocado", "icon": "/discover/icons/card2/4.webp" },
+      { "name": "Rocket Leaves", "icon": "/discover/icons/card2/5.webp" },
+      { "name": "Olive oil", "icon": "/discover/icons/card2/6.webp" },
+      { "name": "Lime Juice", "icon": "/discover/icons/card2/7.webp" }
     ],
     "method": [
       "Toss chopped fruits and greens together.",
@@ -42,11 +42,11 @@
     "card": "card3",
     "title": "Litchi Honey Yogurt Bowl",
     "ingredients": [
-      { "name": "Litchi Honey", "icon": "/discover/icons/card3/1.png" },
-      { "name": "Thick Yogurt", "icon": "/discover/icons/card3/2.png" },
-      { "name": "Berries", "icon": "/discover/icons/card3/3.png" },
-      { "name": "Chia Seeds", "icon": "/discover/icons/card3/4.png" },
-      { "name": "Toasted Almonds", "icon": "/discover/icons/card3/5.png" }
+      { "name": "Litchi Honey", "icon": "/discover/icons/card3/1.webp" },
+      { "name": "Thick Yogurt", "icon": "/discover/icons/card3/2.webp" },
+      { "name": "Berries", "icon": "/discover/icons/card3/3.webp" },
+      { "name": "Chia Seeds", "icon": "/discover/icons/card3/4.webp" },
+      { "name": "Toasted Almonds", "icon": "/discover/icons/card3/5.webp" }
     ],
     "method": [
       "Spoon yogurt into a bowl.",
@@ -60,10 +60,10 @@
     "card": "card4",
     "title": "Coconut Lime Cooler",
     "ingredients": [
-      { "name": "Litchi Honey", "icon": "/discover/icons/card4/1.png" },
-      { "name": "Lime Juice", "icon": "/discover/icons/card4/2.png" },
-      { "name": "Crushed Ice", "icon": "/discover/icons/card4/3.png" },
-      { "name": "Coconut water", "icon": "/discover/icons/card4/4.png" }
+      { "name": "Litchi Honey", "icon": "/discover/icons/card4/1.webp" },
+      { "name": "Lime Juice", "icon": "/discover/icons/card4/2.webp" },
+      { "name": "Crushed Ice", "icon": "/discover/icons/card4/3.webp" },
+      { "name": "Coconut water", "icon": "/discover/icons/card4/4.webp" }
     ],
     "method": [
       "Shake coconut water, lime juice, and Litchi honey together.",
@@ -77,10 +77,10 @@
     "card": "card5",
     "title": "Litchi Honey Malai Toast",
     "ingredients": [
-      { "name": "Litchi Honey", "icon": "/discover/icons/card5/1.png" },
-      { "name": "Bread", "icon": "/discover/icons/card5/2.png" },
-      { "name": "Fruits", "icon": "/discover/icons/card5/3.png" },
-      { "name": "Fresh Milk Malai", "icon": "/discover/icons/card5/4.png" }
+      { "name": "Litchi Honey", "icon": "/discover/icons/card5/1.webp" },
+      { "name": "Bread", "icon": "/discover/icons/card5/2.webp" },
+      { "name": "Fruits", "icon": "/discover/icons/card5/3.webp" },
+      { "name": "Fresh Milk Malai", "icon": "/discover/icons/card5/4.webp" }
     ],
     "method": [
       "Toast the bread in a frypan.",
@@ -94,11 +94,11 @@
     "card": "card6",
     "title": "Litchi Honey Glazed Roasted Carrots",
     "ingredients": [
-      { "name": "Litchi Honey", "icon": "/discover/icons/card6/1.png" },
-      { "name": "Carrot Strips", "icon": "/discover/icons/card6/2.png" },
-      { "name": "Olive Oil", "icon": "/discover/icons/card6/3.png" },
-      { "name": "Salt", "icon": "/discover/icons/card6/4.png" },
-      { "name": "Thyme", "icon": "/discover/icons/card6/5.png" }
+      { "name": "Litchi Honey", "icon": "/discover/icons/card6/1.webp" },
+      { "name": "Carrot Strips", "icon": "/discover/icons/card6/2.webp" },
+      { "name": "Olive Oil", "icon": "/discover/icons/card6/3.webp" },
+      { "name": "Salt", "icon": "/discover/icons/card6/4.webp" },
+      { "name": "Thyme", "icon": "/discover/icons/card6/5.webp" }
     ],
     "method": [
       "Roast carrot strips with olive oil and salt until tender.",
@@ -112,12 +112,12 @@
     "card": "card7",
     "title": "Litchi Honey Overnight Oats",
     "ingredients": [
-      { "name": "Litchi Honey", "icon": "/discover/icons/card7/1.png" },
-      { "name": "Oats", "icon": "/discover/icons/card7/2.png" },
-      { "name": "Milk", "icon": "/discover/icons/card7/3.png" },
-      { "name": "Chia Seeds", "icon": "/discover/icons/card7/4.png" },
-      { "name": "Banana", "icon": "/discover/icons/card7/5.png" },
-      { "name": "Nuts", "icon": "/discover/icons/card7/6.png" }
+      { "name": "Litchi Honey", "icon": "/discover/icons/card7/1.webp" },
+      { "name": "Oats", "icon": "/discover/icons/card7/2.webp" },
+      { "name": "Milk", "icon": "/discover/icons/card7/3.webp" },
+      { "name": "Chia Seeds", "icon": "/discover/icons/card7/4.webp" },
+      { "name": "Banana", "icon": "/discover/icons/card7/5.webp" },
+      { "name": "Nuts", "icon": "/discover/icons/card7/6.webp" }
     ],
     "method": [
       "Combine oats, chia seeds, milk, and Litchi honey.",
@@ -131,11 +131,11 @@
     "card": "card8",
     "title": "Litchi Honey Shrikhand",
     "ingredients": [
-      { "name": "Litchi Honey", "icon": "/discover/icons/card8/1.png" },
-      { "name": "Hung Curd", "icon": "/discover/icons/card8/2.png" },
-      { "name": "Cardamom", "icon": "/discover/icons/card8/3.png" },
-      { "name": "Saffron", "icon": "/discover/icons/card8/4.png" },
-      { "name": "Pistachios", "icon": "/discover/icons/card8/5.png" }
+      { "name": "Litchi Honey", "icon": "/discover/icons/card8/1.webp" },
+      { "name": "Hung Curd", "icon": "/discover/icons/card8/2.webp" },
+      { "name": "Cardamom", "icon": "/discover/icons/card8/3.webp" },
+      { "name": "Saffron", "icon": "/discover/icons/card8/4.webp" },
+      { "name": "Pistachios", "icon": "/discover/icons/card8/5.webp" }
     ],
     "method": [
       "Whisk hung curd with cardamom, saffron, and Litchi honey until smooth.",

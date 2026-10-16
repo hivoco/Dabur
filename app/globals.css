@@ -76,7 +76,7 @@ html, body {
      - --bg-pos-x pans the image inside the layer (where it overflows: phones)
      - --bg-shift translates the whole layer (works on wide screens too) */
 .app-bg {
-  background-image: url('/bg.jpg');
+  background-image: url('/bg.webp');
   background-repeat: no-repeat;
   background-size: cover;
   /* Y > 50% shifts the image UP (100% = image bottom on screen bottom). It only
@@ -84,6 +84,13 @@ html, body {
   background-position: var(--bg-pos-x, 50%) 85%;
   transform: translateX(var(--bg-shift, 0));
   transition: background-position 0.7s ease, transform 0.7s ease;
+}
+
+/* Phones get a smaller (1280px-tall) copy of the background. */
+@media (max-width: 767px) {
+  .app-bg {
+    background-image: url('/bg-mobile.webp');
+  }
 }
 
 /* Mobile only: nudge the background 8px to the right (added on top of the
@@ -147,4 +154,17 @@ html, body {
   .bee-bounce {
     animation: none;
   }
+}
+
+/* Fullscreen video: the player shell carries the popup's card styling (white
+   border, rounded corners, shadow); drop it so fullscreen is edge-to-edge. */
+.video-shell:fullscreen {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.video-shell:-webkit-full-screen {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }

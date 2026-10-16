@@ -28,7 +28,7 @@ export default function WomenHarvestersPage() {
       {/* Brand logo — top centre, above the popup. Desktop only; on mobile the
           StoryPopup shows its own logo. */}
       <Image
-        src="/logo-1.png"
+        src="/logo-1.webp"
         alt="Dabur Litchi Honey logo"
         width={120}
         height={109}

@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
   // use ?v= to cache-bust images that keep the same filename; Next 16 blocks
   // query strings on local images unless a localPattern permits them. Omitting
   // `search` here allows any query string on any local path.
+  // Inline the (small) Tailwind stylesheet into the HTML so it doesn't block
+  // first render with an extra request.
+  experimental: { inlineCss: true },
+
   images: {
     localPatterns: [{ pathname: "/**" }],
   },

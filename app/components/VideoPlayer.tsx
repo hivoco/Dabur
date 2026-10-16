@@ -139,10 +139,17 @@ export default function VideoPlayer({
   };
 
   const toggleFullscreen = () => {
+    const el = containerRef.current;
+    const v = videoRef.current as
+      | (HTMLVideoElement & { webkitEnterFullscreen?: () => void })
+      | null;
     if (document.fullscreenElement) {
       void document.exitFullscreen();
+    } else if (el?.requestFullscreen) {
+      void el.requestFullscreen();
     } else {
-      void containerRef.current?.requestFullscreen?.();
+      // iPhone Safari has no element fullscreen — use the native video player.
+      v?.webkitEnterFullscreen?.();
     }
     poke();
   };
@@ -153,7 +160,7 @@ export default function VideoPlayer({
   return (
     <div
       ref={containerRef}
-      className={`relative bg-black ${className}`}
+      className={`video-shell relative bg-black ${className}`}
       onMouseMove={poke}
       onMouseLeave={() => setVisible(false)}
       onTouchStart={poke}
@@ -162,6 +169,7 @@ export default function VideoPlayer({
         ref={videoRef}
         src={src}
         playsInline
+        preload="metadata"
         onPlay={() => {
           setPlaying(true);
           setEnded(false);

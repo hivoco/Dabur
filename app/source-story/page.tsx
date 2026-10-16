@@ -26,7 +26,7 @@ export default function SourceStoryPage() {
     <>
       {/* Brand logo — top centre, above the popup (desktop). */}
       <Image
-        src="/logo-1.png"
+        src="/logo-1.webp"
         alt="Dabur Litchi Honey logo"
         width={120}
         height={109}

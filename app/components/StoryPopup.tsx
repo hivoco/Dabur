@@ -12,7 +12,10 @@ import womenData from "../data/women.json";
 const STORY_KEY = "women-story-index";
 
 export default function StoryPopup({ onClose }: { onClose: () => void }) {
-  const [show, setShow] = useState(false);
+  // Visible from the first (server) render so it counts for LCP without waiting
+  // for JS; the entrance animation is pure CSS (`starting:` = @starting-style).
+  // `show` only flips to false to play the exit.
+  const [show, setShow] = useState(true);
 
   // Deterministic default for SSR / first paint (avoids a hydration mismatch);
   // the per-tab story is resolved on the client in the effect below.
@@ -35,10 +38,6 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
     setStory(womenData[idx]);
   }, []);
 
-  useEffect(() => {
-    const r = requestAnimationFrame(() => setShow(true));
-    return () => cancelAnimationFrame(r);
-  }, []);
 
   // Play the slide-out-left exit, then let the parent recenter the bg + unmount.
   const handleClose = () => {
@@ -52,7 +51,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
     <div
       onClick={handleClose}
       className={`full-bleed fixed inset-y-0 z-50 flex items-center justify-center bg-black/15 p-0 backdrop-blur-[4px] transition-opacity duration-300 md:items-center md:px-6 md:pb-6 md:pt-26 md:portrait:pb-32 ${
-        show ? "opacity-100" : "opacity-0"
+        show ? "opacity-100 starting:opacity-0" : "opacity-0"
       }`}
     >
       {/*
@@ -70,7 +69,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
       <div
         onClick={(e) => e.stopPropagation()}
         className={`bg-glass-dark @container relative flex h-svh w-full flex-col overflow-hidden border-white/40 shadow-[0_8px_60px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-all duration-500 ease-out md:h-[calc(100svh-128px)] md:max-h-155 md:portrait:h-[calc(100svh-232px)] md:portrait:max-h-225 md:max-w-5xl [@media(max-height:700px)]:md:max-w-200 md:rounded-[28px] md:border ${
-          show ? "translate-x-0 opacity-100" : "-translate-x-32 opacity-0"
+          show ? "translate-x-0 opacity-100 starting:-translate-x-32 starting:opacity-0" : "-translate-x-32 opacity-0"
         }`}
       >
         {/* Close */}
@@ -85,7 +84,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
 
         {/* Brand logo — mobile, top centre */}
         <Image
-          src="/logo-1.png"
+          src="/logo-1.webp"
           alt="Logo"
           width={120}
           height={109}
@@ -94,11 +93,11 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
 
         {/* Title */}
         <div className="flex shrink-0 flex-col  items-center px-6 pt-1 @2xl:pt-6">
-          <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-[clamp(48px,11svh,80px)] object-contain @2xl:w-32" />
+          <Image src="/mask2.webp" alt="" width={130} height={22} className="h-auto w-[clamp(48px,11svh,80px)] object-contain @2xl:w-32" />
           <h2 className="text-center text-[clamp(0.9rem,2.6svh,1.4rem)] font-semibold text-white [text-shadow:0px_4px_4px_#000000] @2xl:text-[clamp(15px,3.4svh,26px)]">
             {story.title}
           </h2>
-          <Image src="/mask2.png" alt="" width={130} height={22} className="h-auto w-[clamp(48px,11svh,80px)] rotate-180 object-contain @2xl:w-32" />
+          <Image src="/mask2.webp" alt="" width={130} height={22} className="h-auto w-[clamp(48px,11svh,80px)] rotate-180 object-contain @2xl:w-32" />
         </div>
 
         {/* Main — stacked on mobile, two columns on desktop */}
@@ -112,7 +111,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
               />
               {/* JEEViKA badge — mobile, bottom-right corner of the video */}
               <Image
-                src="/jivika.png"
+                src="/jivika.webp"
                 alt="JEEViKA"
                 width={98}
                 height={98}
@@ -127,19 +126,19 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
           {/* Did You Know card */}
           <div className="relative isolate w-full @2xl:w-[42%] md:-mt-28">
             <div className="bg-glass-soft relative z-0 rounded-[28.718px] border border-white/40 p-[clamp(0.6rem,2svh,1rem)] @2xl:p-5">
-              <Image src="/quate.png" alt="" width={19} height={19} className="absolute -top-2 left-4 w-3 object-contain @2xl:w-6" />
+              <Image src="/quate.webp" alt="" width={19} height={19} className="absolute -top-2 left-4 w-3 object-contain @2xl:w-6" />
               <h3 className="text-[clamp(0.9rem,2.2svh,1.25rem)] font-semibold leading-none tracking-normal text-white @2xl:text-[clamp(15px,3svh,23.93px)]">
                 Did You Know?
               </h3>
               <p className="mt-2 max-w-5/6 text-[clamp(0.72rem,1.65svh,0.95rem)] font-semibold leading-snug tracking-normal text-white @2xl:text-[clamp(11px,1.9svh,15px)]">
                 {story.didYouKnow}
               </p>
-              <Image src="/quate.png" alt="" width={19} height={19} className="absolute -bottom-2 right-4 w-3 rotate-180 object-contain @2xl:w-6" />
+              <Image src="/quate.webp" alt="" width={19} height={19} className="absolute -bottom-2 right-4 w-3 rotate-180 object-contain @2xl:w-6" />
             </div>
             {/* JEEViKA logo — desktop. A SIBLING of the card (not a child) so it
                 always paints after/above the box and can never slip behind it. */}
             <Image
-              src="/jivika.png"
+              src="/jivika.webp"
               alt="JEEViKA"
               width={98}
               height={98}

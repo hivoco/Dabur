@@ -106,7 +106,7 @@ const JSON_LD = {
     "@type": "Organization",
     name: "Dabur India Ltd.",
     url: SITE_URL,
-    logo: `${SITE_URL}/logo-1.png`,
+    logo: `${SITE_URL}/logo-1.webp`,
   },
   {
     "@type": "WebSite",
@@ -120,7 +120,7 @@ const JSON_LD = {
     description:
       "Monofloral litchi honey sourced from Shahi Litchi blossoms of Muzaffarpur, Bihar.",
     category: "Honey",
-    image: `${SITE_URL}/mono1.png`,
+    image: `${SITE_URL}/mono1.webp`,
     url: SITE_URL,
     keywords: [
       "litchi honey",

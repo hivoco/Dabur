@@ -13,14 +13,14 @@ import recipeData from "../data/recipie.json";
 const ASSET_VERSION = "2";
 
 const TOP_CARDS = [1, 2, 3, 4].map(
-  (n) => `/discover/upper-card/${n}.png?v=${ASSET_VERSION}`
+  (n) => `/discover/upper-card/${n}.webp?v=${ASSET_VERSION}`
 );
 
 // Recipes are data-driven from app/data/recipie.json. The Nth entry (card1..8)
-// maps to its hero image at /discover/bottom-card/bN.png; every ingredient
+// maps to its hero image at /discover/bottom-card/bN.webp; every ingredient
 // carries its own icon path, all rendered dynamically in the RecipePopup.
 const RECIPES: Recipe[] = recipeData.map((r, i) => ({
-  src: `/discover/bottom-card/b${i + 1}.png?v=${ASSET_VERSION}`,
+  src: `/discover/bottom-card/b${i + 1}.webp?v=${ASSET_VERSION}`,
   title: r.title,
   why: r.whyItWorks,
   ingredients: r.ingredients,
@@ -29,21 +29,16 @@ const RECIPES: Recipe[] = recipeData.map((r, i) => ({
 
 // A few bees scattered around (gentle float via the .bee-float class).
 const BEES = [
-  { src: "/new-bee-2.gif", className: "left-[12%] md:left-[7%] top-[7%] w-8 md:w-12", delay: "0s", flip: true },
-  { src: "/new-bee-2.gif", className: "right-[10%] top-[8%] w-8 md:w-12", delay: "0.6s", flip: true },
-  { src: "/new-bee-2.gif", className: "right-[7%] top-[44%] w-8 md:w-12", delay: "1.1s", flip: false },
-  { src: "/new-bee-2.gif", className: "left-[40%] bottom-[28%] w-7 md:w-10", delay: "1.6s", flip: true },
+  { src: "/new-bee-2.webp", className: "left-[12%] md:left-[7%] top-[7%] w-8 md:w-12", delay: "0s", flip: true },
+  { src: "/new-bee-2.webp", className: "right-[10%] top-[8%] w-8 md:w-12", delay: "0.6s", flip: true },
+  { src: "/new-bee-2.webp", className: "right-[7%] top-[44%] w-8 md:w-12", delay: "1.1s", flip: false },
+  { src: "/new-bee-2.webp", className: "left-[40%] bottom-[28%] w-7 md:w-10", delay: "1.6s", flip: true },
 ];
 
 export default function Discover() {
   const [active, setActive] = useState<Recipe | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  // Trigger the staggered card reveal once the page mounts.
-  useEffect(() => {
-    const r = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(r);
-  }, []);
+  // The staggered reveal is CSS-only (`starting:` = @starting-style), so the
+  // cards are visible in the server HTML instead of waiting for JS to mount.
 
   // Desktop renders the recipes twice so the carousel can loop forever. We
   // resolve `desktop` after mount (deterministic SSR) to avoid a hydration
@@ -112,23 +107,23 @@ export default function Discover() {
 
       {/* Decorative leaf — top-left corner (flipped 180deg) */}
       <Image
-        src="/leaf.png"
+        src="/leaf.webp"
         alt=""
         width={123}
         height={158}
         className={`pointer-events-none absolute -top-8.75 left-0 z-0 w-24 md:h-39.5 select-none object-contain transition-all duration-700 ease-out ${
-          mounted ? "translate-x-0 translate-y-0 opacity-100" : "-translate-x-full -translate-y-full opacity-0"
+          "translate-x-0 translate-y-0 opacity-100 starting:-translate-x-full starting:-translate-y-full starting:opacity-0"
         }`}
       />
 
       {/* Decorative litchi — top:170px, right edge */}
       <Image
-        src="/discover/litchi.png"
+        src="/discover/litchi.webp"
         alt=""
         width={84}
         height={86}
         className={`pointer-events-none absolute right-0 top-25 md:top-[170.74px] z-0 hidden h-14 w-14 select-none md:block md:h-21.5 md:w-[83.5px] object-cover transition-all duration-700 ease-out ${
-          mounted ? "translate-x-0 translate-y-0 opacity-100" : "translate-x-full -translate-y-full opacity-0"
+          "translate-x-0 translate-y-0 opacity-100 starting:translate-x-full starting:-translate-y-full starting:opacity-0"
         }`}
       />
 
@@ -170,7 +165,7 @@ export default function Discover() {
         {/* Logo */}
         <div className="flex shrink-0 justify-center pt-[clamp(0.5rem,2.5svh,1.5rem)] pb-[clamp(0.25rem,1svh,0.75rem)]">
           <Image
-            src="/logo-1.png"
+            src="/logo-1.webp"
             alt="Logo"
             width={120}
             height={109}
@@ -192,7 +187,7 @@ export default function Discover() {
                   key={src}
                   style={{ transitionDelay: `${i * 90}ms` }}
                   className={`relative aspect-482/586 h-[clamp(120px,27svh,225px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out md:h-auto md:w-full ${
-                    mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                    "translate-y-0 opacity-100 starting:translate-y-6 starting:opacity-0"
                   }`}
                 >
                   <Image src={src} alt="" fill sizes="(max-width: 768px) 200px, 240px" className="object-contain" />
@@ -221,7 +216,7 @@ export default function Discover() {
                     onClick={() => setActive(r)}
                     style={{ transitionDelay: `${(TOP_CARDS.length + (i % RECIPES.length)) * 90}ms` }}
                     className={`relative h-[clamp(130px,26svh,240px)] w-[70vw] shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-[clamp(140px,30svh,240px)] md:w-52 ${
-                      mounted ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+                      "translate-y-0 opacity-100 starting:translate-y-6 starting:opacity-0"
                     }`}
                   >
                     <Image src={r.src} alt={r.title} fill sizes="(max-width: 768px) 240px, 300px" className="object-cover" />

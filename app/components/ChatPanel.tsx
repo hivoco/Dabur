@@ -10,8 +10,8 @@ type Message = { role: "user" | "bot"; text: string };
 // Persist the conversation in the browser tab (cleared when the tab closes, and
 // also when the chat popup is closed — see ChatWidget). Exported so the widget
 // can wipe it on close.
-export const STORAGE_KEY = "cho-chat-history";
-const MAX_HISTORY = 10; // keep the last 10 messages
+import { STORAGE_KEY } from "./chatStorage";
+const MAX_HISTORY = 10; // keep the last 10 messages (= 5 questions + answers)
 
 // Typewriter pacing for the bot reply so it reads as a natural, typed-out
 // message instead of appearing all at once. Tune TYPE_TICK_MS to taste.
@@ -103,12 +103,13 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
     // textArg lets a topic/question chip send directly; otherwise use the input.
     const text = (textArg ?? input).trim();
     if (!text || streaming) return;
-    // Short-term memory: send the last 5 messages from THIS tab's session so the
-    // bot knows what was just discussed. sessionStorage is cleared when the tab
+    // Short-term memory: send the last 5 questions with their answers (10
+    // messages) from THIS tab's session so follow-ups ("explain more", "a better
+    // answer to my last question") have context. Closing the chat wipes it. sessionStorage is cleared when the tab
     // closes, so a fresh visit starts with no history (nothing persisted long-term).
     const history = messages
       .filter((m) => m.text.trim())
-      .slice(-5)
+      .slice(-MAX_HISTORY)
       .map((m) => ({ role: m.role, content: m.text }));
     setInput("");
     setMessages((m) => [...m, { role: "user", text }, { role: "bot", text: "" }]);
@@ -119,16 +120,15 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
     let finished = false; // server stream has ended
 
     // Typewriter: reveal the buffered text a little at a time so the reply reads
-    // as if it's being typed instead of appearing instantly. It catches up
-    // faster when a lot is buffered, so it never lags far behind the stream.
+    // as if it's being typed instead of appearing instantly. The step grows
+    // with the backlog (~1/8 of it per frame), so it never trails the stream
+    // by more than a few frames — long answers no longer "type" for seconds
+    // after the server has finished.
     const reveal = () =>
       new Promise<void>((resolve) => {
         const tick = () => {
           if (shown < buffer.length) {
-            const step = Math.min(
-              8,
-              Math.max(2, Math.ceil((buffer.length - shown) / 40))
-            );
+            const step = Math.max(2, Math.ceil((buffer.length - shown) / 8));
             shown = Math.min(buffer.length, shown + step);
             updateLastBot(buffer.slice(0, shown));
           }
@@ -176,7 +176,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
       {/* Header */}
       <div className="m-2 flex items-center gap-3 rounded-[22px] border border-white/50 bg-[#E5AF62] px-3 py-2.5 shadow-sm ">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-cream md:h-11 md:w-11">
-          <Image src="/chat-bee.png" alt="" width={132} height={132} className="h-9 w-9 object-contain md:h-11 md:w-11" />
+          <Image src="/chat-bee.webp" alt="" width={132} height={132} className="h-9 w-9 object-contain md:h-11 md:w-11" />
         </span>
         <div className="flex-1 leading-tight ">
           <p className="text-sm font-bold text-maroon md:text-base">Ask our Chief Honey Officer</p>
@@ -298,7 +298,7 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#4D0000] transition hover:opacity-90 md:h-11 md:w-11"
           >
             <Image
-              src="/share.png"
+              src="/share.webp"
               alt=""
               width={41}
               height={39}

@@ -58,7 +58,7 @@ const JSON_LD = {
     recipeCategory: "Healthy",
     recipeCuisine: "Healthy",
     keywords: "litchi honey recipe",
-    image: `${SITE_URL}/discover/bottom-card/b${i + 1}.png`,
+    image: `${SITE_URL}/discover/bottom-card/b${i + 1}.webp`,
     recipeIngredient: r.ingredients.map((ing) => ing.name),
     recipeInstructions: r.method.map((step) => ({
       "@type": "HowToStep",

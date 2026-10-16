@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import ChatPanel, { STORAGE_KEY } from "./ChatPanel";
+import dynamic from "next/dynamic";
+import { STORAGE_KEY } from "./chatStorage";
+
+// The panel (markdown renderer etc.) is only needed once the chat is opened.
+const ChatPanel = dynamic(() => import("./ChatPanel"), { ssr: false });
 import { useEscClose } from "../lib/useEscClose";
 
 const GREETING = "Hi, I’m your Chief Honey Officer (CHO)";
@@ -106,7 +110,7 @@ export default function ChatWidget({
           {/* Brand logo — mobile: takes its own space at the top so the panel
               fills the remaining height below it. Hidden on desktop. */}
           <Image
-            src="/logo-1.png"
+            src="/logo-1.webp"
             alt="Logo"
             width={120}
             height={109}
@@ -129,7 +133,7 @@ export default function ChatWidget({
           }`}
         >
           <Image
-            src="/chat-bee.png"
+            src="/chat-bee.webp"
             alt=""
             width={132}
             height={132}
@@ -150,7 +154,7 @@ export default function ChatWidget({
         className="bg-glass flex h-12 w-12 items-center justify-center rounded-full border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px]"
       >
         <Image
-          src="/chat-bee.png"
+          src="/chat-bee.webp"
           alt="Chat"
           width={104}
           height={104}
