@@ -107,6 +107,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
             <div className="relative w-full">
               <VideoPlayer
                 src={story.video}
+                landscapeFullscreen
                 className="h-[clamp(90px,24svh,230px)] w-full overflow-hidden rounded-[17.39px] border border-white shadow-lg @2xl:aspect-auto [@media(min-height:701px)]:@2xl:h-auto [@media(max-height:700px)]:@2xl:h-[clamp(150px,40svh,330px)] [@media(max-height:700px)]:@2xl:w-auto"
               />
               {/* JEEViKA badge — mobile: ~3/4 of it sits ABOVE the video so it
