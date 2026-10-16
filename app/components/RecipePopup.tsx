@@ -88,7 +88,7 @@ export default function RecipePopup({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`bg-cream relative flex h-[90vh] w-full max-w-249 flex-col overflow-y-scroll rounded-t-3xl p-5 shadow-[0px_5px_15px_rgba(0,0,0,0.50)] transition-all duration-500 ease-out md:h-[min(560px,80svh)] md:max-w-[min(996px,142svh)] md:rounded-[24.89px] md:p-[clamp(1rem,4svh,1.75rem)] md:overflow-hidden ${
+        className={`bg-cream relative flex h-[90vh] w-full max-w-249 flex-col overflow-hidden rounded-t-3xl p-5 shadow-[0px_5px_15px_rgba(0,0,0,0.50)] transition-all duration-500 ease-out md:h-[min(560px,80svh)] md:max-w-[min(996px,142svh)] md:rounded-[24.89px] md:p-[clamp(1rem,4svh,1.75rem)] ${
           show
             ? "translate-y-0 opacity-100 md:scale-100"
             : "translate-y-full opacity-0 md:translate-y-0 md:scale-95"
@@ -97,8 +97,9 @@ export default function RecipePopup({
         {/* Drag handle (mobile bottom-sheet) */}
         <div className="mx-auto mb-3 h-1.5 w-36 shrink-0 rounded-full bg-[#1D1D1D] md:hidden" />
 
-        {/* Header: back button on the same row as the centred title */}
-        <div className="flex items-center">
+        {/* Header: back button on the same row as the centred title. Stays put
+            on mobile — only the content below it scrolls. */}
+        <div className="flex shrink-0 items-center">
           <button
             type="button"
             onClick={handleClose}
@@ -116,8 +117,9 @@ export default function RecipePopup({
           <span className="h-8 w-8 shrink-0" aria-hidden />
         </div>
 
-        {/* Content */}
-        <div className="mt-[clamp(0.6rem,2.85svh,1.25rem)] flex flex-col gap-[clamp(0.6rem,2.85svh,1.25rem)] md:min-h-0 md:flex-1 md:flex-row md:gap-[clamp(1rem,4svh,1.75rem)]">
+        {/* Content — mobile: the scrolling area under the fixed header.
+            Desktop: two columns, the right one scrolls on its own. */}
+        <div className="mt-[clamp(0.6rem,2.85svh,1.25rem)] flex min-h-0 flex-1 flex-col gap-[clamp(0.6rem,2.85svh,1.25rem)] overflow-y-auto overscroll-contain md:flex-row md:gap-[clamp(1rem,4svh,1.75rem)] md:overflow-visible">
           {/* Left: image + why it works */}
           <div className="flex flex-col gap-[clamp(0.4rem,2.3svh,1rem)] md:min-h-0 md:w-[52%]">
             <div className="relative h-[clamp(140px,30svh,208px)] w-full shrink-0 overflow-hidden rounded-2xl md:h-auto md:flex-1">

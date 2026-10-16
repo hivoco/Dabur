@@ -40,61 +40,85 @@ export default function Discover() {
   // The staggered reveal is CSS-only (`starting:` = @starting-style), so the
   // cards are visible in the server HTML instead of waiting for JS to mount.
 
-  // Desktop renders the recipes twice so the carousel can loop forever. We
-  // resolve `desktop` after mount (deterministic SSR) to avoid a hydration
-  // mismatch from reading matchMedia during render.
+  // Infinite carousel (mobile + desktop): the recipes are rendered three times
+  // and we keep the scroll inside the MIDDLE copy. Whenever scrolling settles
+  // in the first or last copy we jump by exactly one copy's width — the same
+  // cards are on screen, so the jump is invisible and there is never an end in
+  // either direction (swipe, arrows or auto-advance).
   const carouselRef = useRef<HTMLDivElement>(null);
-  const [desktop, setDesktop] = useState(false);
+  const lastTouch = useRef(0); // when the user last touched/swiped (ms)
+  const touching = useRef(false);
+
+  const metrics = () => {
+    const el = carouselRef.current;
+    if (!el || el.children.length <= RECIPES.length) return null;
+    const kids = el.children;
+    const left = (i: number) => (kids[i] as HTMLElement).offsetLeft;
+    return { el, step: left(1) - left(0), copyWidth: left(RECIPES.length) - left(0) };
+  };
+
+  // Snap back into the middle copy once scrolling stops.
+  const recenter = () => {
+    const m = metrics();
+    if (!m || touching.current) return;
+    const { el, copyWidth } = m;
+    if (el.scrollLeft < copyWidth - 1) el.scrollLeft += copyWidth;
+    else if (el.scrollLeft >= 2 * copyWidth - 1) el.scrollLeft -= copyWidth;
+  };
+
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const update = () => setDesktop(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
+    const m = metrics();
+    if (!m) return;
+    const { el } = m;
+    // Start in the middle copy (no animation).
+    el.scrollLeft = m.copyWidth;
+
+    let settle: ReturnType<typeof setTimeout> | undefined;
+    const onScroll = () => {
+      clearTimeout(settle);
+      settle = setTimeout(recenter, 150);
+    };
+    const onTouchStart = () => {
+      touching.current = true;
+      lastTouch.current = Date.now();
+    };
+    const onTouchEnd = () => {
+      touching.current = false;
+      lastTouch.current = Date.now();
+      onScroll(); // recenter after the momentum scroll settles
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+
+    // Auto-advance one card every 3s. Paused while hovered (desktop), touched,
+    // or for 4s after the user last swiped (mobile).
+    const id = setInterval(() => {
+      if (el.matches(":hover") || touching.current) return;
+      if (Date.now() - lastTouch.current < 4000) return;
+      const cur = metrics();
+      if (!cur) return;
+      recenter();
+      el.scrollBy({ left: cur.step, behavior: "smooth" });
+    }, 3000);
+
+    return () => {
+      clearInterval(id);
+      clearTimeout(settle);
+      el.removeEventListener("scroll", onScroll);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Auto-advance one card at a time. Because the two copies are identical, once
-  // the scroll passes the end of the first copy we instantly rewind by exactly
-  // one copy's width — the same cards are on screen, so the jump is invisible
-  // and it never looks like the end.
-  useEffect(() => {
-    if (!desktop) return; // mobile scrolls manually
-    const el = carouselRef.current;
-    if (!el) return;
-    const id = setInterval(() => {
-      // Live hover check (not a stored flag) so it can never get stuck paused.
-      if (el.matches(":hover")) return;
-      const kids = el.children;
-      if (kids.length <= RECIPES.length) return;
-      const step =
-        (kids[1] as HTMLElement).offsetLeft - (kids[0] as HTMLElement).offsetLeft;
-      const copyWidth =
-        (kids[RECIPES.length] as HTMLElement).offsetLeft -
-        (kids[0] as HTMLElement).offsetLeft;
-      if (el.scrollLeft >= copyWidth - 1) el.scrollLeft -= copyWidth;
-      el.scrollBy({ left: step, behavior: "smooth" });
-    }, 3000);
-    return () => clearInterval(id);
-  }, [desktop]);
-
-  // Prev/next arrows scroll by one card (card width + gap). Native scroll
-  // clamps at the ends and snap-aligns the result.
+  // Prev/next arrows scroll by one card (card width + gap); `recenter` first so
+  // there is always a card to move to in either direction.
   const scrollByCard = (dir: 1 | -1) => {
-    const el = carouselRef.current;
-    if (!el) return;
-    const kids = el.children;
-    if (kids.length < 2) return;
-    const step =
-      (kids[1] as HTMLElement).offsetLeft - (kids[0] as HTMLElement).offsetLeft;
-    // Wrap seamlessly at either end when the recipes are duplicated (desktop).
-    if (desktop && kids.length > RECIPES.length) {
-      const copyWidth =
-        (kids[RECIPES.length] as HTMLElement).offsetLeft -
-        (kids[0] as HTMLElement).offsetLeft;
-      if (dir === 1 && el.scrollLeft >= copyWidth - 1) el.scrollLeft -= copyWidth;
-      else if (dir === -1 && el.scrollLeft <= 1) el.scrollLeft += copyWidth;
-    }
-    el.scrollBy({ left: dir * step, behavior: "smooth" });
+    const m = metrics();
+    if (!m) return;
+    recenter();
+    m.el.scrollBy({ left: dir * m.step, behavior: "smooth" });
   };
 
   return (
@@ -209,10 +233,15 @@ export default function Discover() {
                 ref={carouselRef}
                 className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:gap-6 md:pb-0 pb-[clamp(0.25rem,1.5svh,2.5rem)]"
               >
-                {(desktop ? [...RECIPES, ...RECIPES] : RECIPES).map((r, i) => (
+                {[...RECIPES, ...RECIPES, ...RECIPES].map((r, i) => {
+                  // Only the middle copy is "real" for screen readers/keyboard.
+                  const clone = i < RECIPES.length || i >= 2 * RECIPES.length;
+                  return (
                   <button
                     type="button"
                     key={i}
+                    aria-hidden={clone || undefined}
+                    tabIndex={clone ? -1 : undefined}
                     onClick={() => setActive(r)}
                     style={{ transitionDelay: `${(TOP_CARDS.length + (i % RECIPES.length)) * 90}ms` }}
                     className={`relative h-[clamp(130px,26svh,240px)] w-[70vw] shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-[clamp(140px,30svh,240px)] md:w-52 ${
@@ -226,7 +255,8 @@ export default function Discover() {
                       </p>
                     </div>
                   </button>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Prev / next arrows, vertically centred over the cards. */}

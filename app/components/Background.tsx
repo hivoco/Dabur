@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { preload } from "react-dom";
 import type { CSSProperties, ReactNode } from "react";
 
 // 50% = centered. Lower reveals the LEFT of the image (image slides right);
@@ -34,11 +33,7 @@ export default function BackgroundProvider({
 }) {
   const [posX, setPosX] = useState(50);
 
-  // The background is a CSS image, so the browser only finds it after the
-  // stylesheet loads. Preload the right size up front (it is the biggest asset
-  // on every page); media queries match .app-bg in globals.css.
-  preload("/bg-mobile.webp", { as: "image", fetchPriority: "high", media: "(max-width: 767px)" });
-  preload("/bg.webp", { as: "image", fetchPriority: "high", media: "(min-width: 768px)" });
+  // (The background image is preloaded from <head> in app/layout.tsx.)
 
   // Read the step at call time (not from state) so it's correct even on a direct
   // page visit, before any resize listener could run.

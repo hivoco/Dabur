@@ -101,7 +101,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Main — stacked on mobile, two columns on desktop */}
-        <div className="flex w-full shrink-0 flex-col items-center gap-[clamp(0.4rem,1.4svh,0.75rem)] px-6 pt-[clamp(0.4rem,1.4svh,0.75rem)] @2xl:min-h-0 @2xl:flex-1 @2xl:flex-row @2xl:items-center @2xl:justify-evenly @2xl:gap-8 @2xl:px-10">
+        <div className="flex w-full shrink-0 flex-col items-center gap-[clamp(0.4rem,1.4svh,0.75rem)] px-6 pt-[calc(clamp(30px,6.75svh,54px)+14px)] @2xl:pt-[clamp(0.4rem,1.4svh,0.75rem)] @2xl:min-h-0 @2xl:flex-1 @2xl:flex-row @2xl:items-center @2xl:justify-evenly @2xl:gap-8 @2xl:px-10">
           {/* Video + caption */}
           <div className="flex w-full flex-col  items-center @2xl:w-[58%]">
             <div className="relative w-full">
@@ -109,13 +109,17 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
                 src={story.video}
                 className="h-[clamp(90px,24svh,230px)] w-full overflow-hidden rounded-[17.39px] border border-white shadow-lg @2xl:aspect-auto [@media(min-height:701px)]:@2xl:h-auto [@media(max-height:700px)]:@2xl:h-[clamp(150px,40svh,330px)] [@media(max-height:700px)]:@2xl:w-auto"
               />
-              {/* JEEViKA badge — mobile, bottom-right corner of the video */}
+              {/* JEEViKA badge — mobile: ~3/4 of it sits ABOVE the video so it
+                  only nips the top-right corner. The main block's top padding
+                  reserves that height + the 10px bounce, so it never reaches the
+                  heading; the woman (flex-1) gives up that space on short
+                  screens. */}
               <Image
                 src="/jivika.webp"
                 alt="JEEViKA"
                 width={98}
                 height={98}
-                className="absolute jivika-bounce  -top-12 md:-top-[clamp(1.25rem,5.5svh,2.5rem)] right-1 z-10 h-[clamp(44px,11svh,80px)] w-[clamp(44px,11svh,80px)] rounded-full object-contain @2xl:hidden"
+                className="absolute jivika-bounce -top-[clamp(30px,6.75svh,54px)] right-1 z-10 h-[clamp(40px,9svh,72px)] w-[clamp(40px,9svh,72px)] rounded-full object-contain @2xl:hidden"
               />
             </div>
             <p className="mt-2 text-center text-[clamp(0.78rem,1.9svh,1rem)] font-semibold text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] @2xl:mt-4 @2xl:text-lg [@media(max-height:700px)]:@2xl:text-sm">

@@ -59,12 +59,24 @@ function ReplayIcon({ className = "h-8 w-8" }: { className?: string }) {
   );
 }
 
+function BackIcon({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+}
+
 export default function VideoPlayer({
   src,
   className = "",
+  landscapeFullscreen = false,
 }: {
   src: string;
   className?: string;
+  /** Keep fullscreen landscape on a portrait phone (the popup shows this video
+   *  rotated, and fullscreen would otherwise drop it back to portrait). */
+  landscapeFullscreen?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -75,6 +87,30 @@ export default function VideoPlayer({
   const [muted, setMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  // Fullscreen where the orientation lock was refused: rotate the inner stage
+  // with CSS instead (only while the screen is portrait — see globals.css).
+  const [fsRotate, setFsRotate] = useState(false);
+  // This player is the fullscreen element (shows the Back button).
+  const [isFs, setIsFs] = useState(false);
+
+  // Leaving fullscreen (button, back gesture, Esc): undo the lock / rotation.
+  useEffect(() => {
+    const onChange = () => {
+      setIsFs(
+        !!containerRef.current &&
+          document.fullscreenElement === containerRef.current
+      );
+      if (document.fullscreenElement) return;
+      setFsRotate(false);
+      try {
+        screen.orientation?.unlock?.();
+      } catch {
+        // not supported — nothing to undo
+      }
+    };
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, []);
 
   // Reveal the controls, then auto-hide after a short delay (works for hover & tap).
   const poke = () => {
@@ -146,7 +182,19 @@ export default function VideoPlayer({
     if (document.fullscreenElement) {
       void document.exitFullscreen();
     } else if (el?.requestFullscreen) {
-      void el.requestFullscreen();
+      void el.requestFullscreen().then(async () => {
+        if (!landscapeFullscreen) return;
+        // Android Chrome can lock the screen to landscape while fullscreen.
+        const orientation = screen.orientation as ScreenOrientation & {
+          lock?: (o: "landscape") => Promise<void>;
+        };
+        try {
+          await orientation.lock?.("landscape");
+          if (!orientation.lock) setFsRotate(true);
+        } catch {
+          setFsRotate(true);
+        }
+      });
     } else {
       // iPhone Safari has no element fullscreen — use the native video player.
       v?.webkitEnterFullscreen?.();
@@ -164,69 +212,87 @@ export default function VideoPlayer({
       onMouseMove={poke}
       onMouseLeave={() => setVisible(false)}
       onTouchStart={poke}
+      data-fs-rotate={fsRotate || undefined}
     >
-      <video
-        ref={videoRef}
-        src={src}
-        playsInline
-        preload="metadata"
-        onPlay={() => {
-          setPlaying(true);
-          setEnded(false);
-        }}
-        onPause={() => setPlaying(false)}
-        onEnded={() => {
-          setEnded(true);
-          setPlaying(false);
-        }}
-        onClick={togglePlay}
-        onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
-        onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
-        className="h-full w-full object-contain"
-      />
+      <div className="video-stage relative h-full w-full">
+        <video
+          ref={videoRef}
+          src={src}
+          playsInline
+          preload="metadata"
+          onPlay={() => {
+            setPlaying(true);
+            setEnded(false);
+          }}
+          onPause={() => setPlaying(false)}
+          onEnded={() => {
+            setEnded(true);
+            setPlaying(false);
+          }}
+          onClick={togglePlay}
+          onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
+          onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+          onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
+          className="h-full w-full object-contain"
+        />
 
-      {/* Replay — only when the video has finished */}
-      {ended && (
+        {/* Back — fullscreen only: exits fullscreen, back to the normal view */}
+      {isFs && (
         <button
           type="button"
-          onClick={replay}
-          aria-label="Replay"
-          className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-[2px] transition hover:bg-black/70"
+          onClick={() => {
+            void document.exitFullscreen();
+          }}
+          aria-label="Exit fullscreen"
+          className="absolute left-4 top-4 z-10 flex h-10 items-center gap-1.5 rounded-full bg-black/50 pl-2.5 pr-4 text-sm font-medium text-white backdrop-blur-[2px] transition hover:bg-black/70"
         >
-          <ReplayIcon className="h-8 w-8" />
+          <BackIcon />
+          Back
         </button>
       )}
 
-      {/* Control bar — hidden by default; not shown while the replay overlay is up */}
-      <div
-        className={`pointer-events-none absolute inset-x-0 bottom-0 flex items-center gap-3 bg-linear-to-t from-black/50 to-transparent px-4 pb-3 pt-10 transition-opacity duration-200 ${
-          visible && !ended ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <button type="button" onClick={togglePlay} aria-label={playing ? "Pause" : "Play"} className={btn}>
-          {playing ? <PauseIcon /> : <PlayIcon />}
-        </button>
-        <button type="button" onClick={toggleMute} aria-label={muted ? "Unmute" : "Mute"} className={btn}>
-          {muted ? <VolumeOffIcon /> : <VolumeOnIcon />}
-        </button>
+      {/* Replay — only when the video has finished */}
+        {ended && (
+          <button
+            type="button"
+            onClick={replay}
+            aria-label="Replay"
+            className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-[2px] transition hover:bg-black/70"
+          >
+            <ReplayIcon className="h-8 w-8" />
+          </button>
+        )}
 
-        {/* Progress / seek bar */}
-        <input
-          type="range"
-          min={0}
-          max={duration || 0}
-          step="any"
-          value={currentTime}
-          onChange={onSeek}
-          onPointerDown={poke}
-          aria-label="Seek"
-          className="pointer-events-auto h-1 flex-1 cursor-pointer accent-white"
-        />
+        {/* Control bar — hidden by default; not shown while the replay overlay is up */}
+        <div
+          className={`pointer-events-none absolute inset-x-0 bottom-0 flex items-center gap-3 bg-linear-to-t from-black/50 to-transparent px-4 pb-3 pt-10 transition-opacity duration-200 ${
+            visible && !ended ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <button type="button" onClick={togglePlay} aria-label={playing ? "Pause" : "Play"} className={btn}>
+            {playing ? <PauseIcon /> : <PlayIcon />}
+          </button>
+          <button type="button" onClick={toggleMute} aria-label={muted ? "Unmute" : "Mute"} className={btn}>
+            {muted ? <VolumeOffIcon /> : <VolumeOnIcon />}
+          </button>
 
-        <button type="button" onClick={toggleFullscreen} aria-label="Fullscreen" className={btn}>
-          <FullscreenIcon />
-        </button>
+          {/* Progress / seek bar */}
+          <input
+            type="range"
+            min={0}
+            max={duration || 0}
+            step="any"
+            value={currentTime}
+            onChange={onSeek}
+            onPointerDown={poke}
+            aria-label="Seek"
+            className="pointer-events-auto h-1 flex-1 cursor-pointer accent-white"
+          />
+
+          <button type="button" onClick={toggleFullscreen} aria-label="Fullscreen" className={btn}>
+            <FullscreenIcon />
+          </button>
+        </div>
       </div>
     </div>
   );

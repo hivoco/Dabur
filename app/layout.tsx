@@ -180,6 +180,26 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${inter.variable} h-full antialiased`}
     >
+      <head>
+        {/* Background first: it's a CSS image (found only after the stylesheet)
+            and the biggest thing on screen, so fetch the right size at the
+            highest priority straight from the HTML. Media queries match
+            .app-bg in globals.css. */}
+        <link
+          rel="preload"
+          as="image"
+          href="/bg-mobile.webp"
+          media="(max-width: 767px)"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/bg.webp"
+          media="(min-width: 768px)"
+          fetchPriority="high"
+        />
+      </head>
       <body className="min-h-svh ">
         <BackgroundProvider>
           {/* Page container: centred, max 1440px. transform-gpu makes it the

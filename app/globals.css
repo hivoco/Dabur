@@ -168,3 +168,25 @@ html, body {
   border-radius: 0;
   box-shadow: none;
 }
+
+/* Landscape fullscreen on a portrait phone when the browser refuses an
+   orientation lock: browsers force the fullscreen element itself to
+   transform:none, so rotate its inner stage 90deg to fill the screen instead. */
+@media (orientation: portrait) {
+  .video-shell[data-fs-rotate]:fullscreen .video-stage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vh;
+    height: 100vw;
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+  .video-shell[data-fs-rotate]:-webkit-full-screen .video-stage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vh;
+    height: 100vw;
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+}
