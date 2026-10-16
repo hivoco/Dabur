@@ -11,6 +11,14 @@ const inter = Inter({
 // Production origin used for canonical URLs, Open Graph and JSON-LD.
 export const SITE_URL = "https://www.daburlitchihoney.com";
 
+// Share image (Open Graph / Twitter): the brand logo on a 1200x630 cream canvas.
+export const OG_IMAGE = {
+  url: "/og-image.jpg",
+  width: 1200,
+  height: 630,
+  alt: "Dabur Honey logo",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -57,22 +65,21 @@ export const metadata: Metadata = {
     description:
       "Monofloral Litchi Honey sourced from Shahi Litchi blossoms of Muzaffarpur.",
     url: SITE_URL,
-    // TODO: replace with a dedicated 1200x630 image at /assets/og-image.jpg.
-    images: [{ url: "/bg.jpg", width: 1200, height: 630, alt: "Dabur Litchi Honey" }],
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Dabur Litchi Honey",
     description: "Discover monofloral litchi honey from Muzaffarpur.",
-    // TODO: replace with a dedicated /assets/twitter-card.jpg.
-    images: ["/bg.jpg"],
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  icons: { icon: "/logo-1.png", apple: "/logo-1.png" },
+  // Favicons come from the file conventions: app/favicon.ico, app/icon.png
+  // and app/apple-icon.png (all generated from the logo).
 };
 
 // Prevent zoom/scaling (pinch-zoom and input-focus auto-zoom on mobile).

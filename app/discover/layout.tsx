@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_URL } from "../layout";
+import { OG_IMAGE, SITE_URL } from "../layout";
 import recipeData from "../data/recipie.json";
 
 // Per-page SEO for the discover / recipes page. A route-segment layout can set
@@ -19,10 +19,19 @@ export const metadata: Metadata = {
   alternates: { canonical: "/discover" },
   openGraph: {
     type: "website",
+    siteName: "Dabur Litchi Honey",
     title: "Litchi Honey Recipes | Dabur Litchi Honey",
     description:
       "Explore refreshing recipes made with Dabur Litchi Honey including smoothies, yogurt bowls, salads, overnight oats and desserts.",
     url: `${SITE_URL}/discover`,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Litchi Honey Recipes | Dabur Litchi Honey",
+    description:
+      "Explore refreshing recipes made with Dabur Litchi Honey including smoothies, yogurt bowls, salads, overnight oats and desserts.",
+    images: [OG_IMAGE.url],
   },
 };
 

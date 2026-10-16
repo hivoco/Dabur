@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_IMAGE } from "../layout";
 
 export const metadata: Metadata = {
   title: {
@@ -15,10 +16,19 @@ export const metadata: Metadata = {
   alternates: { canonical: "/women-harvesters" },
   openGraph: {
     type: "website",
+    siteName: "Dabur Litchi Honey",
     title: "Women Behind the Harvest | Dabur Litchi Honey",
     description:
       "Meet the women harvesters behind Dabur Litchi Honey, crafted in partnership with JEEVIKA in Bihar.",
     url: "/women-harvesters",
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Women Behind the Harvest | Dabur Litchi Honey",
+    description:
+      "Meet the women harvesters behind Dabur Litchi Honey, crafted in partnership with JEEVIKA in Bihar.",
+    images: [OG_IMAGE.url],
   },
 };
 
