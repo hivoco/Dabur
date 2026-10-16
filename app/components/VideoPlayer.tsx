@@ -71,12 +71,15 @@ export default function VideoPlayer({
   src,
   className = "",
   landscapeFullscreen = false,
+  showFullscreen = true,
 }: {
   src: string;
   className?: string;
   /** Keep fullscreen landscape on a portrait phone (the popup shows this video
    *  rotated, and fullscreen would otherwise drop it back to portrait). */
   landscapeFullscreen?: boolean;
+  /** Show the fullscreen button in the control bar. */
+  showFullscreen?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -289,9 +292,11 @@ export default function VideoPlayer({
             className="pointer-events-auto h-1 flex-1 cursor-pointer accent-white"
           />
 
-          <button type="button" onClick={toggleFullscreen} aria-label="Fullscreen" className={btn}>
-            <FullscreenIcon />
-          </button>
+          {showFullscreen && (
+            <button type="button" onClick={toggleFullscreen} aria-label="Fullscreen" className={btn}>
+              <FullscreenIcon />
+            </button>
+          )}
         </div>
       </div>
     </div>

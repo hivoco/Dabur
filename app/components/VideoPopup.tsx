@@ -77,7 +77,7 @@ export default function VideoPopup({
       >
         {videoSrc ? (
           // key: remount (fresh player state) if the screen crosses the breakpoint.
-          <VideoPlayer key={videoSrc} src={videoSrc} className="h-full w-full" landscapeFullscreen />
+          <VideoPlayer key={videoSrc} src={videoSrc} className="h-full w-full" landscapeFullscreen showFullscreen={false} />
         ) : (
           <div className="h-full w-full bg-black" />
         )}
