@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { useBackground } from "./components/Background";
 import { useRouter } from "next/navigation";
+import { useBackground } from "./components/Background";
 import ChatWidget from "./components/ChatWidget";
 
 // FlankButton notched-pill outline, authored in the 105×51 viewBox then scaled
@@ -59,7 +59,7 @@ function FlankButton({
     <div className={`absolute ${position}`}>
       {/* bee glass badge */}
       <span
-        className="bee-float bg-glass absolute left-9 -top-12 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/30 shadow-lg backdrop-blur-[2px]"
+        className="bee-float bg-glass absolute left-9 -top-11 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/30 shadow-lg backdrop-blur-[2px]"
         style={{ animationDelay: isLeft ? "0s" : "0.7s" }}
       >
         <Image
@@ -79,7 +79,7 @@ function FlankButton({
         onClick={handleActivate}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
-        className="relative block h-16.25  w-35 shrink-0 cursor-pointer origin-center scale-x-70 scale-y-75 md:scale-100"
+        className="relative block h-16.25  w-35 shrink-0 cursor-pointer origin-center scale-x-70 scale-y-75 sm:scale-100"
         style={{ clipPath: FLANK_CLIP }}
       >
         {/* Frosted-glass layer: actually blurs the page content behind the
@@ -112,7 +112,7 @@ function FlankButton({
           {/* Icon and Text Container */}
           <foreignObject x="0" y="10" width="105" height="39">
             <div
-              className={`pointer-events-none flex h-full items-center gap-0.5 font-[Inter] text-[10px] font-medium leading-2.5 text-white md:gap-1 ${
+              className={`pointer-events-none flex h-full items-center gap-0.5 font-[Inter] text-[10px] font-medium leading-2.5 text-white sm:gap-1 ${
                 isLeft
                   ? "flex-row justify-start pl-2 text-left"
                   : "flex-row-reverse justify-end pr-2 text-right"
@@ -156,172 +156,83 @@ export default function Home() {
   const { center } = useBackground();
   const router = useRouter();
 
-  // Fade the page content in on mount, and re-center the background. The
-  // Story/Video pages slide it, so returning here (including via the browser
-  // back button) should reset it to centre.
-  const [mounted, setMounted] = useState(false);
+  // Re-center the background: the Story/Video pages slide it, so returning
+  // here should reset it.
   useEffect(() => {
     center();
-    const r = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(r);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="relative flex h-svh  flex-col px-10 md:px-0 items-center overflow-hidden">
-      {/* SEO heading — visually hidden but present for crawlers/screen readers. */}
+    <div className="relative flex h-svh flex-col items-center overflow-hidden px-4">
       <h1 className="sr-only">Monofloral Litchi Honey</h1>
 
-      {/* Brand logo — top centre of the PAGE. On desktop it stays visible
-          above an open popup; on mobile it hides (the popup shows its own). */}
       <Image
         src="/logo-1.png"
         alt="Dabur Litchi Honey logo"
         width={120}
         height={109}
         priority
-        className={`relative z-60 mt-2 w-20 mb-2 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] transition-opacity duration-500 ${
-          !mounted ? "opacity-0" : "opacity-100"
-        }`}
+        className="relative mt-2 mb-2 w-20 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]"
       />
 
-      {/* Foreground content — hidden while a popup is open so only the
-          popup (over the sliding background image) is visible. */}
-      <div
-        className={`flex w-full flex-1 flex-col items-center transition-opacity duration-500 ${
-          !mounted ? "pointer-events-none opacity-0" : "opacity-100"
-        }`}
-      >
-
-     
-
-      <div className="bg-glass-tint relative flex items-center justify-center rounded-[12.78px] backdrop-blur-[2px] h-32 md:h-40 w-64 md:w-87 [@media(max-height:699px)]:h-[clamp(64px,15svh,105px)] md:[@media(max-height:699px)]:h-[clamp(64px,15svh,105px)] [@media(max-height:699px)]:w-[clamp(140px,29svh,203px)] md:[@media(max-height:699px)]:w-[clamp(140px,29svh,203px)]">
-       
-        
-
-        <Image
-          src="/mask2.png"
-          alt=""
-          width={106}
-          height={29}
-          className="absolute top-1 left-1/2 w-20 md:w-28 [@media(max-height:699px)]:w-[clamp(44px,9.4svh,66px)] md:[@media(max-height:699px)]:w-[clamp(44px,9.4svh,66px)]  -translate-x-1/2 object-contain"
-        />
-
-        <Image
-          src="/mono1.png"
-          alt="Dabur Litchi Honey jar — monofloral litchi honey"
-          width={350}
-          height={110}
-          priority
-          className="object-contain w-56 md:w-96 [@media(max-height:699px)]:w-[clamp(120px,27svh,189px)] md:[@media(max-height:699px)]:w-[clamp(120px,27svh,189px)] "
-        />
-
-        <Image
-          src="/mask2.png"
-          alt=""
-          width={106}
-          height={29}
-          className="absolute bottom-1 left-1/2 w-20 md:w-28 [@media(max-height:699px)]:w-[clamp(44px,9.4svh,66px)] md:[@media(max-height:699px)]:w-[clamp(44px,9.4svh,66px)]   rotate-180 -translate-x-1/2 object-contain"
-        />
+      {/* Glass card 425×128, radius 12: text block is 387×96, inset 16px
+          top / 19px sides (pt-4 / px-4.75). */}
+      <div className="bg-glass-card flex min-h-32 w-106.25 max-w-full items-center justify-center rounded-xl px-4.75 py-4 backdrop-blur-[2px] short:min-h-0 short:w-90 short:px-3 short:py-2.5">
+        <div className="flex min-h-24 w-96.75 max-w-full flex-col justify-center text-center text-[13px] leading-[1.35] text-white short:min-h-0 short:w-84 short:text-[11px]">
+          <p className="">Every Great Honey Has an Origin.</p>
+          <p className="">Discover the story behind this one.</p>
+          <p className="mt-1 short:mt-0.5">
+            For just a few weeks every year, Bihar&apos;s famous litchi orchards
+            come alive with blossoms. Bees collect nectar during this fleeting
+            season to create a honey that&apos;s naturally delicate, floral and
+            seasonal.
+          </p>
+        </div>
       </div>
 
-      {/* Left button — upper-left, flanking the centre */}
+      {/* Flank buttons over the pack in the background: top-left and
+          bottom-right. */}
       <FlankButton
         side="left"
         bee="/new-bee-2.gif"
         onClick={() => router.push("/women-harvesters")}
         text="Meet Our <br/> Women <br/> Harvesters"
-        position="top-[42%] md:top-[42%] left-0 md:left-1/2 translate-x-0 md:-translate-x-[250px]"
+        // 42% down on phones, 36% on sm+, sliding further down as the screen
+        // drops below 760px tall (+0.3px per px lost) so it keeps clear of the card.
+        position="top-[calc(42%_+_max(0px,_760px_-_100svh)_*_0.3)] sm:top-[calc(36%_+_max(0px,_760px_-_100svh)_*_0.3)] left-0 sm:left-1/2 translate-x-0 sm:-translate-x-[250px]"
       />
 
-
-      {/* Right button — lower-right, flanking the centre */}
+      {/* Phone and tablet/desktop (sm: ≥640px) variants of the right button (different line breaks). */}
       <FlankButton
         side="right"
         bee="/new-bee-2.gif"
         onClick={() => router.push("/source-story")}
         text="Know Our  Sourcing <br/> Story"
-        position="bottom-[29%] md:hidden left-auto md:left-1/2 -right-3 md:right-auto translate-x-0 md:translate-x-[120px]"
+        position="bottom-[29%] sm:hidden left-auto sm:left-1/2 -right-3 sm:right-auto translate-x-0 sm:translate-x-[120px]"
       />
-
-       <FlankButton
+      <FlankButton
         side="right"
         bee="/new-bee-2.gif"
         onClick={() => router.push("/source-story")}
         text="Know Our <br/> Sourcing Story"
-        position="bottom-[29%] hidden md:flex left-auto md:left-1/2 right-0 md:right-auto translate-x-0 md:translate-x-[120px]"
+        position="bottom-[29%] hidden sm:flex left-auto sm:left-1/2 right-0 sm:right-auto translate-x-0 sm:translate-x-[120px]"
       />
 
-      {/* Decorative bees — top / right, smaller and flipped. The flip
-          (-scale-x-100) lives on the WRAPPER so it doesn't fight the bee-float
-          transform that animates the image. */}
-      <div className="pointer-events-none absolute top-[10%] right-[14%] hidden md:block z-20 w-5  select-none md:w-12">
-        <Image
-          src="/new-bee-2.gif"
-          alt=""
-          width={10}
-          height={10}
-          unoptimized
-          className="bee-float w-7 object-contain"
-          style={{ animationDelay: "0.3s" }}
-        />
-      </div>
-      <div className="pointer-events-none absolute top-[12%] left-[13%] z-20 w-5  select-none -scale-x-100 md:w-12">
-        <Image
-          src="/new-bee-2.gif"
-          alt=""
-          width={10}
-          height={10}
-          unoptimized
-          className="bee-float w-7 object-contain"
-          style={{ animationDelay: "0.3s" }}
-        />
-      </div>
-      <div className="pointer-events-none absolute bottom-[22%] left-[13%] z-20 w-5  select-none md:w-12">
-        <Image
-          src="/new-bee-2.gif"
-          alt=""
-          width={10}
-          height={10}
-          unoptimized
-          className="bee-float w-7 object-contain"
-          style={{ animationDelay: "0.3s" }}
-        />
-      </div>
-      <div className="pointer-events-none absolute top-[30%] md:top-[45%] right-[4%] z-20 w-5  md:scale-x-100  select-none md:w-10">
-        <Image
-          src="/new-bee-2.gif"
-          alt=""
-          width={20}
-          height={20}
-          unoptimized
-          className="bee-float  w-7 object-contain"
-          style={{ animationDelay: "1.2s" }}
-        />
-      </div>
-
-
-
-
-      </div>
-
-      {/* Bottom action row — OUTSIDE the fading wrapper so the chat stays visible
-          (e.g. floating over an open popup). z-[60] sits above the popup (z-50);
-          the Discover button hides while a popup is open. On desktop md:contents
-          dissolves the row (Discover in flow, chat floats corner). */}
-      <div className="fixed inset-x-0 bottom-5 z-[60] flex items-center justify-center gap-2.5 px-5 md:contents">
+      {/* Bottom action row. Mobile: fixed row with Discover + chat side by
+          side. Desktop (md:contents dissolves the row): Discover in flow at
+          the bottom centre, chat floats in the bottom-right corner. */}
+      <div className="fixed inset-x-0 bottom-5 z-60 flex items-center justify-center gap-2.5 px-5 md:contents">
         <button
           type="button"
           onClick={() => router.push("/discover")}
-          className="bg-glass flex h-[48.51px] flex-1 items-center justify-center gap-[10.54px] rounded-[31.62px] border border-white/30 px-[21.08px] py-[14.76px] text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] md:mt-auto md:mb-8 md:w-80 md:flex-none"
+          className="bg-glass flex h-[48.51px] flex-1 items-center justify-center rounded-[31.62px] border border-white/30 px-[21.08px] text-[15px] font-medium text-white shadow-[0_4px_30px_rgba(0,0,0,0.15)] backdrop-blur-[2px] transition hover:backdrop-blur-[5px] short:h-10 short:px-4 short:text-[13px] md:mt-auto md:mb-8 md:w-80 md:flex-none short:md:mb-4"
         >
           Discover More
         </button>
 
-        {/* Mobile: an in-flow flex item in the row. Desktop: floats corner. */}
         <ChatWidget triggerClassName="flex flex-col items-end gap-3 md:fixed md:bottom-5 md:right-5 md:z-70" />
       </div>
-
     </div>
   );
 }

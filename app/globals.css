@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* short: screens under 620px tall (e.g. phones in landscape, small laptops). */
+@custom-variant short (@media (max-height: 619.98px));
+
 @theme {
   --color-maroon: #4D0000;
   --color-gold: #E5AF62;
@@ -16,6 +19,13 @@
 /* Glassmorphism backgrounds (green tint + white sheen), as reusable Tailwind
    utilities so they can be applied with a class instead of an inline style.
    bg-glass: plain; bg-glass-tint: +20% black; bg-glass-dark: +25% black. */
+/* Stretch a fixed layer inside the page container out to the screen edges
+   (pair with inset-y-0 instead of inset-0). */
+@utility full-bleed {
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+}
+
 @utility bg-glass {
   background: linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)),
     linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
@@ -30,6 +40,12 @@
   background: linear-gradient(0deg, rgba(75, 83, 32, 0.15), rgba(75, 83, 32, 0.15)),
     linear-gradient(0deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
     linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
+}
+@utility bg-glass-card {
+  /* Home card design spec: white 10% over black 30% over a green 25% base. */
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%),
+    rgba(75, 83, 32, 0.25);
 }
 @utility bg-glass-soft {
   /* Design spec: white 10% over black 10% over a green 15% base. */
@@ -55,23 +71,19 @@ html, body {
   overflow-x: hidden;
 }
 
-/* The landscape image is sized LARGER than the viewport so it always fully
-   covers AND has slack to move:
-     - horizontally via --bg-pos-x (the left/right pan)
-     - vertically  shifted 100px DOWN (see background-position below)
-   Height is the viewport + 250px, so there's always 250px of vertical overflow
-   (125px above/below centre) — enough to drop the image 100px without ever
-   exposing a blank top edge. Width follows (auto); a landscape image then
-   overflows sideways for the --bg-pos-x pan. */
+/* Background image at cover size on a layer 4vw wider than the screen per
+   side. Two slide mechanisms combine for the left/right pan:
+     - --bg-pos-x pans the image inside the layer (where it overflows: phones)
+     - --bg-shift translates the whole layer (works on wide screens too) */
 .app-bg {
   background-image: url('/bg.jpg');
   background-repeat: no-repeat;
-  background-size: auto calc(100% + 250px);
-  /* calc(50% + 100px): centred vertically, then nudged 100px DOWN.
-     Increase/decrease the 100px to taste (and bump the 250px above if you push
-     it past ~125px so the top stays covered). */
-  background-position: var(--bg-pos-x, 50%) calc(50% + 50px);
-  transition: background-position 0.7s ease;
+  background-size: cover;
+  /* Y > 50% shifts the image UP (100% = image bottom on screen bottom). It only
+     moves where the image is taller than the screen, so no edge is ever exposed. */
+  background-position: var(--bg-pos-x, 50%) 85%;
+  transform: translateX(var(--bg-shift, 0));
+  transition: background-position 0.7s ease, transform 0.7s ease;
 }
 
 /* Mobile only: nudge the background 8px to the right (added on top of the

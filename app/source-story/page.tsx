@@ -33,7 +33,10 @@ export default function SourceStoryPage() {
         priority
         className="pointer-events-none fixed left-1/2 top-2 z-60 hidden w-20 -translate-x-1/2 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] md:block"
       />
-      <VideoPopup src="/brand-film.mp4" onClose={() => router.push("/")} />
+      <VideoPopup
+        src="/brand-film.mp4"
+        mobileSrc="/mb-brand-film.mp4"
+        onClose={() => router.push("/")} />
       <ChatWidget />
     </>
   );

@@ -104,7 +104,7 @@ export default function Discover() {
 
   return (
     <>
-    <div className="fixed inset-0 z-0 overflow-hidden  bg-black/35 backdrop-blur-[5px]">
+    <div className="full-bleed fixed inset-y-0 z-0 overflow-hidden  bg-black/35 backdrop-blur-[5px]">
       {/* SEO heading — visually hidden but present for crawlers/screen readers. */}
       <h1 className="sr-only">
         Dabur Litchi Honey — Recipes &amp; What Makes It Special
@@ -156,7 +156,7 @@ export default function Discover() {
       <Link
         href="/"
         aria-label="Close"
-        className="fixed right-5 top-5 z-30 flex h-[24.61px] w-[24.61px] items-center justify-center rounded-sm bg-black/10 p-1.5 backdrop-blur-[2px] transition hover:bg-black/20"
+        className="fixed right-[max(1.25rem,calc(50vw-720px+1.25rem))] top-5 z-30 flex h-[24.61px] w-[24.61px] items-center justify-center rounded-sm bg-black/10 p-1.5 backdrop-blur-[2px] transition hover:bg-black/20"
       >
         <Image src="/cross.svg" alt="" width={21} height={21} unoptimized className="h-full w-full object-contain" />
       </Link>

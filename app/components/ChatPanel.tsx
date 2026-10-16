@@ -41,7 +41,7 @@ const TOPICS = [
 const QUESTIONS = [
   "How do I know the honey is pure?",
   "Best way to eat Litchi Honey?",
-  "How do Dabur check for adulteration? ",
+  "How does Dabur check for adulteration? ",
 ];
 
 function PlusIcon() {

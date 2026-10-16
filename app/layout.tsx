@@ -168,7 +168,15 @@ export default function RootLayout({
       className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-svh ">
-        <BackgroundProvider>{children}</BackgroundProvider>
+        <BackgroundProvider>
+          {/* Page container: centred, max 1440px. transform-gpu makes it the
+              containing block for position:fixed descendants, so the fixed
+              page overlays, close buttons and chat button stay inside it.
+              Full-screen dim/blur layers opt out with `full-bleed`. */}
+          <div className="relative mx-auto min-h-svh w-full max-w-360 transform-gpu">
+            {children}
+          </div>
+        </BackgroundProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}

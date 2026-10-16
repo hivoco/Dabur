@@ -11,8 +11,8 @@
   "dependencies": {
     "@huggingface/transformers": "^3.8.1",
     "@langchain/community": "^1.1.29",
-    "@langchain/core": "^1.1.48",
-    "@langchain/groq": "^1.2.1",
+    "@langchain/core": "^1.2.18",
+    "@langchain/openai": "^1.6.2",
     "@langchain/textsplitters": "^1.0.1",
     "faiss-node": "^0.5.1",
     "next": "16.2.9",
@@ -23,13 +23,13 @@
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.0",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
-    "tailwindcss": "^4.3.0",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5"
   }
 }

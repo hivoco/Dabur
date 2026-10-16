@@ -51,7 +51,7 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
   return (
     <div
       onClick={handleClose}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/15 p-0 backdrop-blur-[4px] transition-opacity duration-300 md:items-center md:px-6 md:pb-6 md:pt-26 ${
+      className={`full-bleed fixed inset-y-0 z-50 flex items-center justify-center bg-black/15 p-0 backdrop-blur-[4px] transition-opacity duration-300 md:items-center md:px-6 md:pb-6 md:pt-26 md:portrait:pb-32 ${
         show ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -63,10 +63,13 @@ export default function StoryPopup({ onClose }: { onClose: () => void }) {
         so they shrink on short screens and grow on tall ones.
         DESKTOP (@2xl, container query on this card): two-column layout with the
         woman as a bottom-right cutout.
+        PORTRAIT TABLET (md:portrait): the card grows taller (up to 900px) so the
+        woman sits below the "Did You Know" card instead of over its text, and
+        the extra bottom padding keeps it clear of the chat button.
       */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`bg-glass-dark @container relative flex h-svh w-full flex-col overflow-hidden border-white/40 shadow-[0_8px_60px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-all duration-500 ease-out md:h-[calc(100svh-128px)] md:max-h-155 md:max-w-5xl [@media(max-height:700px)]:md:max-w-200 md:rounded-[28px] md:border ${
+        className={`bg-glass-dark @container relative flex h-svh w-full flex-col overflow-hidden border-white/40 shadow-[0_8px_60px_rgba(0,0,0,0.35)] backdrop-blur-[2px] transition-all duration-500 ease-out md:h-[calc(100svh-128px)] md:max-h-155 md:portrait:h-[calc(100svh-232px)] md:portrait:max-h-225 md:max-w-5xl [@media(max-height:700px)]:md:max-w-200 md:rounded-[28px] md:border ${
           show ? "translate-x-0 opacity-100" : "-translate-x-32 opacity-0"
         }`}
       >

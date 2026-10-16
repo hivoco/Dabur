@@ -83,7 +83,7 @@ export default function ChatWidget({
         <div
           onClick={closeChat}
           aria-hidden
-          className={`fixed inset-0 z-60 bg-black/60 backdrop-blur-xl ${
+          className={`full-bleed fixed inset-y-0 z-60 bg-black/60 backdrop-blur-xl ${
             desktopBackdrop ? "" : "md:hidden"
           }`}
         />

@@ -49,8 +49,16 @@ export default function BackgroundProvider({
     <BackgroundContext.Provider value={{ showLeft, showRight, center }}>
       <div
         aria-hidden
-        className="app-bg fixed inset-0 -z-10"
-        style={{ "--bg-pos-x": `${posX}%` } as CSSProperties}
+        className="app-bg fixed inset-y-0 -inset-x-[4vw] -z-10"
+        style={
+          {
+            "--bg-pos-x": `${posX}%`,
+            // The layer is 4vw wider than the screen on each side; translating
+            // it up to ±4vw gives a visible slide even when the image is no
+            // wider than the screen (desktop/tablet).
+            "--bg-shift": `${((50 - posX) / 50) * 4}vw`,
+          } as CSSProperties
+        }
       />
       {children}
     </BackgroundContext.Provider>

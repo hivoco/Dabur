@@ -1,18 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { useEscClose } from "../lib/useEscClose";
 import VideoPlayer from "./VideoPlayer";
 
+// Phones get the mobile cut of the video; matches the max-md layout below.
+const MOBILE_QUERY = "(max-width: 767.98px)";
+const subscribeMobile = (cb: () => void) => {
+  const mq = window.matchMedia(MOBILE_QUERY);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
+
 export default function VideoPopup({
   src,
+  mobileSrc,
   onClose,
 }: {
   src: string;
+  /** Played instead of `src` on phones (max-md). */
+  mobileSrc?: string;
   onClose: () => void;
 }) {
   const [show, setShow] = useState(false);
+
+  // null during SSR / first paint, so neither file starts downloading until
+  // we know which one this screen needs.
+  const isMobile = useSyncExternalStore(
+    subscribeMobile,
+    () => window.matchMedia(MOBILE_QUERY).matches,
+    () => null
+  );
+  const videoSrc = isMobile === null ? null : isMobile && mobileSrc ? mobileSrc : src;
 
   useEffect(() => {
     const r = requestAnimationFrame(() => setShow(true));
@@ -30,7 +50,7 @@ export default function VideoPopup({
   return (
     <div
       onClick={handleClose}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-[2px] transition-opacity duration-300 md:px-6 md:pb-6 md:pt-26  ${
+      className={`full-bleed fixed inset-y-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-[2px] transition-opacity duration-300 md:px-6 md:pb-6 md:pt-26  ${
         show ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -42,7 +62,7 @@ export default function VideoPopup({
           handleClose();
         }}
         aria-label="Close"
-        className="fixed right-5 top-5 z-30 flex h-[24.61px] w-[24.61px] items-center justify-center rounded-sm bg-black/10 p-1.5 backdrop-blur-[2px] transition hover:bg-black/20 "
+        className="fixed right-[max(1.25rem,calc(50vw-720px+1.25rem))] top-5 z-30 flex h-[24.61px] w-[24.61px] items-center justify-center rounded-sm bg-black/10 p-1.5 backdrop-blur-[2px] transition hover:bg-black/20 "
       >
         <Image src="/cross.svg" alt="" width={21} height={21} unoptimized className="h-full w-full object-contain" />
       </button>
@@ -58,7 +78,12 @@ export default function VideoPopup({
           show ? "opacity-100 md:translate-x-0" : "opacity-0 md:translate-x-40"
         }`}
       >
-        <VideoPlayer src={src} className="h-full w-full" />
+        {videoSrc ? (
+          // key: remount (fresh player state) if the screen crosses the breakpoint.
+          <VideoPlayer key={videoSrc} src={videoSrc} className="h-full w-full" />
+        ) : (
+          <div className="h-full w-full bg-black" />
+        )}
       </div>
     </div>
   );
