@@ -195,7 +195,12 @@ export default function Home() {
           bottom-right. On phones the pill is scaled to 70% width, leaving 21px
           of empty box on each side, so -left/-right-1.25 (5px) puts the visible
           edge exactly 16px from the screen edge on both sides — 9px on
-          screens narrower than 370px (-left/-right-3 = 12px). */}
+          screens narrower than 370px (-left/-right-3 = 12px).
+          sm+: the pair mirrors around the honey JAR, not the page centre — the
+          jar sits at ~48.6% of the background image, i.e. 1.38% of the image's
+          on-screen width (max(108vw, 153.8vh): cover of the 108vw-wide bg
+          layer, image ratio 1.538) left of centre, so both buttons shift by
+          that much. */}
       <FlankButton
         side="left"
         bee="/new-bee-2.webp"
@@ -203,7 +208,7 @@ export default function Home() {
         text="Meet Our <br/> Women <br/> Harvesters"
         // 42% down on phones, 36% on sm+, sliding further down as the screen
         // drops below 760px tall (+0.3px per px lost) so it keeps clear of the card.
-        position="top-[calc(42%_+_max(0px,_760px_-_100svh)_*_0.3)] sm:top-[calc(36%_+_max(0px,_760px_-_100svh)_*_0.3)] -left-1.25 max-[370px]:-left-3 sm:left-1/2 translate-x-0 sm:-translate-x-[250px]"
+        position="top-[calc(42%_+_max(0px,_760px_-_100svh)_*_0.3)] sm:top-[calc(36%_+_max(0px,_760px_-_100svh)_*_0.3)] -left-1.25 max-[370px]:-left-3 sm:left-1/2 translate-x-0 sm:-translate-x-[calc(250px_+_max(108vw,_153.8vh)_*_0.0138)]"
       />
 
       {/* Phone and tablet/desktop (sm: ≥640px) variants of the right button (different line breaks). */}
@@ -212,14 +217,14 @@ export default function Home() {
         bee="/new-bee-2.webp"
         onClick={() => router.push("/source-story")}
         text="Know Our  Sourcing <br/> Story"
-        position="bottom-[29%] sm:hidden left-auto sm:left-1/2 -right-1.25 max-[370px]:-right-3 sm:right-auto translate-x-0 sm:translate-x-[120px]"
+        position="bottom-[29%] sm:hidden left-auto sm:left-1/2 -right-1.25 max-[370px]:-right-3 sm:right-auto translate-x-0 sm:translate-x-[calc(110px_-_max(108vw,_153.8vh)_*_0.0138)]"
       />
       <FlankButton
         side="right"
         bee="/new-bee-2.webp"
         onClick={() => router.push("/source-story")}
         text="Know Our <br/> Sourcing Story"
-        position="bottom-[29%] hidden sm:flex left-auto sm:left-1/2 right-0 sm:right-auto translate-x-0 sm:translate-x-[120px]"
+        position="bottom-[29%] hidden sm:flex left-auto sm:left-1/2 right-0 sm:right-auto translate-x-0 sm:translate-x-[calc(110px_-_max(108vw,_153.8vh)_*_0.0138)]"
       />
 
       {/* Bottom action row. Mobile: fixed row with Discover + chat side by
