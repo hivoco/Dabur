@@ -192,7 +192,10 @@ export default function Home() {
       </div>
 
       {/* Flank buttons over the pack in the background: top-left and
-          bottom-right. */}
+          bottom-right. On phones the pill is scaled to 70% width, leaving 21px
+          of empty box on each side, so -left/-right-1.25 (5px) puts the visible
+          edge exactly 16px from the screen edge on both sides — 9px on
+          screens narrower than 370px (-left/-right-3 = 12px). */}
       <FlankButton
         side="left"
         bee="/new-bee-2.webp"
@@ -200,7 +203,7 @@ export default function Home() {
         text="Meet Our <br/> Women <br/> Harvesters"
         // 42% down on phones, 36% on sm+, sliding further down as the screen
         // drops below 760px tall (+0.3px per px lost) so it keeps clear of the card.
-        position="top-[calc(42%_+_max(0px,_760px_-_100svh)_*_0.3)] sm:top-[calc(36%_+_max(0px,_760px_-_100svh)_*_0.3)] left-0 sm:left-1/2 translate-x-0 sm:-translate-x-[250px]"
+        position="top-[calc(42%_+_max(0px,_760px_-_100svh)_*_0.3)] sm:top-[calc(36%_+_max(0px,_760px_-_100svh)_*_0.3)] -left-1.25 max-[370px]:-left-3 sm:left-1/2 translate-x-0 sm:-translate-x-[250px]"
       />
 
       {/* Phone and tablet/desktop (sm: ≥640px) variants of the right button (different line breaks). */}
@@ -209,7 +212,7 @@ export default function Home() {
         bee="/new-bee-2.webp"
         onClick={() => router.push("/source-story")}
         text="Know Our  Sourcing <br/> Story"
-        position="bottom-[29%] sm:hidden left-auto sm:left-1/2 -right-3 sm:right-auto translate-x-0 sm:translate-x-[120px]"
+        position="bottom-[29%] sm:hidden left-auto sm:left-1/2 -right-1.25 max-[370px]:-right-3 sm:right-auto translate-x-0 sm:translate-x-[120px]"
       />
       <FlankButton
         side="right"
