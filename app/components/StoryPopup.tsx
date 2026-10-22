@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import VideoPlayer from "./VideoPlayer";
 import { useEscClose } from "../lib/useEscClose";
@@ -11,33 +11,33 @@ import womenData from "../data/women.json";
 // closes). A fresh tab/visit gets a new random story.
 const STORY_KEY = "women-story-index";
 
+// The tab's story index: read from sessionStorage, or pick one at random and
+// save it. Stable after the first call, so it is safe as a store snapshot.
+let memoryIdx: number | null = null; // fallback when storage is unavailable
+function tabStoryIndex(): number {
+  try {
+    const saved = sessionStorage.getItem(STORY_KEY);
+    if (saved !== null && womenData[Number(saved)]) return Number(saved);
+    const idx = Math.floor(Math.random() * womenData.length);
+    sessionStorage.setItem(STORY_KEY, String(idx));
+    return idx;
+  } catch {
+    if (memoryIdx === null) memoryIdx = Math.floor(Math.random() * womenData.length);
+    return memoryIdx;
+  }
+}
+const noSubscribe = () => () => {};
+
 export default function StoryPopup({ onClose }: { onClose: () => void }) {
   // Visible from the first (server) render so it counts for LCP without waiting
   // for JS; the entrance animation is pure CSS (`starting:` = @starting-style).
   // `show` only flips to false to play the exit.
   const [show, setShow] = useState(true);
 
-  // Deterministic default for SSR / first paint (avoids a hydration mismatch);
-  // the per-tab story is resolved on the client in the effect below.
-  const [story, setStory] = useState(womenData[0]);
-
-  // Resolve the per-tab story once on the client.
-  useEffect(() => {
-    let idx: number;
-    try {
-      const saved = sessionStorage.getItem(STORY_KEY);
-      if (saved !== null && womenData[Number(saved)]) {
-        idx = Number(saved);
-      } else {
-        idx = Math.floor(Math.random() * womenData.length);
-        sessionStorage.setItem(STORY_KEY, String(idx));
-      }
-    } catch {
-      idx = Math.floor(Math.random() * womenData.length);
-    }
-    setStory(womenData[idx]);
-  }, []);
-
+  // Story 0 on the server / first paint (no hydration mismatch); the client
+  // then switches to this tab's story.
+  const story =
+    womenData[useSyncExternalStore(noSubscribe, tabStoryIndex, () => 0)];
 
   // Play the slide-out-left exit, then let the parent recenter the bg + unmount.
   const handleClose = () => {

@@ -7,7 +7,10 @@ import { useEffect, useRef } from "react";
  */
 export function useEscClose(handler: () => void) {
   const ref = useRef(handler);
-  ref.current = handler;
+  // Keep the ref pointing at the latest handler (synced after render).
+  useEffect(() => {
+    ref.current = handler;
+  });
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") ref.current();

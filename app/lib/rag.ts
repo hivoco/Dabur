@@ -51,7 +51,7 @@ export async function ingestPdf(source: Blob | string): Promise<number> {
 
 /**
  * Get the vector store for querying. Loads the persisted index from disk if it
- * exists; otherwise seeds it from the bundled /public/qa.pdf on first use.
+ * exists; otherwise seeds it from the bundled data/qa.pdf on first use.
  */
 export function getVectorStore(): Promise<FaissStore> {
   if (!storePromise) {
@@ -60,7 +60,8 @@ export function getVectorStore(): Promise<FaissStore> {
         return FaissStore.load(STORE_DIR, embeddings());
       }
       const { store } = await buildAndSave(
-        path.join(process.cwd(), "public", "qa.pdf")
+        // Kept OUT of /public so the source PDF can't be downloaded.
+        path.join(process.cwd(), "data", "qa.pdf")
       );
       return store;
     })().catch((err) => {

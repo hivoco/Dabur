@@ -1,28 +1,105 @@
-import { ChatOpenAI } from "@langchain/openai";
+import { ChatGroq } from "@langchain/groq";
 import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { AIMessage, HumanMessage, SystemMessage, type BaseMessage } from "@langchain/core/messages";
 import type { Document } from "@langchain/core/documents";
 import { getVectorStore } from "@/app/lib/rag";
+import { SITE_URL } from "@/app/lib/site";
 
 export const runtime = "nodejs";
 
-// OpenAI model used for both the chat answer and the abuse classifier.
-const OPENAI_MODEL = "gpt-6-luna";
+// Groq model used for both the chat answer and the abuse classifier.
+const GROQ_MODEL = "qwen/qwen3.8-27b";
 export const maxDuration = 60;
 
-// Allow the chat to be called from a different origin (e.g. local dev frontend
-// hitting the deployed backend). Tighten "*" to a specific origin if you prefer.
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
+// ---- Abuse protection -------------------------------------------------------
 
-export function OPTIONS() {
-  return new Response(null, { status: 204, headers: CORS });
+// Only these sites may call the chat from a browser (CORS). The site itself is
+// always allowed; add others (e.g. a local dev frontend that talks to the
+// deployed backend) as a comma-separated CHAT_ALLOWED_ORIGINS.
+const ALLOWED_ORIGINS = new Set(
+  [
+    new URL(SITE_URL).origin,
+    ...(process.env.CHAT_ALLOWED_ORIGINS ?? "").split(","),
+    ...(process.env.NODE_ENV === "production" ? [] : ["http://localhost:3000"]),
+  ]
+    .map((o) => o.trim().replace(/\/+$/, ""))
+    .filter(Boolean)
+);
+
+// Same-origin requests (the site calling its own API) are always fine; other
+// origins must be on the allow-list.
+function originAllowed(req: Request): { ok: boolean; origin: string | null } {
+  const origin = req.headers.get("origin");
+  if (!origin) return { ok: true, origin: null }; // non-browser / same-origin GET-style
+  if (ALLOWED_ORIGINS.has(origin)) return { ok: true, origin };
+  try {
+    const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+    if (host && new URL(origin).host === host) return { ok: true, origin };
+  } catch {
+    // malformed Origin header
+  }
+  return { ok: false, origin };
 }
+
+function corsHeaders(origin: string | null): Record<string, string> {
+  return origin
+    ? {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        Vary: "Origin",
+      }
+    : {};
+}
+
+export function OPTIONS(req: Request) {
+  const { ok, origin } = originAllowed(req);
+  if (!ok) return new Response(null, { status: 403 });
+  return new Response(null, { status: 204, headers: corsHeaders(origin) });
+}
+
+// Per-visitor rate limit (in memory, per server process): every chat message
+// costs two Groq calls, so cap how fast one IP can send them.
+const RATE_LIMITS = [
+  { windowMs: 60_000, max: 15 }, // 15 messages / minute
+  { windowMs: 24 * 60 * 60_000, max: 300 }, // 300 messages / day
+];
+const hits = new Map<string, number[]>();
+
+// The visitor's IP as seen by our reverse proxy. Prefer X-Real-IP (nginx sets
+// it from the real connection), then the LAST X-Forwarded-For entry (the one
+// our proxy appended) — the first entries are client-supplied and spoofable.
+function clientIp(req: Request) {
+  const real = req.headers.get("x-real-ip")?.trim();
+  if (real) return real;
+  const xff = req.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",").pop()!.trim();
+  return "unknown";
+}
+
+function rateLimited(ip: string) {
+  const now = Date.now();
+  const longest = Math.max(...RATE_LIMITS.map((l) => l.windowMs));
+  const list = (hits.get(ip) ?? []).filter((t) => now - t < longest);
+  const over = RATE_LIMITS.some(
+    (l) => list.filter((t) => now - t < l.windowMs).length >= l.max
+  );
+  if (!over) list.push(now);
+  hits.set(ip, list);
+  // Keep the map from growing forever.
+  if (hits.size > 10_000) {
+    for (const [k, v] of hits) if (!v.some((t) => now - t < longest)) hits.delete(k);
+  }
+  return over;
+}
+
+// Input size caps.
+const MAX_BODY_BYTES = 64 * 1024;
+const MAX_MESSAGE_CHARS = 1000;
+const MAX_HISTORY_ITEMS = 10; // last 5 questions + their answers
+const MAX_HISTORY_CHARS = 3000; // per history message
 
 // Canned replies the CHO must reproduce verbatim. Kept as constants so the exact
 // wording and contact details live in a single place.
@@ -58,13 +135,15 @@ const fixHoney = (text: string) => text.replace(/\bh[aeou]+n+e?y\b/gi, "honey");
 // any error, so a transient classifier failure never blocks a real question.
 async function isAbusive(message: string): Promise<boolean> {
   try {
-    const classifier = new ChatOpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-      model: OPENAI_MODEL,
-      // Reasoning model: only the default temperature is allowed, and a tiny
-      // token cap would be eaten by reasoning before the YES/NO is written.
-      reasoning: { effort: "low" },
-    });
+    const classifier = new ChatGroq({
+      apiKey: process.env.GROQ_API_KEY,
+      model: GROQ_MODEL,
+      temperature: 0,
+      maxTokens: 5,
+      // Qwen3 is a thinking model: answer directly (no reasoning tokens eating
+      // the tiny YES/NO budget), and never return any thinking text.
+      reasoningEffort: "none",
+    }).withConfig({ reasoning_format: "hidden" });
     const res = await classifier.invoke([
       new SystemMessage(
         "You are a strict content-safety classifier. Decide whether the user's message contains profanity, sexual content, slurs, hate speech, personal insults, or abusive/offensive slang in ANY language — including Hindi or Hinglish (Hindi written with English letters) and deliberately misspelled or obfuscated words. Reply with ONLY one word: YES if it does, otherwise NO."
@@ -108,17 +187,48 @@ Context:
 {context}`;
 
 export async function POST(req: Request) {
-  try {
-    const { message, history } = (await req.json()) as {
-      message?: string;
-      history?: { role?: string; content?: string }[];
-    };
-    if (!message || typeof message !== "string") {
-      return new Response("Missing 'message'", { status: 400 });
-    }
+  const { ok, origin } = originAllowed(req);
+  if (!ok) return new Response("Forbidden", { status: 403 });
+  const CORS = corsHeaders(origin);
+  const text = (body: string, status: number) =>
+    new Response(body, {
+      status,
+      headers: { "Content-Type": "text/plain; charset=utf-8", ...CORS },
+    });
 
-    if (!process.env.OPENAI_API_KEY) {
-      return new Response("OPENAI_API_KEY is not set", { status: 500 });
+  if (rateLimited(clientIp(req))) {
+    return text(
+      "You're sending messages too quickly. Please wait a moment and try again.",
+      429
+    );
+  }
+  if (Number(req.headers.get("content-length") || 0) > MAX_BODY_BYTES) {
+    return text("Message is too long.", 413);
+  }
+
+  try {
+    const body = (await req.json()) as {
+      message?: unknown;
+      history?: unknown;
+    };
+    if (typeof body.message !== "string" || !body.message.trim()) {
+      return text("Missing 'message'", 400);
+    }
+    const message = body.message.trim().slice(0, MAX_MESSAGE_CHARS);
+    const history = (Array.isArray(body.history) ? body.history : [])
+      .slice(-MAX_HISTORY_ITEMS)
+      .filter(
+        (h): h is { role: string; content: string } =>
+          !!h &&
+          typeof h === "object" &&
+          typeof (h as { content?: unknown }).content === "string" &&
+          typeof (h as { role?: unknown }).role === "string"
+      )
+      .map((h) => ({ role: h.role, content: h.content.slice(0, MAX_HISTORY_CHARS) }));
+
+    if (!process.env.GROQ_API_KEY) {
+      console.error("GROQ_API_KEY is not set");
+      return text("Chat is temporarily unavailable.", 503);
     }
 
     // Profanity / abuse guard — classified by the LLM so it catches slang,
@@ -163,14 +273,14 @@ export async function POST(req: Request) {
       ],
     ]);
 
-    const model = new ChatOpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-      model: OPENAI_MODEL,
-      reasoning: { effort: "low" },
-      // Longer, fuller answers (the prompt still keeps them grounded in context).
-      verbosity: "high",
+    const model = new ChatGroq({
+      apiKey: process.env.GROQ_API_KEY,
+      model: GROQ_MODEL,
+      temperature: 0.3,
+      // Answer straight away (fast first token) and never stream any thinking.
+      reasoningEffort: "none",
       streaming: true,
-    });
+    }).withConfig({ reasoning_format: "hidden" });
 
     // One RAG chain so LangSmith traces retrieval + prompt + LLM as a single run.
     type ChainInput = {
@@ -228,10 +338,43 @@ export async function POST(req: Request) {
             controller.enqueue(encoder.encode(PROFANITY_MESSAGE));
             return;
           }
+          // Backstop: drop any <think>…</think> block the model still emits
+          // (tags can be split across tokens, so scan a running buffer).
+          let pending = "";
+          let inThink = false;
+          const emit = (t: string) => {
+            if (!t) return;
+            acc += t;
+            controller.enqueue(encoder.encode(t));
+          };
           for await (const token of tokenStream) {
-            acc += token;
-            controller.enqueue(encoder.encode(token));
+            pending += token;
+            for (;;) {
+              if (inThink) {
+                const end = pending.indexOf("</think>");
+                if (end === -1) {
+                  pending = pending.slice(-8); // keep a possible partial "</think>"
+                  break;
+                }
+                pending = pending.slice(end + 8).replace(/^\s+/, "");
+                inThink = false;
+              } else {
+                const start = pending.indexOf("<think>");
+                if (start === -1) {
+                  // Hold back a possible partial "<think" at the end.
+                  const keep = pending.lastIndexOf("<");
+                  const safe = keep !== -1 && "<think>".startsWith(pending.slice(keep)) ? keep : pending.length;
+                  emit(pending.slice(0, safe));
+                  pending = pending.slice(safe);
+                  break;
+                }
+                emit(pending.slice(0, start));
+                pending = pending.slice(start + 7);
+                inThink = true;
+              }
+            }
           }
+          if (!inThink) emit(pending);
           // Never append a disclaimer to the out-of-knowledge fallback reply.
           const accLower = acc.toLowerCase();
           const isFallback = accLower.includes(

@@ -119,16 +119,15 @@ export default function ChatPanel({ onClose }: { onClose: () => void }) {
     let shown = 0; // characters revealed to the user so far
     let finished = false; // server stream has ended
 
-    // Typewriter: reveal the buffered text a little at a time so the reply reads
-    // as if it's being typed instead of appearing instantly. The step grows
-    // with the backlog (~1/8 of it per frame), so it never trails the stream
-    // by more than a few frames — long answers no longer "type" for seconds
-    // after the server has finished.
+    // Typewriter: reveal the reply at a natural typing pace instead of all at
+    // once (the model streams the whole answer in under a second). Each frame
+    // shows 3 chars plus a little more while a lot is still waiting, so the
+    // pace is steady and eases out: ~2s for a short reply, ~5s for a long one.
     const reveal = () =>
       new Promise<void>((resolve) => {
         const tick = () => {
           if (shown < buffer.length) {
-            const step = Math.max(2, Math.ceil((buffer.length - shown) / 8));
+            const step = 3 + Math.floor((buffer.length - shown) / 150);
             shown = Math.min(buffer.length, shown + step);
             updateLastBot(buffer.slice(0, shown));
           }

@@ -8,14 +8,10 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-// Public origin used for canonical URLs, Open Graph (share image) and JSON-LD.
-// Link previews only work if this origin really serves the app, so it must be
-// the CURRENT live URL. NEXT_PUBLIC_SITE_URL (read at build time) overrides it.
-// TODO at launch: change to "https://www.daburlitchihoney.com" once that domain
-// points at this app (it is a parked page today).
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://test.hivoco.com"
-).replace(/\/+$/, "");
+// Public origin (canonical URLs, Open Graph, JSON-LD) — defined in app/lib/site.ts
+// so API routes can use it without importing this layout.
+import { SITE_URL } from "./lib/site";
+export { SITE_URL };
 
 // Share image (Open Graph / Twitter): the brand logo on a 1200x630 cream canvas.
 export const OG_IMAGE = {
