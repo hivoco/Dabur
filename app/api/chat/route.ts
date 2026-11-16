@@ -3,8 +3,7 @@ import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { AIMessage, HumanMessage, SystemMessage, type BaseMessage } from "@langchain/core/messages";
-import type { Document } from "@langchain/core/documents";
-import { getVectorStore } from "@/app/lib/rag";
+import { ensureKnowledgeBase, searchKnowledge } from "@/app/lib/rag";
 import { SITE_URL } from "@/app/lib/site";
 
 export const runtime = "nodejs";
@@ -249,20 +248,16 @@ export async function POST(req: Request) {
           : new HumanMessage(h.content as string)
       );
 
-    // Retrieve the most relevant chunks from the FAISS index.
-    let store;
+    // The knowledge base (PDF chunks + embeddings) must be ready to search.
     try {
-      store = await getVectorStore();
+      await ensureKnowledgeBase();
     } catch (err) {
-      console.error("vector store load error", err);
-      return new Response(
-        "I couldn't load the knowledge base yet. Please upload a PDF to `/api/ingest` first.",
-        { status: 200, headers: { "Content-Type": "text/plain; charset=utf-8" } }
-      );
+      console.error("knowledge base load error", err);
+      return text("I couldn't load the knowledge base yet. Please try again shortly.", 503);
     }
-    const retriever = store.asRetriever(6);
-    const formatDocs = (docs: Document[]) =>
-      docs.map((d) => d.pageContent).join("\n\n---\n\n");
+    // The 6 most relevant chunks, joined into the prompt's {context}.
+    const retrieveContext = async (query: string) =>
+      (await searchKnowledge(query, 6)).join("\n\n---\n\n");
 
     const prompt = ChatPromptTemplate.fromMessages([
       ["system", SYSTEM_PROMPT],
@@ -292,8 +287,7 @@ export async function POST(req: Request) {
       {
         context: RunnableSequence.from([
           (input: ChainInput) => input.retrievalQuery,
-          retriever,
-          formatDocs,
+          retrieveContext,
         ]),
         question: (input: ChainInput) => input.question,
         history: (input: ChainInput) => input.history,

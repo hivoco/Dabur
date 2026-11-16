@@ -56,7 +56,6 @@ const nextConfig: NextConfig = {
 
   // Keep native / heavy RAG deps out of the bundler (run them in Node directly).
   serverExternalPackages: [
-    "faiss-node",
     "@huggingface/transformers",
     "pdf-parse",
   ],

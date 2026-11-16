@@ -22,6 +22,7 @@
 
 # generated FAISS vector index (rebuilt from the uploaded PDF)
 /faiss_store
+/knowledge_base
 
 # misc
 .DS_Store

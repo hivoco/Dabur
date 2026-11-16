@@ -35,7 +35,7 @@ function keyMatches(given: string, expected: string) {
 }
 
 /**
- * POST /api/ingest — upload a PDF to (re)build the FAISS knowledge base.
+ * POST /api/ingest — upload a PDF to (re)build the chatbot knowledge base.
  *
  * Protected: set INGEST_SECRET in the server environment and send it in the
  * `x-ingest-key` header. With no INGEST_SECRET configured the endpoint is
@@ -105,7 +105,7 @@ export async function POST(req: Request) {
     return Response.json({
       ok: true,
       chunks,
-      message: `FAISS index built from the uploaded PDF and saved to /faiss_store (${chunks} chunks).`,
+      message: `Knowledge base rebuilt from the uploaded PDF and saved to /knowledge_base (${chunks} chunks).`,
     });
   } catch (err) {
     // Log the detail server-side only; never echo internals to the client.
