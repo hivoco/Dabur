@@ -13,11 +13,21 @@ const STORE_DIR = path.join(process.cwd(), "faiss_store");
 function embeddings() {
   return new HuggingFaceTransformersEmbeddings({
     model: "Xenova/all-MiniLM-L6-v2",
+    // ONNX Runtime uses every CPU core by default, which pins a small server at
+    // 100% on each chat. Two threads is plenty for this tiny model.
+    pretrainedOptions: {
+      session_options: { intraOpNumThreads: 2, interOpNumThreads: 1 },
+    },
   });
 }
 
 // Cached store for the running server process.
 let storePromise: Promise<FaissStore> | null = null;
+// When loading/building last failed. Building embeds the whole PDF (the most
+// CPU-heavy job in the app), so after a failure wait before trying again
+// instead of re-running it on every chat request.
+let lastFailure = 0;
+const RETRY_AFTER_MS = 60_000;
 
 // Extract a PDF (uploaded Blob or a file path), embed it, and persist to disk.
 async function buildAndSave(
@@ -54,6 +64,9 @@ export async function ingestPdf(source: Blob | string): Promise<number> {
  * exists; otherwise seeds it from the bundled data/qa.pdf on first use.
  */
 export function getVectorStore(): Promise<FaissStore> {
+  if (!storePromise && Date.now() - lastFailure < RETRY_AFTER_MS) {
+    return Promise.reject(new Error("Knowledge base unavailable; retrying shortly."));
+  }
   if (!storePromise) {
     storePromise = (async () => {
       if (existsSync(path.join(STORE_DIR, "faiss.index"))) {
@@ -65,7 +78,8 @@ export function getVectorStore(): Promise<FaissStore> {
       );
       return store;
     })().catch((err) => {
-      storePromise = null; // allow a retry on the next request
+      storePromise = null; // allow a retry once the cool-down has passed
+      lastFailure = Date.now();
       throw err;
     });
   }

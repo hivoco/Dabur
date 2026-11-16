@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { jsonLd } from "./lib/jsonLd";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import BackgroundProvider from "./components/Background";
@@ -208,7 +209,7 @@ export default function RootLayout({
         </BackgroundProvider>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(JSON_LD) }}
         />
       </body>
     </html>

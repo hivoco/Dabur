@@ -7,6 +7,26 @@ export const maxDuration = 300;
 // Largest PDF we will accept (bytes).
 const MAX_PDF_BYTES = 20 * 1024 * 1024;
 
+// Failed-key attempts per IP (in memory): after 5 wrong keys in 15 minutes the
+// IP is locked out for the rest of that window, so the key can't be brute-forced.
+const FAIL_WINDOW_MS = 15 * 60_000;
+const MAX_FAILS = 5;
+const fails = new Map<string, number[]>();
+
+function clientIp(req: Request) {
+  const real = req.headers.get("x-real-ip")?.trim();
+  if (real) return real;
+  const xff = req.headers.get("x-forwarded-for");
+  return xff ? xff.split(",").pop()!.trim() : "unknown";
+}
+
+function recentFails(ip: string) {
+  const now = Date.now();
+  const list = (fails.get(ip) ?? []).filter((t) => now - t < FAIL_WINDOW_MS);
+  fails.set(ip, list);
+  return list;
+}
+
 // Constant-time compare so the key can't be guessed byte by byte from timing.
 function keyMatches(given: string, expected: string) {
   const a = Buffer.from(given);
@@ -31,7 +51,13 @@ export async function POST(req: Request) {
   if (!secret) {
     return Response.json({ error: "Ingest is disabled." }, { status: 403 });
   }
+  const ip = clientIp(req);
+  const attempts = recentFails(ip);
+  if (attempts.length >= MAX_FAILS) {
+    return Response.json({ error: "Too many attempts. Try again later." }, { status: 429 });
+  }
   if (!keyMatches(req.headers.get("x-ingest-key") ?? "", secret)) {
+    attempts.push(Date.now());
     return Response.json({ error: "Unauthorized." }, { status: 401 });
   }
 

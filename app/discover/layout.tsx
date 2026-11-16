@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { jsonLd } from "../lib/jsonLd";
 import { OG_IMAGE, SITE_URL } from "../layout";
 import recipeData from "../data/recipie.json";
 
@@ -78,7 +79,7 @@ export default function DiscoverLayout({
       {children}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(JSON_LD) }}
       />
     </>
   );

@@ -18,11 +18,13 @@ const csp = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
+  ...(isDev ? [] : ["upgrade-insecure-requests"]),
 ].join("; ");
 
 const securityHeaders = [
   { key: "Content-Security-Policy", value: csp },
   { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
@@ -36,6 +38,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // This folder is the project root (a stray lockfile in the parent folder
+  // otherwise makes Turbopack guess the wrong root).
+  turbopack: { root: __dirname },
+
   // Don't advertise the framework in an X-Powered-By header.
   poweredByHeader: false,
 
