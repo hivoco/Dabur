@@ -86,6 +86,45 @@ html, body {
   transition: background-position 0.7s ease, transform 0.7s ease;
 }
 
+/* Keep the honey jar clear of the text card above it and the "Discover More"
+   bar below it. On wide-but-short screens (laptops, phones held sideways) the
+   cover-scaled image is much taller than the screen, so the 85% shift would
+   lift the jar under the card. Instead the jar's lid (46.2% down the image;
+   the jar is 29.7% of the image tall) is kept at least --jar-min-top from the
+   top, where --jar-min-top centres the jar between the card's bottom
+   (--card-bottom) and the button bar's top (--bar-from-bottom above the screen
+   edge). The shown image height is max(70.2vw, 100vh): cover of the
+   108vw-wide layer, image ratio 1.5385. max(85%, …) keeps the usual look where
+   there's room; min(0px, …) keeps the image's top edge covered. Upright phones
+   are unaffected: there the image already fits the height. */
+.app-bg {
+  --img-h: max(70.2vw, 100vh);
+  --card-bottom: 241px;
+  --bar-from-bottom: 80px;
+  --jar-min-top: calc((var(--card-bottom) + 100vh - var(--bar-from-bottom) - 0.297 * var(--img-h)) / 2);
+  background-position-y: min(0px, max(85%, calc(var(--jar-min-top) - 0.462 * var(--img-h))));
+}
+/* Short screens: smaller logo + shorter card, lower button bar (`short:`). */
+@media (max-height: 619.98px) {
+  .app-bg {
+    --card-bottom: 150px;
+    --bar-from-bottom: 52px;
+  }
+}
+/* md+ short screens (480px+ tall) show the 4-line desktop paragraph. */
+@media (max-height: 619.98px) and (min-width: 768px) and (min-height: 480px) {
+  .app-bg {
+    --card-bottom: 180px;
+  }
+}
+
+/* Very short screens: the logo shrinks again. */
+@media (max-height: 419.98px) {
+  .app-bg {
+    --card-bottom: 135px;
+  }
+}
+
 /* Phones get a smaller (1280px-tall) copy of the background. */
 @media (max-width: 767px) {
   .app-bg {

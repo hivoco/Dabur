@@ -29,10 +29,10 @@ const RECIPES: Recipe[] = recipeData.map((r, i) => ({
 
 // A few bees scattered around (gentle float via the .bee-float class).
 const BEES = [
-  { src: "/new-bee-2.webp", className: "left-[12%] md:left-[7%] top-[7%] w-8 md:w-12", delay: "0s", flip: true },
-  { src: "/new-bee-2.webp", className: "right-[10%] top-[8%] w-8 md:w-12", delay: "0.6s", flip: true },
-  { src: "/new-bee-2.webp", className: "right-[7%] top-[44%] w-8 md:w-12", delay: "1.1s", flip: false },
-  { src: "/new-bee-2.webp", className: "left-[40%] bottom-[28%] w-7 md:w-10", delay: "1.6s", flip: true },
+  { src: "/new-bee-2.webp", className: "left-[12%] min-[470px]:left-[7%] top-[7%] w-8 min-[470px]:w-12", delay: "0s", flip: true },
+  { src: "/new-bee-2.webp", className: "right-[10%] top-[8%] w-8 min-[470px]:w-12", delay: "0.6s", flip: true },
+  { src: "/new-bee-2.webp", className: "right-[7%] top-[44%] w-8 min-[470px]:w-12", delay: "1.1s", flip: false },
+  { src: "/new-bee-2.webp", className: "left-[40%] bottom-[28%] w-7 min-[470px]:w-10", delay: "1.6s", flip: true },
 ];
 
 export default function Discover() {
@@ -135,18 +135,19 @@ export default function Discover() {
         alt=""
         width={123}
         height={158}
-        className={`pointer-events-none absolute -top-8.75 left-0 z-0 w-24 md:h-39.5 select-none object-contain transition-all duration-700 ease-out ${
+        className={`pointer-events-none absolute -top-8.75 left-0 z-0 w-24 min-[470px]:h-39.5 short:h-auto short:w-14 select-none object-contain transition-all duration-700 ease-out ${
           "translate-x-0 translate-y-0 opacity-100 starting:-translate-x-full starting:-translate-y-full starting:opacity-0"
         }`}
       />
 
-      {/* Decorative litchi — top:170px, right edge */}
+      {/* Decorative litchi — top:170px, right edge. Only from 1100px wide:
+          narrower screens have no margin beside the cards for it. */}
       <Image
         src="/discover/litchi.webp"
         alt=""
         width={84}
         height={86}
-        className={`pointer-events-none absolute right-0 top-25 md:top-[170.74px] z-0 hidden h-14 w-14 select-none md:block md:h-21.5 md:w-[83.5px] object-cover transition-all duration-700 ease-out ${
+        className={`pointer-events-none absolute right-0 top-25 min-[470px]:top-[170.74px] z-0 hidden h-14 w-14 select-none min-[1100px]:block min-[470px]:h-21.5 min-[470px]:w-[83.5px] object-cover transition-all duration-700 ease-out ${
           "translate-x-0 translate-y-0 opacity-100 starting:translate-x-full starting:-translate-y-full starting:opacity-0"
         }`}
       />
@@ -199,30 +200,31 @@ export default function Discover() {
         </div>
 
         {/* Sections — centred in the leftover height with a scaling gap. */}
-        <div className="flex min-h-0 flex-1 flex-col justify-center gap-[clamp(1rem,4svh,2.25rem)] px-5 pb-[clamp(0.75rem,2svh,1.5rem)] md:px-10">
-          {/* What Makes It Truly Special */}
-          <div className="mx-auto w-full md:max-w-[min(910px,128svh)]">
-            <h2 className="mb-[clamp(0.4rem,1.6svh,1.25rem)] text-center text-[clamp(1rem,2.4svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[clamp(1.25rem,3.4svh,28px)]">
+        <div className="flex min-h-0 flex-1 flex-col justify-center-safe gap-[clamp(1rem,4svh,2.25rem)] px-5 pb-[clamp(0.75rem,2svh,1.5rem)] min-[470px]:px-10">
+          {/* What Makes It Truly Special — on short screens (<520px tall) the
+              row is capped by height so its 4 cards stay small enough to fit. */}
+          <div className="mx-auto w-full min-[470px]:max-w-[min(910px,128svh)] [@media(max-height:520px)]:min-[470px]:max-w-[min(910px,92svh)]">
+            <h2 className="mb-[clamp(0.4rem,1.6svh,1.25rem)] text-center text-[clamp(1rem,2.4svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] min-[470px]:text-left min-[470px]:text-[clamp(1.25rem,3.4svh,28px)]">
               What Makes it Truly Special
             </h2>
-            <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:grid md:grid-cols-4 md:gap-6 md:overflow-visible md:pb-0">
+            <div className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-1 scrollbar-none [&::-webkit-scrollbar]:hidden min-[470px]:mr-0 min-[470px]:grid min-[470px]:grid-cols-4 min-[470px]:gap-6 [@media(max-height:520px)]:min-[470px]:gap-3 min-[470px]:overflow-visible min-[470px]:pb-0">
               {TOP_CARDS.map((src, i) => (
                 <div
                   key={src}
                   style={{ transitionDelay: `${i * 90}ms` }}
-                  className={`relative aspect-482/586 h-[clamp(120px,27svh,225px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out md:h-auto md:w-full ${
+                  className={`relative aspect-482/586 h-[clamp(120px,27svh,225px)] w-auto shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out min-[470px]:h-auto min-[470px]:w-full ${
                     "translate-y-0 opacity-100 starting:translate-y-6 starting:opacity-0"
                   }`}
                 >
-                  <Image src={src} alt="" fill sizes="(max-width: 768px) 200px, 240px" className="object-contain" />
+                  <Image src={src} alt="" fill sizes="(max-width: 469px) 200px, 240px" className="object-contain" />
                 </div>
               ))}
             </div>
           </div>
 
           {/* Elevate your recipes */}
-          <div className="mx-auto w-full md:max-w-[min(910px,128svh)]">
-            <h2 className="mb-[clamp(0.4rem,1.6svh,1.25rem)] text-center text-[clamp(1rem,2.4svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] md:text-left md:text-[clamp(1.25rem,3.4svh,28px)]">
+          <div className="mx-auto w-full min-[470px]:max-w-[min(910px,128svh)]">
+            <h2 className="mb-[clamp(0.4rem,1.6svh,1.25rem)] text-center text-[clamp(1rem,2.4svh,1.25rem)] font-bold leading-tight tracking-normal text-white [text-shadow:0px_3px_6px_rgba(0,0,0,0.4)] min-[470px]:text-left min-[470px]:text-[clamp(1.25rem,3.4svh,28px)]">
               Elevate Your Recipes with a Drizzle of Litchi Honey
             </h2>
             {/* Carousel: auto-advances + manual scroll + prev/next arrows.
@@ -231,7 +233,7 @@ export default function Discover() {
             <div className="relative">
               <div
                 ref={carouselRef}
-                className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden md:mr-0 md:gap-6 md:pb-0 pb-[clamp(0.25rem,1.5svh,2.5rem)]"
+                className="-mr-5 flex snap-x snap-mandatory gap-4 overflow-x-auto scrollbar-none [&::-webkit-scrollbar]:hidden min-[470px]:mr-0 min-[470px]:gap-6 min-[470px]:pb-0 pb-[clamp(0.25rem,1.5svh,2.5rem)]"
               >
                 {[...RECIPES, ...RECIPES, ...RECIPES].map((r, i) => {
                   // Only the middle copy is "real" for screen readers/keyboard.
@@ -244,11 +246,11 @@ export default function Discover() {
                     tabIndex={clone ? -1 : undefined}
                     onClick={() => setActive(r)}
                     style={{ transitionDelay: `${(TOP_CARDS.length + (i % RECIPES.length)) * 90}ms` }}
-                    className={`relative h-[clamp(130px,26svh,240px)] w-[70vw] shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 md:h-[clamp(140px,30svh,240px)] md:w-52 ${
+                    className={`relative h-[clamp(130px,26svh,240px)] w-[70vw] shrink-0 snap-start overflow-hidden rounded-[11.34px] border-[0.5px] border-white text-left shadow-[0px_3px_6px_rgba(0,0,0,0.23)] transition-all duration-500 ease-out hover:brightness-105 min-[470px]:h-[clamp(140px,30svh,240px)] [@media(max-height:520px)]:min-[470px]:h-[max(96px,28svh)] min-[470px]:w-52 ${
                       "translate-y-0 opacity-100 starting:translate-y-6 starting:opacity-0"
                     }`}
                   >
-                    <Image src={r.src} alt={r.title} fill sizes="(max-width: 768px) 240px, 300px" className="object-cover" />
+                    <Image src={r.src} alt={r.title} fill sizes="(max-width: 469px) 240px, 300px" className="object-cover" />
                     <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/30 to-transparent p-3">
                       <p className="text-sm font-semibold leading-tight text-white">
                         {r.title}
@@ -264,7 +266,7 @@ export default function Discover() {
                 type="button"
                 aria-label="Previous"
                 onClick={() => scrollByCard(-1)}
-                className="absolute left-1 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-[2px] transition hover:bg-black/50 md:flex"
+                className="absolute left-1 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-[2px] transition hover:bg-black/50 min-[470px]:flex"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <polyline points="15 18 9 12 15 6" />
@@ -274,7 +276,7 @@ export default function Discover() {
                 type="button"
                 aria-label="Next"
                 onClick={() => scrollByCard(1)}
-                className="absolute right-1 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-[2px] transition hover:bg-black/50 md:flex"
+                className="absolute right-1 top-1/2 z-10 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/30 text-white backdrop-blur-[2px] transition hover:bg-black/50 min-[470px]:flex"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                   <polyline points="9 18 15 12 9 6" />

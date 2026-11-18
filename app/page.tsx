@@ -173,20 +173,32 @@ export default function Home() {
         width={120}
         height={109}
         priority
-        className="relative mt-2 mb-2 w-20 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)]"
+        className="relative mt-2 mb-2 w-20 object-contain drop-shadow-[0_2px_10px_rgba(0,0,0,0.55)] short:mt-1 short:mb-1 short:w-14 [@media(max-height:419.98px)]:w-10"
       />
 
-      {/* Glass card 425×128, radius 12: text block is 387×96, inset 16px
-          top / 19px sides (pt-4 / px-4.75). */}
-      <div className="bg-glass-card flex min-h-32 w-106.25 max-w-full items-center justify-center rounded-xl px-4.75 py-4 backdrop-blur-[2px] short:min-h-0 short:w-90 short:px-3 short:py-2.5">
-        <div className="flex min-h-24 w-96.75 max-w-full flex-col justify-center text-center text-[13px] leading-[1.35] text-white short:min-h-0 short:w-84 short:text-[11px]">
-          <p className="">Every Great Honey Has an Origin.</p>
-          <p className="">Discover the story behind this one.</p>
-          <p className="mt-1 short:mt-0.5">
+      {/* Glass card, radius 12: 425px wide on phones (text block 387px, inset
+          16px top / 19px sides). From md (and from sm on short/landscape
+          screens) it widens to 600px so the paragraph wraps onto fewer lines
+          and the card stays short — keeping it clear of
+          the honey jar in the background on wide-but-short screens. */}
+      <div className="bg-glass-card flex min-h-32 w-106.25 max-w-full items-center justify-center rounded-xl px-4.75 py-4 backdrop-blur-[2px] md:min-h-0 md:w-150 short:min-h-0 short:w-90 short:px-3 short:py-2.5 sm:short:w-150">
+        <div className="flex min-h-24 w-96.75 max-w-full flex-col justify-center text-center text-[13px] leading-[1.35] text-white md:min-h-0 md:w-140 short:min-h-0 short:w-84 short:text-[11px] sm:short:w-140">
+          {/* Each headline stays on ONE line: the font shrinks below 15px (13px on
+              short screens) only when the card is too narrow for it. The longest
+              line is ~17.5× its font size wide; the text area is the screen minus
+              the page gutter and card padding (70px, or 56px on short screens). */}
+          <p className="whitespace-nowrap text-[min(15px,calc((100vw-70px)/17.5))] font-semibold leading-snug short:text-[min(13px,calc((100vw-56px)/17.5))]">Every Great Honey Has an Origin.</p>
+          <p className="whitespace-nowrap text-[min(15px,calc((100vw-70px)/17.5))] font-semibold leading-snug short:text-[min(13px,calc((100vw-56px)/17.5))]">Discover the story behind this one.</p>
+          <p className="mt-2.5 short:mt-1.5">
+            {/* md+ (and at least 480px tall): break before "with blossoms",
+                "Bees collect" and "naturally delicate". Phones and very short
+                screens wrap naturally, which keeps the card short. */}
             For just a few weeks every year, Bihar&apos;s famous litchi orchards
-            come alive with blossoms. Bees collect nectar during this fleeting
-            season to create a honey that&apos;s naturally delicate, floral and
-            seasonal.
+            come alive <br className="hidden md:[@media(min-height:480px)]:inline" />
+            with blossoms. <br className="hidden md:[@media(min-height:480px)]:inline" />
+            Bees collect nectar during this fleeting season to
+            create a honey that&apos;s <br className="hidden md:[@media(min-height:480px)]:inline" />
+            naturally delicate, floral and seasonal.
           </p>
         </div>
       </div>
@@ -211,26 +223,30 @@ export default function Home() {
         position="top-[calc(42%_+_max(0px,_760px_-_100svh)_*_0.3)] sm:top-[calc(36%_+_max(0px,_760px_-_100svh)_*_0.3)] -left-1.25 max-[370px]:-left-3 sm:left-1/2 translate-x-0 sm:-translate-x-[calc(250px_+_max(108vw,_153.8vh)_*_0.0138)]"
       />
 
-      {/* Phone and tablet/desktop (sm: ≥640px) variants of the right button (different line breaks). */}
+      {/* Phone and tablet/desktop (sm: ≥640px) variants of the right button
+          (different line breaks). Its top is the LOWER of its usual spot
+          (29% above the bottom = 71% minus its 65px height) and the left
+          button's top, so on short screens — where the left button slides down
+          — the two end up level and the right one never rises above the left. */}
       <FlankButton
         side="right"
         bee="/new-bee-2.webp"
         onClick={() => router.push("/source-story")}
         text="Know Our  Sourcing <br/> Story"
-        position="bottom-[29%] sm:hidden left-auto sm:left-1/2 -right-1.25 max-[370px]:-right-3 sm:right-auto translate-x-0 sm:translate-x-[calc(110px_-_max(108vw,_153.8vh)_*_0.0138)]"
+        position="top-[max(calc(71%_-_65px),calc(42%_+_max(0px,_760px_-_100svh)_*_0.3))] sm:hidden left-auto sm:left-1/2 -right-1.25 max-[370px]:-right-3 sm:right-auto translate-x-0 sm:translate-x-[calc(110px_-_max(108vw,_153.8vh)_*_0.0138)]"
       />
       <FlankButton
         side="right"
         bee="/new-bee-2.webp"
         onClick={() => router.push("/source-story")}
         text="Know Our <br/> Sourcing Story"
-        position="bottom-[29%] hidden sm:flex left-auto sm:left-1/2 right-0 sm:right-auto translate-x-0 sm:translate-x-[calc(110px_-_max(108vw,_153.8vh)_*_0.0138)]"
+        position="top-[max(calc(71%_-_65px),calc(36%_+_max(0px,_760px_-_100svh)_*_0.3))] hidden sm:flex left-auto sm:left-1/2 right-0 sm:right-auto translate-x-0 sm:translate-x-[calc(110px_-_max(108vw,_153.8vh)_*_0.0138)]"
       />
 
       {/* Bottom action row. Mobile: fixed row with Discover + chat side by
           side. Desktop (md:contents dissolves the row): Discover in flow at
           the bottom centre, chat floats in the bottom-right corner. */}
-      <div className="fixed inset-x-0 bottom-5 z-60 flex items-center justify-center gap-2.5 px-5 md:contents">
+      <div className="fixed inset-x-0 bottom-5 short:bottom-3 z-60 flex items-center justify-center gap-2.5 px-5 md:contents">
         <button
           type="button"
           onClick={() => router.push("/discover")}

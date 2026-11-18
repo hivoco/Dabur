@@ -39,7 +39,7 @@ function keyMatches(given: string, expected: string) {
  *
  * Protected: set INGEST_SECRET in the server environment and send it in the
  * `x-ingest-key` header. With no INGEST_SECRET configured the endpoint is
- * disabled, so nobody can replace the chatbot's knowledge.
+ * disabled and hidden (404), so nobody can replace the chatbot's knowledge.
  *
  * From Postman:
  *   - Headers → x-ingest-key: <INGEST_SECRET>
@@ -49,7 +49,8 @@ function keyMatches(given: string, expected: string) {
 export async function POST(req: Request) {
   const secret = process.env.INGEST_SECRET;
   if (!secret) {
-    return Response.json({ error: "Ingest is disabled." }, { status: 403 });
+    // Hidden while disabled: answer exactly like a route that doesn't exist.
+    return new Response(null, { status: 404 });
   }
   const ip = clientIp(req);
   const attempts = recentFails(ip);
