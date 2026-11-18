@@ -179,10 +179,11 @@ export default function Home() {
       {/* Glass card, radius 12: 425px wide on phones (text block 387px, inset
           16px top / 19px sides). From md (and from sm on short/landscape
           screens) it widens to 600px so the paragraph wraps onto fewer lines
-          and the card stays short — keeping it clear of
+          and the card stays short. From lg it hugs its text (w-fit, max 600px)
+          with tighter 12px side padding — keeping it clear of
           the honey jar in the background on wide-but-short screens. */}
-      <div className="bg-glass-card flex min-h-32 w-106.25 max-w-full items-center justify-center rounded-xl px-4.75 py-4 backdrop-blur-[2px] md:min-h-0 md:w-150 short:min-h-0 short:w-90 short:px-3 short:py-2.5 sm:short:w-150">
-        <div className="flex min-h-24 w-96.75 max-w-full flex-col justify-center text-center text-[13px] leading-[1.35] text-white md:min-h-0 md:w-140 short:min-h-0 short:w-84 short:text-[11px] sm:short:w-140">
+      <div className="bg-glass-card flex min-h-32 w-106.25 max-w-full items-center justify-center rounded-xl px-4.75 py-4 backdrop-blur-[2px] md:min-h-0 md:w-150 short:min-h-0 short:w-90 short:px-3 short:py-2.5 sm:short:w-150 lg:w-fit lg:max-w-150 lg:px-3 lg:short:w-fit">
+        <div className="flex min-h-24 w-96.75 max-w-full flex-col justify-center text-center text-[13px] leading-[1.35] text-white md:min-h-0 md:w-140 short:min-h-0 short:w-84 short:text-[11px] sm:short:w-140 lg:w-auto lg:short:w-auto">
           {/* Each headline stays on ONE line: the font shrinks below 15px (13px on
               short screens) only when the card is too narrow for it. The longest
               line is ~17.5× its font size wide; the text area is the screen minus
@@ -190,12 +191,12 @@ export default function Home() {
           <p className="whitespace-nowrap text-[min(15px,calc((100vw-70px)/17.5))] font-semibold leading-snug short:text-[min(13px,calc((100vw-56px)/17.5))]">Every Great Honey Has an Origin.</p>
           <p className="whitespace-nowrap text-[min(15px,calc((100vw-70px)/17.5))] font-semibold leading-snug short:text-[min(13px,calc((100vw-56px)/17.5))]">Discover the story behind this one.</p>
           <p className="mt-2.5 short:mt-1.5">
-            {/* md+ (and at least 480px tall): break before "with blossoms",
-                "Bees collect" and "naturally delicate". Phones and very short
-                screens wrap naturally, which keeps the card short. */}
+            {/* md+ (and at least 480px tall): break before "Bees collect" and
+                "naturally delicate". Phones and very short screens wrap
+                naturally, which keeps the card short. */}
             For just a few weeks every year, Bihar&apos;s famous litchi orchards
-            come alive <br className="hidden md:[@media(min-height:480px)]:inline" />
-            with blossoms. <br className="hidden md:[@media(min-height:480px)]:inline" />
+            come alive with blossoms.{" "}
+            <br className="hidden md:[@media(min-height:480px)]:inline" />
             Bees collect nectar during this fleeting season to
             create a honey that&apos;s <br className="hidden md:[@media(min-height:480px)]:inline" />
             naturally delicate, floral and seasonal.

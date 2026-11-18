@@ -99,7 +99,7 @@ html, body {
    are unaffected: there the image already fits the height. */
 .app-bg {
   --img-h: max(70.2vw, 100vh);
-  --card-bottom: 241px;
+  --card-bottom: 223px;
   --bar-from-bottom: 80px;
   --jar-min-top: calc((var(--card-bottom) + 100vh - var(--bar-from-bottom) - 0.297 * var(--img-h)) / 2);
   background-position-y: min(0px, max(85%, calc(var(--jar-min-top) - 0.462 * var(--img-h))));
@@ -111,10 +111,10 @@ html, body {
     --bar-from-bottom: 52px;
   }
 }
-/* md+ short screens (480px+ tall) show the 4-line desktop paragraph. */
+/* md+ short screens (480px+ tall) show the 3-line desktop paragraph. */
 @media (max-height: 619.98px) and (min-width: 768px) and (min-height: 480px) {
   .app-bg {
-    --card-bottom: 180px;
+    --card-bottom: 164px;
   }
 }
 
