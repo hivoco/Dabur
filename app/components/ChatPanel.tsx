@@ -21,27 +21,30 @@ const TYPE_TICK_MS = 30; // ms between reveal frames
 // Set NEXT_PUBLIC_API_BASE_URL to call a different backend (e.g. from local dev).
 const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
 
-// Each topic chip drops its mapped question into the chat input (same as the
-// suggested questions below).
+// Each topic chip sends its own question — one per topic, worded like the
+// matching FAQ entry in the knowledge-base PDF so retrieval finds it.
 const TOPICS = [
-  { label: "Traceability", question: "How can I check honey purity?" },
+  {
+    label: "Traceability",
+    question: "How can I trace my Dabur Honey jar to its batch?",
+  },
   {
     label: "JEEViKA",
     question: "Who are the JEEViKA Didis mentioned with Dabur Litchi Honey?",
   },
-  { label: "Authenticity", question: "Is Dabur Honey a pure honey?" },
+  { label: "Authenticity", question: "Is Dabur honey original honey?" },
   {
     label: "Naturally Sourced",
-    question: "Where is Dabur Litchi Honey naturally sourced from?",
+    question: "Where is Dabur Litchi Honey sourced from?",
   },
   { label: "Monofloral", question: "What is monofloral honey?" },
   { label: "Purity", question: "How is honey tested for purity?" },
 ];
 
 const QUESTIONS = [
-  "How do I know the honey is pure?",
+  "What makes litchi honey special?",
   "Best way to eat Litchi Honey?",
-  "How does Dabur check for adulteration? ",
+  "How does Dabur check for adulteration?",
 ];
 
 function PlusIcon() {
