@@ -189,7 +189,7 @@ export default function Home() {
               line is ~17.5× its font size wide; the text area is the screen minus
               the page gutter and card padding (70px, or 56px on short screens). */}
           <p className="whitespace-nowrap text-[min(15px,calc((100vw-70px)/17.5))] font-semibold leading-snug short:text-[min(13px,calc((100vw-56px)/17.5))]">Every Great Honey Has an Origin.</p>
-          <p className="whitespace-nowrap text-[min(15px,calc((100vw-70px)/17.5))] font-semibold leading-snug short:text-[min(13px,calc((100vw-56px)/17.5))]">Discover the story behind this one.</p>
+          <p className="whitespace-nowrap text-[min(15px,calc((100vw-70px)/17.5))] font-semibold leading-snug short:text-[min(13px,calc((100vw-56px)/17.5))]">Discover The Story Behind This One.</p>
           <p className="mt-2.5 short:mt-1.5">
             {/* md+ (and at least 480px tall): break before "Bees collect" and
                 "naturally delicate". Phones and very short screens wrap
